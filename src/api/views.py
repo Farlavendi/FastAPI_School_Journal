@@ -1,9 +1,12 @@
-from fastapi import APIRouter
+from typing import Annotated
 
-from .models import Student
+from fastapi import APIRouter, Path
+
+from api.schemas import Student
 
 api_router = APIRouter(
     prefix="/api",
+    tags=["Api"],
 )
 
 
@@ -13,12 +16,12 @@ def get_students():
 
 
 @api_router.post("/new_student/")
-def new_student(student: Student):
+def create_student(student: Student):
     return student
 
 
 @api_router.get("/students/{student_id}/")
-def get_student_by_id(student_id: int):
+def get_student_by_id(student_id: Annotated[int, Path(ge=0)]):
     return {
         "student": {
             "id": student_id,

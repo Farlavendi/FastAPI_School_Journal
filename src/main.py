@@ -8,7 +8,7 @@ In case you don't remember the process number use folowing comands:
 import uvicorn
 from fastapi import FastAPI
 
-from journal.api.api import api_router
+from api.views import api_router
 
 app = FastAPI()
 
