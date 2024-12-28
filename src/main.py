@@ -1,10 +1,3 @@
-"""
-To shut down the surver use c command: taskkill /F /PID {process_id}
-In case you don't remember the process number use folowing comands:
-    (Get-NetTCPConnection -LocalPort {port_number}).OwningProcess
-    and then
-    wmic process where ("ParentProcessId={received_owning_process_number}") get Caption,ProcessId
-"""
 import uvicorn
 from fastapi import FastAPI
 

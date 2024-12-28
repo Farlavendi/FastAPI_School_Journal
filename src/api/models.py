@@ -1,8 +1,10 @@
-from fastapi import Path
-from pydantic import BaseModel, Field
 from typing import Annotated
 
-from users.schemas import User
+from fastapi import Path
+from pydantic import BaseModel, Field
+
+from users.models import User
+
 
 class Class(BaseModel):
     id: Annotated[int, Field(ge=0)]
@@ -11,4 +13,4 @@ class Class(BaseModel):
 
 class Student(User):
     id: Annotated[int, Field(ge=0)]
-    class_num: Annotated[int, Field(ge=1) ,Path(alias="Class number")]
+    class_num: Annotated[int, Field(ge=1), Path(alias="Class number")]

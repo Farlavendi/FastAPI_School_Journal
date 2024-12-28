@@ -2,7 +2,7 @@ from typing import Annotated
 
 from fastapi import APIRouter, Path
 
-from api.schemas import Student
+from api.models import Student
 
 api_router = APIRouter(
     prefix="/api",

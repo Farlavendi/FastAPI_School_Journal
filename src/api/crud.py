@@ -1,4 +1,4 @@
-from api.schemas import Student
+from api.models import Student
 
 
 def create_student(student: Student):
