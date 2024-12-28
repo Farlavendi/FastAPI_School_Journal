@@ -1,5 +1,7 @@
 from fastapi import APIRouter
 
+from .models import Student
+
 api_router = APIRouter(
     prefix="/api",
 )
@@ -10,8 +12,13 @@ def get_students():
     return ["Student_1", "Student_2", "Student_3"]
 
 
-@api_router.get("/students/{student_id}")
-def get_student_by_id(student_id):
+@api_router.post("/new_student/")
+def new_student(student: Student):
+    return student
+
+
+@api_router.get("/students/{student_id}/")
+def get_student_by_id(student_id: int):
     return {
         "student": {
             "id": student_id,

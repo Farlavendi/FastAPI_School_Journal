@@ -5,9 +5,10 @@ In case you don't remember the process number use folowing comands:
     and then
     wmic process where ("ParentProcessId={received_owning_process_number}") get Caption,ProcessId
 """
-
+import uvicorn
 from fastapi import FastAPI
-from .journal.api.api import api_router
+
+from journal.api.api import api_router
 
 app = FastAPI()
 
@@ -17,3 +18,6 @@ app.include_router(router=api_router)
 @app.get("/")
 async def root():
     return "The server is running."
+
+if __name__ == "__main__":
+    uvicorn.run("main:app", reload=True)
