@@ -1,14 +1,21 @@
 from api.models import Student
 
 
-def create_student(student: Student):
+def create_student(student: Student) -> dict:
+    user = student.model_dump()
+    return {
+        "success": True,
+        "user": user
+    }
+
+
+def read_student(student: Student):
     return student
 
-def read_student(student: Student) -> Student:
-    return student
 
 def update_student(student: Student):
     return student
+
 
 def delete_student(student: Student):
     return student

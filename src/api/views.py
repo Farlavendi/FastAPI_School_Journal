@@ -1,7 +1,7 @@
 from typing import Annotated
 
 from fastapi import APIRouter, Path
-
+from api import crud
 from api.models import Student
 
 api_router = APIRouter(
@@ -16,8 +16,8 @@ def get_students():
 
 
 @api_router.post("/new_student/")
-def create_student(student: Student):
-    return student
+def create_student(user: Student):
+    return crud.create_student(user)
 
 
 @api_router.get("/students/{student_id}/")
