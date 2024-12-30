@@ -5,7 +5,6 @@ from pydantic import BaseModel, Field
 
 from users.models import User
 
-
 class Class(BaseModel):
     id: Annotated[int, Field(ge=0)]
     number: Annotated[int, Field(gt=0)]
