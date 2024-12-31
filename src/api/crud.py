@@ -3,10 +3,7 @@ from api.models import Student
 
 def create_student(student: Student) -> dict:
     user = student.model_dump()
-    return {
-        "success": True,
-        "user": user
-    }
+    return {"success": True, "user": user}
 
 
 def read_student(student: Student):

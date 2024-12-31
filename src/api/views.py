@@ -1,6 +1,9 @@
+from http import HTTPStatus
 from typing import Annotated
 
 from fastapi import APIRouter, Path
+from starlette import status
+
 from api import crud
 from api.models import Student
 
@@ -11,11 +14,14 @@ api_router = APIRouter(
 
 
 @api_router.get("/students/")
-def get_students():
-    return ["Student_1", "Student_2", "Student_3"]
+def get_students(student_id: Annotated[int, Path(ge=0)]):
+    # if student_id not in students:
+    #   raise HTTPException(status_code=404, detail="Not Found")
+    # return {"student": students[student_id]}
+    return "Some student"
 
 
-@api_router.post("/new_student/")
+@api_router.post("/new_student/", status_code=status.HTTP_201_CREATED)
 def create_student(user: Student):
     return crud.create_student(user)
 
