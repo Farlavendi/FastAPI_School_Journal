@@ -21,9 +21,9 @@ def get_students(student_id: Annotated[int, Path(ge=0)]):
     return "Some student"
 
 
-@api_router.post("/new_student/", status_code=status.HTTP_201_CREATED)
-def create_student(user: Student):
-    return crud.create_student(user)
+# @api_router.post("/new_student/", status_code=status.HTTP_201_CREATED)
+# def create_student(user: Student):
+#     return crud.create_student(user)
 
 
 @api_router.get("/students/{student_id}/")

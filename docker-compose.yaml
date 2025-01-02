@@ -1,0 +1,13 @@
+version: "3.13"
+
+services:
+  web:
+    build:
+      dockerfile: Dockerfile
+    ports:
+      - "8000:5432"
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: postgres

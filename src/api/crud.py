@@ -1,7 +1,7 @@
 from api.models import Student
 
 
-def create_student(student: Student) -> dict:
+def create_student(student: Student):
     user = student.model_dump()
     return {"success": True, "user": user}
 

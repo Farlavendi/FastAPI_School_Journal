@@ -20,9 +20,9 @@ from users.model import Base, User
 class Class(Base):
     __tablename__ = "classes"
     id: Mapped[int] = mapped_column(primary_key=True)
-    class_num: Mapped[int] = mapped_column(alias="Class number")
+    class_num: Mapped[int] = mapped_column()
 
 
 class Student(User):
     id: Mapped[int] = mapped_column(primary_key=True)
-    class_num: Mapped[int] = mapped_column(alias="Class number")
+    class_num: Mapped[int] = mapped_column()
