@@ -17,7 +17,7 @@ class User(Base):
         autoincrement=True,
         index=True,
     )
-    email: Mapped[String] = mapped_column(
+    email: Mapped[str] = mapped_column(
         String,
         unique=True,
         nullable=False,
