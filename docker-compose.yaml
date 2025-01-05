@@ -1,13 +1,16 @@
 version: "3.13"
 
 services:
-  web:
-    build:
-      dockerfile: Dockerfile
-    ports:
-      - "8000:5432"
-  db:
-    image: postgres
+  postgres:
+    image: postgres:17.2-alpine
     restart: always
-    environment:
-      POSTGRES_PASSWORD: postgres
+    env_file:
+      - .env
+    expose:
+      - 5432
+  web:
+    build: .
+    ports:
+      - "8000:8080"
+    depends_on:
+      - postgres
