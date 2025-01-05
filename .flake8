@@ -1,0 +1,12 @@
+[flake8]
+ignore = F403, F401,
+exclude =
+    migrations
+    .git,
+    .idea,
+    __pycache__,
+    venv
+filename = *.py
+accept-encodings = utf-8
+max-complexity = 12
+max-line-length = 150
