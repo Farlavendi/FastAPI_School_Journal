@@ -3,7 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from core import db_helper
 from . import crud
-from .schemas import Student, StudentCreate, StudentUpdate, StudentPartialUpdate
+from .schemas import *
 from .dependencies import student_by_id
 
 students_router = APIRouter(tags=["Students"])
@@ -35,7 +35,7 @@ async def get_student_by_id(
     return student
 
 
-@students_router.put("/{student_id}/")
+@students_router.put("/update/{student_id}/")
 async def update_student(
     student_update: StudentUpdate,
     student: Student = Depends(student_by_id),
@@ -48,7 +48,7 @@ async def update_student(
     )
 
 
-@students_router.patch("/{student_id}/")
+@students_router.patch("/update/{student_id}/")
 async def update_student_partial(
     student_update: StudentPartialUpdate,
     student: Student = Depends(student_by_id),
@@ -59,7 +59,7 @@ async def update_student_partial(
     )
 
 
-@students_router.delete("/{student_id}/", status_code=status.HTTP_204_NO_CONTENT)
+@students_router.delete("/remove/{student_id}/", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_student(
     student: Student = Depends(student_by_id),
     session: AsyncSession = Depends(db_helper.scoped_session_dependency),

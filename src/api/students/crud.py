@@ -30,8 +30,8 @@ async def update_student(
     student_update: StudentUpdate | StudentPartialUpdate,
     partial: bool = False,
 ) -> Student:
-    for name, value in student_update.model_dump(exclude_unset=partial).items():
-        setattr(student, name, value)
+    for username, value in student_update.model_dump(exclude_unset=partial).items():
+        setattr(student, username, value)
     await session.commit()
     return student
 
