@@ -1,20 +1,21 @@
 [tool.poetry]
-name = "fast-api-journal"
+name = "fastapi-school-journal"
 version = "0.1.0"
-description = ""
-authors = ["DenisBichuk <denisbichuk@gmail.com>"]
+description = "School journal API."
+authors = ["Denis Bichuk <denisbicuk18@gmail.com>"]
+license = "MIT"
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.12"
-fastapi = "^0.115.2"
-uvicorn = "^0.31.1"
+python = "^3.13"
+fastapi = "^0.115.6"
+uvicorn = "^0.34.0"
 pydantic = "^2.10.4"
 sqlalchemy = "^2.0.36"
 asyncpg = "^0.30.0"
-greenlet = "^3.1.1"
-pydantic-settings = "^2.7.1"
 python-dotenv = "^1.0.1"
+pydantic-settings = "^2.7.1"
+greenlet = "^3.1.1"
 
 
 [tool.poetry.group.dev.dependencies]

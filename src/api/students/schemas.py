@@ -1,5 +1,4 @@
 from pydantic import ConfigDict
-from sqlalchemy.orm import Mapped, mapped_column
 
 from users.schemas import User
 
