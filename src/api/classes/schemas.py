@@ -2,7 +2,6 @@ from pydantic import BaseModel, ConfigDict
 
 
 class BaseClass(BaseModel):
-    __tablename__ = "classes"
     class_num: int
 
 
@@ -18,3 +17,6 @@ class Class(BaseClass):
     model_config = ConfigDict(from_attributes=True)
 
     id: int
+
+    class Config:
+        orm_mode = True
