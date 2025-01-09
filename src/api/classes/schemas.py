@@ -18,5 +18,3 @@ class Class(BaseClass):
 
     id: int
 
-    class Config:
-        orm_mode = True

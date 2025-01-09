@@ -1,3 +1,3 @@
-from .models import Base, User
+from .models import Base, UserModel
 from .schemas import User
-__all__ = ("Base", "User")
+__all__ = ("User")
