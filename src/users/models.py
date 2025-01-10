@@ -2,17 +2,16 @@ from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 
 class Base(DeclarativeBase):
-    pass
-
-
-class UserModel(Base):
-    __abstract__ = True
-
     id: Mapped[int] = mapped_column(
         primary_key=True,
         autoincrement=True,
         index=True,
     )
+
+
+class UserModel(Base):
+    __abstract__ = True
+
     email: Mapped[str] = mapped_column(
         unique=True,
         nullable=False,
