@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING
 from .users import User
 
 if TYPE_CHECKING:
-    from .classes import Class
+    from . import Class
 
 
 class Student(User):
@@ -14,4 +14,4 @@ class Student(User):
         ForeignKey("classes.class_num", name="fk_student_class_num"),
     )
 
-    class_: Mapped[Class] = relationship(back_populates="students")
+    class_: Mapped["Class"] = relationship(back_populates="students")

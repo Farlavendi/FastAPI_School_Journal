@@ -1,8 +1,8 @@
 from typing import List
 
 from sqlalchemy import select, Result
-
-from .schemas import Student, StudentCreate, StudentUpdate, StudentPartialUpdate
+from src.api.models import Student
+from .schemas import StudentCreate, StudentUpdate, StudentPartialUpdate
 from sqlalchemy.ext.asyncio import AsyncSession
 
 
