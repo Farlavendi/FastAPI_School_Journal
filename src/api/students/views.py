@@ -1,7 +1,7 @@
 from fastapi import APIRouter, status, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from core import db_helper
+from src.core import db_helper
 from . import crud
 from .schemas import *
 from .dependencies import student_by_id

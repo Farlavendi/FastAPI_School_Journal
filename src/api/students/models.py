@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Mapped
 
-from users.models import UserModel
+from src.users.models import UserModel
 
 
 class Student(UserModel):

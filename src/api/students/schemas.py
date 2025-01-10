@@ -1,6 +1,6 @@
 from pydantic import ConfigDict
 
-from users.schemas import User
+from src.users.schemas import User
 
 
 class BaseStudent(User):

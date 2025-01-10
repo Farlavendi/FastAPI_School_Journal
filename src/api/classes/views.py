@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette import status
 
-from core import db_helper
+from src.core import db_helper
 from . import crud
 from .dependencies import class_by_id
 from .schemas import *

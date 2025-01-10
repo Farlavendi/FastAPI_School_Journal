@@ -1,7 +1,7 @@
 from sqlalchemy import select, Result
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from api.classes.schemas import *
+from src.api.classes.schemas import *
 
 
 async def create_class(session: AsyncSession, class_in: ClassCreate) -> Class:
