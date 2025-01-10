@@ -4,7 +4,7 @@ from sqlalchemy.orm import Mapped, mapped_column
 from .base import Base
 
 
-class UserModel(Base):
+class User(Base):
     __abstract__ = True
 
     email: Mapped[str] = mapped_column(

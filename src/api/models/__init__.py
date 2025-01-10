@@ -1,11 +1,11 @@
 __all__ = (
     'Base',
-    'UserModel',
+    'User',
     'Student',
     'Class',
 )
 
 from .base import Base
-from .users import UserModel
+from .users import User
 from .students import Student
 from .classes import Class
