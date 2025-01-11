@@ -1,4 +1,5 @@
-from fastapi import APIRouter, status, Depends
+import sqlalchemy
+from fastapi import APIRouter, status, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.core import db_helper
@@ -25,7 +26,18 @@ async def create_student(
     student_in: StudentCreate,
     session: AsyncSession = Depends(db_helper.scoped_session_dependency),
 ):
-    return await crud.create_student(session=session, student_in=student_in)
+    if not Exception:
+        return await crud.create_student(session=session, student_in=student_in)
+    elif sqlalchemy.exc.IntegrityError:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="Student with this username or email already exists.",
+        )
+    else:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="There is an error on our server, please try again later.",
+        )
 
 
 @students_router.get("/{student_id}/", response_model=Student)

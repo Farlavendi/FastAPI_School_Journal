@@ -2,7 +2,7 @@ from sqlalchemy import select, Result
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.api.models import Class
-from src.api.classes.schemas import ClassCreate, ClassUpdate
+from src.api.classes.schemas import ClassCreate, ClassUpdate, ClassDelete
 
 
 async def create_class(session: AsyncSession, class_in: ClassCreate) -> Class:
@@ -19,7 +19,7 @@ async def get_classes(session: AsyncSession) -> list[Class]:
     return list(classes)
 
 
-async def get_class_by_id(session: AsyncSession, class_id: int) -> Class | None:
+async def get_class_by_id(session: AsyncSession, class_id: int):
     return await session.get(Class, class_id)
 
 
@@ -37,6 +37,6 @@ async def update_class(
 async def delete_class(
     session: AsyncSession,
     class_: Class,
-):
+) -> None:
     await session.delete(class_)
     await session.commit()

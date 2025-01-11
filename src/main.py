@@ -2,6 +2,7 @@ from contextlib import asynccontextmanager
 
 import uvicorn
 from fastapi import FastAPI
+from starlette.responses import RedirectResponse
 
 from api import router as api_router
 from core.config import settings
@@ -17,8 +18,9 @@ app.include_router(router=api_router, prefix=settings.api_v1_prefix)
 
 
 @app.get("/")
-async def root():
-    return "The server is running."
+async def root_and_redirect():
+    redirect_url = RedirectResponse('/docs')
+    return redirect_url
 
 
 if __name__ == "__main__":

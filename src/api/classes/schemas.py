@@ -1,8 +1,8 @@
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class BaseClass(BaseModel):
-    class_num: int
+    class_num: int = Field(..., ge=1)
 
 
 class ClassCreate(BaseClass):
@@ -13,8 +13,11 @@ class ClassUpdate(ClassCreate):
     pass
 
 
+class ClassDelete(BaseClass):
+    pass
+
+
 class Class(BaseClass):
     model_config = ConfigDict(from_attributes=True)
 
     id: int
-

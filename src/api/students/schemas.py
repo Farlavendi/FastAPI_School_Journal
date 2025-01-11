@@ -1,10 +1,10 @@
-from pydantic import ConfigDict
+from pydantic import ConfigDict, Field
 
-from src.users.schemas import User
+from src.users.schemas import BaseUser
 
 
-class BaseStudent(User):
-    class_num: int
+class BaseStudent(BaseUser):
+    class_num: int = Field(..., ge=1)
 
 
 class StudentCreate(BaseStudent):
@@ -27,5 +27,3 @@ class StudentPartialUpdate(StudentCreate):
 
 class Student(BaseStudent):
     model_config = ConfigDict(from_attributes=True)
-
-    id: int
