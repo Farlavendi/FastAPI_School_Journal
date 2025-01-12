@@ -15,8 +15,7 @@ async def create_student(session: AsyncSession, student_in: StudentCreate) -> St
 
 async def get_students(session: AsyncSession) -> List[Student]:
     stmt = select(Student).order_by(Student.id)
-    result: Result = await session.execute(stmt)
-    students = result.scalars().all()
+    students = await session.scalars(stmt)
     return list(students)
 
 
