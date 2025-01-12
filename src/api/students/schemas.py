@@ -27,3 +27,5 @@ class StudentPartialUpdate(StudentCreate):
 
 class Student(BaseStudent):
     model_config = ConfigDict(from_attributes=True)
+
+    id: int

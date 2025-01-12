@@ -13,10 +13,6 @@ class ClassUpdate(ClassCreate):
     pass
 
 
-class ClassDelete(BaseClass):
-    pass
-
-
 class Class(BaseClass):
     model_config = ConfigDict(from_attributes=True)
 

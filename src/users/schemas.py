@@ -1,4 +1,3 @@
-from fastapi import Path
 from pydantic import BaseModel, EmailStr, ConfigDict, Field
 
 
@@ -8,9 +7,9 @@ class BaseUser(BaseModel):
     email: EmailStr = Field(...)
     username: str = Field(..., min_length=3, max_length=50)
     hashed_password: str
-    first_name: str | None = Field(...)
-    second_name: str | None = Field()
-    last_name: str | None = Field(...)
+    first_name: str | None = Field(..., min_length=1, max_length=100)
+    second_name: str | None = Field(min_length=1, max_length=100)
+    last_name: str | None = Field(..., min_length=1, max_length=100)
 
 
 class UserCreate(BaseUser):
@@ -18,4 +17,4 @@ class UserCreate(BaseUser):
 
 
 class User(BaseUser):
-    id: int = Field(ge=1, exclude=True)
+    id: int = Field(ge=1)
