@@ -8,7 +8,7 @@ class BaseUser(BaseModel):
     username: str = Field(..., min_length=3, max_length=50)
     hashed_password: str
     first_name: str | None = Field(..., min_length=1, max_length=100)
-    second_name: str | None = Field(min_length=1, max_length=100)
+    second_name: str | None = Field(max_length=100)
     last_name: str | None = Field(..., min_length=1, max_length=100)
 
 

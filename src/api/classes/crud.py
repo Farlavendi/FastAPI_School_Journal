@@ -1,8 +1,8 @@
 from sqlalchemy import select, Result
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.api.models import Class
 from src.api.classes.schemas import ClassCreate, ClassUpdate
+from src.api.models import Class
 
 
 async def create_class(session: AsyncSession, class_in: ClassCreate) -> Class:
@@ -13,7 +13,7 @@ async def create_class(session: AsyncSession, class_in: ClassCreate) -> Class:
 
 
 async def get_classes(session: AsyncSession) -> list[Class]:
-    stmt = select(Class)
+    stmt = select(Class).order_by(Class.id)
     result: Result = await session.execute(stmt)
     classes = result.scalars().all()
     return list(classes)
@@ -21,6 +21,15 @@ async def get_classes(session: AsyncSession) -> list[Class]:
 
 async def get_class_by_id(session: AsyncSession, class_id: int):
     return await session.get(Class, class_id)
+
+
+async def get_class_by_num(
+    session: AsyncSession,
+    class_num: int,
+) -> Class | None:
+    stmt = select(Class).where(Class.class_num == class_num)
+    class_: Class | None = await session.scalar(stmt)
+    return class_
 
 
 async def update_class(

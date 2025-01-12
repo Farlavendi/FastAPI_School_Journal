@@ -19,7 +19,7 @@ app.include_router(router=api_router, prefix=settings.api_v1_prefix)
 
 @app.get("/")
 async def root_and_redirect():
-    redirect_url = RedirectResponse('/docs')
+    redirect_url = RedirectResponse("/docs")
     return redirect_url
 
 

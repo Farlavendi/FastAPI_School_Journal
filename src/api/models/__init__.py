@@ -1,8 +1,8 @@
 __all__ = (
-    'Base',
-    'User',
-    'Student',
-    'Class',
+    "Base",
+    "User",
+    "Student",
+    "Class",
 )
 
 from .base import Base

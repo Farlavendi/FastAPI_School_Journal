@@ -26,14 +26,14 @@ async def create_student(
     student_in: StudentCreate,
     session: AsyncSession = Depends(db_helper.scoped_session_dependency),
 ):
-    if not Exception:
+    try:
         return await crud.create_student(session=session, student_in=student_in)
-    elif sqlalchemy.exc.IntegrityError:
+    except sqlalchemy.exc.IntegrityError:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
             detail="Student with this username or email already exists.",
         )
-    else:
+    finally:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="There is an error on our server, please try again later.",
