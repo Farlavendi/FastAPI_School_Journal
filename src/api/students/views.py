@@ -45,11 +45,7 @@ async def create_student(
             status_code=status.HTTP_409_CONFLICT,
             detail="Student with this username or email already exists.",
         )
-    finally:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="There is an error on our server, please try again later.",
-        )
+
 
 
 @students_router.put("/update/{student_id}/")

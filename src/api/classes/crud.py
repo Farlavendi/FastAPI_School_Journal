@@ -1,5 +1,6 @@
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import joinedload
 
 from src.api.classes.schemas import ClassCreate, ClassUpdate
 from src.api.models import Class
@@ -26,7 +27,11 @@ async def get_class_by_num(
     session: AsyncSession,
     class_num: int,
 ) -> Class | None:
-    stmt = select(Class).where(Class.class_num == class_num)
+    stmt = (
+        select(Class)
+        .options(joinedload(Class.teacher))
+        .where(Class.class_num == class_num)
+    )
     class_: Class | None = await session.scalar(stmt)
     return class_
 

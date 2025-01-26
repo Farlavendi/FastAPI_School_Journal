@@ -1,3 +1,4 @@
+from sqlalchemy import UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from typing import TYPE_CHECKING
 from . import Base
@@ -14,3 +15,5 @@ class Class(Base):
 
     students: Mapped[list["Student"]] = relationship(back_populates="class_")
     teacher: Mapped["Teacher"] = relationship(back_populates="class_")
+
+    __table_args__ = (UniqueConstraint("class_num"),)

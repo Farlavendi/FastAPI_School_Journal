@@ -1,4 +1,4 @@
-from sqlalchemy import ForeignKey
+from sqlalchemy import ForeignKey, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from typing import TYPE_CHECKING
 from . import User
@@ -18,4 +18,6 @@ class Teacher(User):
         ),
     )
 
-    class_: Mapped["Class"] = relationship(back_populates="teachers")
+    class_: Mapped["Class"] = relationship(back_populates="teacher", single_parent=True)
+
+    __table_args__ = (UniqueConstraint("class_id"),)

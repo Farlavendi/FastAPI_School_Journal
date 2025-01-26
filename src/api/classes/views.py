@@ -62,11 +62,6 @@ async def create_class(
             status_code=status.HTTP_409_CONFLICT,
             detail="Class with this number already exists.",
         )
-    finally:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="There is an error on our server, please try again later.",
-        )
 
 
 @classes_router.put("/update/{class_id}/")

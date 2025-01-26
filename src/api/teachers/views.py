@@ -43,12 +43,7 @@ async def create_teacher(
     except sqlalchemy.exc.IntegrityError:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
-            detail="Teacher with this username or email already exists.",
-        )
-    finally:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="There is an error on our server, please try again later.",
+            detail="Teacher with this username, email or class_id already exists.",
         )
 
 
