@@ -4,6 +4,7 @@ from . import Base
 
 if TYPE_CHECKING:
     from . import Student
+    from . import Teacher
 
 
 class Class(Base):
@@ -12,3 +13,4 @@ class Class(Base):
     class_num: Mapped[int] = mapped_column(unique=True)
 
     students: Mapped[list["Student"]] = relationship(back_populates="class_")
+    teacher: Mapped["Teacher"] = relationship(back_populates="class_")

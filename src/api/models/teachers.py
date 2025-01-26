@@ -7,15 +7,15 @@ if TYPE_CHECKING:
     from . import Class
 
 
-class Student(User):
-    __tablename__ = "students"
+class Teacher(User):
+    __tablename__ = "teachers"
 
-    class_num: Mapped[int] = mapped_column(
+    class_id: Mapped[int] = mapped_column(
         ForeignKey(
-            "classes.class_num",
+            "classes.id",
             ondelete="CASCADE",
-            name="fk_student_class_num",
+            name="fk_teacher_class_id",
         ),
     )
 
-    class_: Mapped["Class"] = relationship(back_populates="students")
+    class_: Mapped["Class"] = relationship(back_populates="teachers")
