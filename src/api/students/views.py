@@ -4,7 +4,12 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.core import db_helper
 from . import crud
-from .schemas import *
+from .schemas import (
+    Student,
+    StudentCreate,
+    StudentUpdate,
+    StudentPartialUpdate,
+)
 from .dependencies import student_by_id
 
 students_router = APIRouter(tags=["Students"])
@@ -15,6 +20,13 @@ async def get_students(
     session: AsyncSession = Depends(db_helper.scoped_session_dependency),
 ):
     return await crud.get_students(session=session)
+
+
+@students_router.get("/{student_id}/", response_model=Student)
+async def get_student_by_id(
+    student: Student = Depends(student_by_id),
+):
+    return student
 
 
 @students_router.post(
@@ -40,13 +52,6 @@ async def create_student(
         )
 
 
-@students_router.get("/{student_id}/", response_model=Student)
-async def get_student_by_id(
-    student: Student = Depends(student_by_id),
-):
-    return student
-
-
 @students_router.put("/update/{student_id}/")
 async def update_student(
     student_update: StudentUpdate,
@@ -67,13 +72,19 @@ async def update_student_partial(
     session: AsyncSession = Depends(db_helper.scoped_session_dependency),
 ):
     return await crud.update_student(
-        session=session, student=student, student_update=student_update, partial=True
+        session=session,
+        student=student,
+        student_update=student_update,
+        partial=True,
     )
 
 
-@students_router.delete("/remove/{student_id}/", status_code=status.HTTP_204_NO_CONTENT)
+@students_router.delete("/delete/{student_id}/", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_student(
     student: Student = Depends(student_by_id),
     session: AsyncSession = Depends(db_helper.scoped_session_dependency),
-) -> None:
-    return await crud.delete_student(session=session, student=student)
+):
+    return await crud.delete_student(
+        session=session,
+        student=student,
+    )

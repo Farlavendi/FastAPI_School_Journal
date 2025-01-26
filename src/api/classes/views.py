@@ -8,7 +8,11 @@ from starlette import status
 from src.core import db_helper
 from . import crud
 from .dependencies import class_by_id
-from .schemas import *
+from .schemas import (
+    Class,
+    ClassCreate,
+    ClassUpdate,
+)
 
 classes_router = APIRouter(tags=["Classes"])
 
@@ -78,9 +82,9 @@ async def update_class(
     )
 
 
-@classes_router.delete("/remove/{class_id}/", status_code=status.HTTP_204_NO_CONTENT)
-async def remove_class(
+@classes_router.delete("/delete/{class_id}/", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_class(
     class_: Class = Depends(class_by_id),
     session: AsyncSession = Depends(db_helper.scoped_session_dependency),
-) -> None:
+):
     return await crud.delete_class(class_=class_, session=session)
