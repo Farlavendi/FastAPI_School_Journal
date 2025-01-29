@@ -32,6 +32,7 @@ async def get_class_by_num(
         .options(joinedload(Class.teacher))
         .where(Class.class_num == class_num)
     )
+
     class_: Class | None = await session.scalar(stmt)
     return class_
 
