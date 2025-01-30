@@ -1,49 +1,20 @@
-from fastapi import APIRouter, Depends, Form, HTTPException
-from starlette import status
+from fastapi import APIRouter, Depends
 
-from src.users.schemas import User
+from auth.utils import validate_auth_user, get_current_active_user
 from src.auth import utils as auth_utils
 from src.auth.schemas import TokenInfo
+from src.users.schemas import UserSchemaForAuth
 
-router = APIRouter(prefix="/jwt", tags=["JWT"])
-
-users_db: dict[str, User] = {
-
-}
+auth_router = APIRouter(prefix="/jwt", tags=["JWT"])
 
 
-def validate_auth_user(
-    username: str = Form(),
-    password: str = Form(),
-):
-    unauthorized_exception = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Incorrect username or password",
-    )
-
-    if not (user := users_db.get(username)):
-        raise unauthorized_exception
-
-    if not auth_utils.validate_password(
-        password=password,
-        hashed_password=user.password
-    ):
-        return unauthorized_exception
-
-    if not user.is_active:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Inactive user",
-        )
-    raise user
-
-
-@router.post("/login/", response_model=TokenInfo)
+@auth_router.post("/login/", response_model=TokenInfo)
 def auth_user_issue_jwt(
-    user: User = Depends(validate_auth_user),
+    user: UserSchemaForAuth = Depends(validate_auth_user),
 ):
     jwt_payload = {
-        "sub": user.id,
+        # "sub": user.id,
+        "sub": user.username,
         "username": user.username,
         "email": user.email,
     }
@@ -54,3 +25,13 @@ def auth_user_issue_jwt(
         access_token=token,
         token_type="Bearer",
     )
+
+
+@auth_router.post("/users/me")
+def auth_user_check_self_info(
+    user: UserSchemaForAuth = Depends(get_current_active_user),
+):
+    return {
+        "username": user.username,
+        "email": user.email,
+    }

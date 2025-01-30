@@ -4,8 +4,9 @@ import uvicorn
 from fastapi import FastAPI
 from starlette.responses import RedirectResponse
 
-from api import router as api_router
-from core.config import settings
+from src.api import router as api_router
+from src.auth.views import auth_router
+from src.core.config import settings
 
 
 @asynccontextmanager
@@ -15,6 +16,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 app.include_router(router=api_router, prefix=settings.api_v1_prefix)
+app.include_router(router=auth_router)
 
 
 @app.get("/")
