@@ -1,12 +1,17 @@
 from datetime import timedelta, datetime, timezone
-
+from jwt.exceptions import InvalidTokenError
 import bcrypt
 import jwt
 from fastapi import HTTPException, Depends, Form
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials, OAuth2PasswordBearer
 from starlette import status
 
 from src.core import config
 from users.schemas import UserSchemaForAuth
+
+oauth2_scheme = OAuth2PasswordBearer(
+    tokenUrl="/jwt/login",
+)
 
 
 def encode_jwt(
@@ -72,12 +77,36 @@ users_db: dict[str, UserSchemaForAuth] = {
 }
 
 
-def get_current_auth_user():
-    pass
+def get_token_payload(
+    token: str = Depends(oauth2_scheme),
+):
+    try:
+        payload = decode_jwt(token=token)
+    except InvalidTokenError:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid token.",
+        )
+    return payload
+
+
+def get_current_user(
+    payload: dict = Depends(get_token_payload),
+) -> UserSchemaForAuth:
+    username: str | None = payload.get("username")
+
+    if user := users_db.get(username):
+        return user
+
+    raise HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        # actually 404 not found but user doesn't need to know this imho.
+        detail="Invalid token.",
+    )
 
 
 def get_current_active_user(
-    user: UserSchemaForAuth = Depends(get_current_auth_user),
+    user: UserSchemaForAuth = Depends(get_current_user),
 ):
     if not user.is_active:
         raise HTTPException(
