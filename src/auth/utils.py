@@ -1,9 +1,11 @@
+import uuid
 from datetime import timedelta, datetime, timezone
-from jwt.exceptions import InvalidTokenError
+
 import bcrypt
 import jwt
 from fastapi import HTTPException, Depends, Form
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials, OAuth2PasswordBearer
+from fastapi.security import OAuth2PasswordBearer
+from jwt.exceptions import InvalidTokenError
 from starlette import status
 
 from src.core import config
@@ -32,6 +34,7 @@ def encode_jwt(
     to_encode.update(
         exp=expire_time,
         iat=now,
+        jti=str(uuid.uuid4()),
     )
 
     encoded = jwt.encode(
@@ -90,23 +93,37 @@ def get_token_payload(
     return payload
 
 
-def get_current_user(
-    payload: dict = Depends(get_token_payload),
-) -> UserSchemaForAuth:
-    username: str | None = payload.get("username")
+def validate_token_type(payload: dict, token_type: str) -> bool:
+    current_token_type = payload.get("type")
+    if token_type != current_token_type:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid token type.",
+        )
+    return True
 
+
+def get_user_by_token_sub(payload: dict) -> UserSchemaForAuth:
+    username = payload.get("sub")
     if user := users_db.get(username):
         return user
-
     raise HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
-        # actually 404 not found but user doesn't need to know this imho.
         detail="Invalid token.",
     )
 
 
+class UserGetterFromToken:
+    def __init__(self, token_type: str):
+        self.token_type = token_type
+
+    def __call__(self, payload: dict = Depends(get_token_payload)):
+        validate_token_type(payload=payload, token_type=self.token_type)
+        return get_user_by_token_sub(payload)
+
+
 def get_current_active_user(
-    user: UserSchemaForAuth = Depends(get_current_user),
+    user: UserSchemaForAuth = Depends(UserGetterFromToken("access")),
 ):
     if not user.is_active:
         raise HTTPException(
