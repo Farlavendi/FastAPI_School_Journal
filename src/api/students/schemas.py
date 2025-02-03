@@ -5,7 +5,8 @@ from src.users.schemas import BaseUser
 
 
 class BaseStudent(BaseUser):
-    id: int
+    model_config = ConfigDict(from_attributes=True)
+
     class_num: int = Field(..., ge=1)
 
 
@@ -28,4 +29,4 @@ class StudentPartialUpdate(StudentCreate):
 
 
 class Student(BaseStudent):
-    model_config = ConfigDict(from_attributes=True)
+    pass

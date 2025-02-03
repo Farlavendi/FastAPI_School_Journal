@@ -4,6 +4,7 @@ from pydantic import BaseModel, EmailStr, ConfigDict, Field
 class BaseUser(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
+    id: int = Field(ge=1)
     email: EmailStr = Field(...)
     username: str = Field(..., min_length=3, max_length=50)
     hashed_password: bytes = Field(...)
@@ -15,6 +16,7 @@ class BaseUser(BaseModel):
 class UserSchemaForAuth(BaseModel):
     model_config = ConfigDict(from_attributes=True, strict=True)
 
+    # id: int = Field(ge=1)
     email: EmailStr = Field(...)
     username: str = Field(..., min_length=3, max_length=50)
     hashed_password: bytes = Field(...)
@@ -29,4 +31,4 @@ class UserCreate(BaseUser):
 
 
 class User(BaseUser):
-    id: int = Field(ge=1)
+    pass

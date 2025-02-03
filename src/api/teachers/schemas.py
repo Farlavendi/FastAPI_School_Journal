@@ -5,7 +5,8 @@ from src.users.schemas import BaseUser
 
 
 class BaseTeacher(BaseUser):
-    id: int
+    model_config = ConfigDict(from_attributes=True)
+
     class_id: int = Field(..., ge=1)
 
 
@@ -28,4 +29,4 @@ class TeacherPartialUpdate(BaseTeacher):
 
 
 class Teacher(BaseTeacher):
-    model_config = ConfigDict(from_attributes=True)
+    pass

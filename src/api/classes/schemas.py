@@ -3,7 +3,9 @@ from pydantic.json_schema import SkipJsonSchema
 
 
 class BaseClass(BaseModel):
-    id: int
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int = Field(ge=1)
     class_num: int = Field(..., ge=1)
 
 
@@ -16,4 +18,4 @@ class ClassUpdate(ClassCreate):
 
 
 class Class(BaseClass):
-    model_config = ConfigDict(from_attributes=True)
+    pass
