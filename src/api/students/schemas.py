@@ -1,14 +1,16 @@
 from pydantic import ConfigDict, Field
+from pydantic.json_schema import SkipJsonSchema
 
 from src.users.schemas import BaseUser
 
 
 class BaseStudent(BaseUser):
+    id: int
     class_num: int = Field(..., ge=1)
 
 
 class StudentCreate(BaseStudent):
-    pass
+    id: SkipJsonSchema[int]
 
 
 class StudentUpdate(StudentCreate):
@@ -27,5 +29,3 @@ class StudentPartialUpdate(StudentCreate):
 
 class Student(BaseStudent):
     model_config = ConfigDict(from_attributes=True)
-
-    id: int
