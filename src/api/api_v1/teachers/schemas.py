@@ -14,11 +14,11 @@ class TeacherCreate(BaseTeacher):
     id: SkipJsonSchema[int]
 
 
-class TeacherUpdate(BaseTeacher):
+class TeacherUpdate(TeacherCreate):
     pass
 
 
-class TeacherPartialUpdate(BaseTeacher):
+class TeacherPartialUpdate(TeacherCreate):
     class_id: int | None = None
     username: str | None = None
     email: str | None = None
