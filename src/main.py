@@ -4,7 +4,7 @@ import uvicorn
 from fastapi import FastAPI
 from starlette.responses import RedirectResponse
 
-from src.api import router as api_router
+from src.api.api_v1 import router as api_router
 from src.auth.views import auth_router
 from src.core.config import settings
 from src.core.db_utils import db_helper

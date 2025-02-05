@@ -1,7 +1,7 @@
 from typing import List
 
 from sqlalchemy import select
-from src.api.models import Teacher
+from src.api.api_v1.models import Teacher
 from .schemas import TeacherCreate, TeacherUpdate, TeacherPartialUpdate
 from sqlalchemy.ext.asyncio import AsyncSession
 

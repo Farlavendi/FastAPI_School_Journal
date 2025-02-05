@@ -1,7 +1,7 @@
 from typing import List
 
 from sqlalchemy import select
-from src.api.models import Student
+from src.api.api_v1.models import Student
 from .schemas import StudentCreate, StudentUpdate, StudentPartialUpdate
 from sqlalchemy.ext.asyncio import AsyncSession
 
