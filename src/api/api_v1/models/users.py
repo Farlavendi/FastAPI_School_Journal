@@ -2,9 +2,10 @@ from sqlalchemy import String
 from sqlalchemy.orm import Mapped, mapped_column
 
 from . import Base
+from src.api.api_v1.models.mixins.int_id_pk import IntIdPkMixin
 
 
-class User(Base):
+class User(IntIdPkMixin, Base):
     __abstract__ = True
 
     email: Mapped[str] = mapped_column(

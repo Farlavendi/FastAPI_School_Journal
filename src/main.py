@@ -2,7 +2,7 @@ from contextlib import asynccontextmanager
 
 import uvicorn
 from fastapi import FastAPI
-from starlette.responses import RedirectResponse
+from fastapi.responses import RedirectResponse, ORJSONResponse
 
 from src.api.api_v1 import router as api_router
 from src.auth.views import auth_router
@@ -16,7 +16,10 @@ async def lifespan(app: FastAPI):
     await db_helper.dispose()
 
 
-app = FastAPI(lifespan=lifespan)
+app = FastAPI(
+    default_response_class=ORJSONResponse,
+    lifespan=lifespan,
+)
 app.include_router(router=api_router, prefix=settings.api_v1_prefix)
 app.include_router(router=auth_router)
 

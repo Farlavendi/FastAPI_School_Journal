@@ -1,12 +1,10 @@
-from pydantic import ConfigDict, Field
+from pydantic import Field
 from pydantic.json_schema import SkipJsonSchema
 
 from src.users.schemas import BaseUser
 
 
 class BaseStudent(BaseUser):
-    model_config = ConfigDict(from_attributes=True)
-
     class_num: int = Field(..., ge=1)
 
 

@@ -1,9 +1,10 @@
-from typing import List
+from typing import Sequence
 
 from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from src.api.api_v1.models import Student
 from .schemas import StudentCreate, StudentUpdate, StudentPartialUpdate
-from sqlalchemy.ext.asyncio import AsyncSession
 
 
 async def create_student(session: AsyncSession, student_in: StudentCreate) -> Student:
@@ -13,7 +14,7 @@ async def create_student(session: AsyncSession, student_in: StudentCreate) -> St
     return student
 
 
-async def get_students(session: AsyncSession) -> List[Student]:
+async def get_students(session: AsyncSession) -> Sequence[Student]:
     stmt = select(Student).order_by(Student.id)
     students = await session.scalars(stmt)
     return list(students)

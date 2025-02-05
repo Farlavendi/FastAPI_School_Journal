@@ -1,3 +1,5 @@
+from typing import Sequence
+
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload
@@ -13,7 +15,7 @@ async def create_class(session: AsyncSession, class_in: ClassCreate) -> Class:
     return class_
 
 
-async def get_classes(session: AsyncSession) -> list[Class]:
+async def get_classes(session: AsyncSession) -> Sequence[Class]:
     stmt = select(Class).order_by(Class.id)
     classes = await session.scalars(stmt)
     return list(classes)
