@@ -1,20 +1,29 @@
-from os import getenv
 from pathlib import Path
-from dotenv import load_dotenv
-from pydantic import BaseModel
-from pydantic_settings import BaseSettings
 
-from src import certs
+from pydantic import BaseModel, PostgresDsn
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
-load_dotenv(str(BASE_DIR / ".env"))
+
+
+class DatabaseConfig(BaseModel):
+    url: PostgresDsn
+    echo: bool = False
+    echo_pool: bool = False
+    pool_size: int = 50
+    max_overflow: int = 10
 
 
 class Settings(BaseSettings):
+    model_config = SettingsConfigDict(
+        env_file=str(BASE_DIR / ".env"),
+        case_sensitive=False,
+        env_nested_delimiter="__",
+        env_prefix="APP_CONFIG__",
+    )
     api_v1_prefix: str = "/api/v1"
 
-    db_url: str = getenv("DB_URL")
-    db_echo: bool = False
+    db: DatabaseConfig
 
 
 class AuthJWT(BaseModel):

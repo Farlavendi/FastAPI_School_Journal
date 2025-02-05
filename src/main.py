@@ -7,11 +7,13 @@ from starlette.responses import RedirectResponse
 from src.api import router as api_router
 from src.auth.views import auth_router
 from src.core.config import settings
+from src.core.db_utils import db_helper
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     yield
+    await db_helper.dispose()
 
 
 app = FastAPI(lifespan=lifespan)
