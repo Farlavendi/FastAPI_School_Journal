@@ -8,7 +8,7 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.13"
-fastapi = "^0.115.6"
+fastapi = {extras = ["standart"], version = "^0.115.8"}
 uvicorn = "^0.34.0"
 pydantic = {extras = ["email"], version = "^2.10.4"}
 sqlalchemy = "^2.0.36"
@@ -21,6 +21,7 @@ bcrypt = "^4.2.1"
 pyjwt = {extras = ["crypto"], version = "^2.10.1"}
 python-multipart = "^0.0.20"
 orjson = "^3.10.15"
+poetry-plugin-export = "^1.9.0"
 
 
 [tool.poetry.group.dev.dependencies]
