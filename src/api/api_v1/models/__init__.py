@@ -3,7 +3,9 @@ __all__ = (
     "User",
     "Student",
     "Class",
-    "Teacher"
+    "Teacher",
+    "Marks",
+    "Profile"
 )
 
 from .base import Base
@@ -11,3 +13,5 @@ from .users import User
 from .teachers import Teacher
 from .students import Student
 from .classes import Class
+from .marks import Marks
+from .profile import Profile

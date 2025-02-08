@@ -7,6 +7,7 @@ from . import User
 
 if TYPE_CHECKING:
     from . import Class
+    from . import Profile
 
 
 class Teacher(User):
@@ -18,8 +19,10 @@ class Teacher(User):
             ondelete="CASCADE",
             name="fk_teacher_class_id",
         ),
+        nullable=False,
     )
 
     class_: Mapped["Class"] = relationship(back_populates="teacher", single_parent=True)
+    profile: Mapped["Profile"] = relationship(back_populates="user")
 
     __table_args__ = (UniqueConstraint("class_id"),)

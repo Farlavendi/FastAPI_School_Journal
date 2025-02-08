@@ -7,6 +7,8 @@ from . import User
 
 if TYPE_CHECKING:
     from . import Class
+    from . import Marks
+    from . import Profile
 
 
 class Student(User):
@@ -18,6 +20,8 @@ class Student(User):
             ondelete="CASCADE",
             name="fk_student_class_num",
         ),
+        nullable=False,
     )
-
     class_: Mapped["Class"] = relationship(back_populates="students")
+    profile: Mapped["Profile"] = relationship(back_populates="user")
+    marks: Mapped["Marks"] = relationship(back_populates="student")
