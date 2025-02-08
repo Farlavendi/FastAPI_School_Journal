@@ -1,5 +1,5 @@
 # This is my pet project, a prototype of school journal app.
-# This is its FastAPI based version, you can find Django based one in my repos as well.
+## This is its FastAPI based version, you can find Django based one in my repos as well.
 
 ---
 # Installation and local deploy
