@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, HTTPException, Path
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette import status
 
-from src.core import db_helper
+from core import db_helper
 from . import crud
 from .dependencies import class_by_id
 from .schemas import (

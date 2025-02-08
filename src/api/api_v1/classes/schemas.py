@@ -1,5 +1,4 @@
-from pydantic import BaseModel, ConfigDict, Field
-from pydantic.json_schema import SkipJsonSchema
+from pydantic import BaseModel, Field
 
 
 class BaseClass(BaseModel):
@@ -15,5 +14,4 @@ class ClassUpdate(ClassCreate):
 
 
 class Class(BaseClass):
-
     id: int = Field(ge=1)

@@ -1,14 +1,16 @@
 FROM python:3.13-slim
 
+ENV PYTHONUNBUFFERED=1
+ENV PYTHONDONTWRITEBYTECODE=1
 WORKDIR /src
 
-RUN apt update;
+RUN pip install --upgrade pip
+COPY requirements.txt .
+RUN pip install -r requirements.txt --no-cache-dir && pip install "fastapi[standard]"
 
-COPY ./src /code/src
+COPY . .
 
-RUN python3 -m pip install --upgrade pip
+EXPOSE 8000
 
-RUN pip3 install -r requirements.txt --no-cache-dir
-# RUN poetry install
-
-CMD ["fastapi", "run", "src/main.py", "--port", "80"]
+CMD ["uvicorn", "./main:app", "--host", "0.0.0.0", "--port", "8000"]
+#CMD ["fastapi", "run", "src/main.py", "--port", "80"]

@@ -8,7 +8,7 @@ from fastapi.security import OAuth2PasswordBearer
 from jwt.exceptions import InvalidTokenError
 from starlette import status
 
-from src.core import config
+from core import config
 from users.schemas import UserSchemaForAuth
 
 oauth2_scheme = OAuth2PasswordBearer(

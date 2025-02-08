@@ -4,8 +4,8 @@ from fastapi import Path, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette import status
 
-from src.api.api_v1.classes.schemas import Class
-from src.core import db_helper
+from .schemas import Class
+from core import db_helper
 from .crud import get_class_by_id
 
 

@@ -1,7 +1,7 @@
 from pydantic import Field
 from pydantic.json_schema import SkipJsonSchema
 
-from src.users.schemas import BaseUser
+from users.schemas import BaseUser
 
 
 class BaseStudent(BaseUser):

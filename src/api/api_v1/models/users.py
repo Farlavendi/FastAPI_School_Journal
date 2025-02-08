@@ -2,7 +2,7 @@ from sqlalchemy import String
 from sqlalchemy.orm import Mapped, mapped_column
 
 from . import Base
-from src.api.api_v1.models.mixins.int_id_pk import IntIdPkMixin
+from .mixins.int_id_pk import IntIdPkMixin
 
 
 class User(IntIdPkMixin, Base):

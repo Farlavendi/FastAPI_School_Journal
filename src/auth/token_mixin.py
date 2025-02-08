@@ -2,7 +2,7 @@ from datetime import timedelta
 
 from auth.utils import encode_jwt
 from users.schemas import UserSchemaForAuth
-from src.core.config import AuthJWT
+from core.config import AuthJWT
 
 
 def create_jwt(

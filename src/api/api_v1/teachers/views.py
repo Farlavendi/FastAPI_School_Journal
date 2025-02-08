@@ -2,7 +2,7 @@ import sqlalchemy
 from fastapi import APIRouter, status, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.core import db_helper
+from core import db_helper
 from . import crud
 from .schemas import (
     Teacher,
