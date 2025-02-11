@@ -14,4 +14,4 @@ from .teachers import Teacher
 from .students import Student
 from .classes import Class
 from .marks import Marks
-from .profile import Profile
+from .profiles import Profile

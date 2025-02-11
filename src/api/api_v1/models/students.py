@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -23,5 +23,5 @@ class Student(User):
         nullable=False,
     )
     class_: Mapped["Class"] = relationship(back_populates="students")
-    profile: Mapped["Profile"] = relationship(back_populates="user")
+    profile: Mapped[Optional["Profile"]] = relationship(back_populates="student")
     marks: Mapped["Marks"] = relationship(back_populates="student")

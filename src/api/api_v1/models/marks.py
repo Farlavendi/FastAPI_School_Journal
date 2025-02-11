@@ -1,5 +1,6 @@
 from typing import TYPE_CHECKING
 
+from sqlalchemy import ForeignKey, UniqueConstraint
 from sqlalchemy.orm import Mapped, relationship, mapped_column
 
 from . import Base
@@ -18,4 +19,10 @@ class Marks(Base):
     geography: Mapped[int] = mapped_column()
     literature: Mapped[int] = mapped_column()
 
+    student_id: Mapped[int] = mapped_column(
+        ForeignKey("students.id", ondelete="CASCADE"), nullable=True
+    )
+
     student: Mapped["Student"] = relationship(back_populates="marks")
+
+    __table_args__ = (UniqueConstraint("student_id"),)
