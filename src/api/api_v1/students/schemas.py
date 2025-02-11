@@ -1,5 +1,4 @@
 from pydantic import Field
-from pydantic.json_schema import SkipJsonSchema
 
 from users.schemas import BaseUser
 
@@ -9,11 +8,11 @@ class BaseStudent(BaseUser):
 
 
 class StudentCreate(BaseStudent):
-    id: SkipJsonSchema[int]
+    pass
 
 
 class StudentUpdate(StudentCreate):
-    pass
+    id: int
 
 
 class StudentPartialUpdate(StudentCreate):
@@ -27,4 +26,4 @@ class StudentPartialUpdate(StudentCreate):
 
 
 class Student(BaseStudent):
-    pass
+    id: int

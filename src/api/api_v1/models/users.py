@@ -13,7 +13,7 @@ class User(Base):
     username: Mapped[str] = mapped_column(
         unique=True,
     )
-    hashed_password: Mapped[str] = mapped_column(
+    password: Mapped[str] = mapped_column(
         unique=True,
     )
     first_name: Mapped[str] = mapped_column(String(50))

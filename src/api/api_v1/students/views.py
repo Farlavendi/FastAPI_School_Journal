@@ -29,6 +29,14 @@ async def get_student_by_id(
     return student
 
 
+@students_router.get("/{student_id}/marks", response_model=Student)
+async def get_marks(
+    student_id: int,
+    session: AsyncSession = Depends(db_helper.scoped_session_dependency),
+):
+    return await crud.get_marks(student_id=student_id, session=session)
+
+
 @students_router.post(
     "/create/",
     response_model=Student,

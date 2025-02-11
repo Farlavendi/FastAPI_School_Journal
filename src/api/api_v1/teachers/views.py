@@ -19,7 +19,7 @@ teachers_router = APIRouter(tags=["Teachers"])
 async def get_teachers(
     session: AsyncSession = Depends(db_helper.scoped_session_dependency),
 ):
-    return crud.get_teachers(session)
+    return await crud.get_teachers(session)
 
 
 @teachers_router.get("/{teacher_id}/", response_model=Teacher)
