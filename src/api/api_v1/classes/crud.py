@@ -4,7 +4,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload
 
-from .schemas import ClassCreate, ClassUpdate
+from .schemas import ClassCreate
 from api.api_v1.models import Class
 
 
@@ -36,17 +36,6 @@ async def get_class_by_num(
     )
 
     class_: Class | None = await session.scalar(stmt)
-    return class_
-
-
-async def update_class(
-    session: AsyncSession,
-    class_: Class,
-    class_update: ClassUpdate,
-) -> Class:
-    for class_num, value in class_update.model_dump().items():
-        setattr(class_, class_num, value)
-    await session.commit()
     return class_
 
 

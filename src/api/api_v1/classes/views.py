@@ -11,7 +11,6 @@ from .dependencies import class_by_id
 from .schemas import (
     Class,
     ClassCreate,
-    ClassUpdate,
 )
 
 classes_router = APIRouter(tags=["Classes"])
@@ -68,17 +67,17 @@ async def create_class(
         )
 
 
-@classes_router.put("/update/{class_id}/")
-async def update_class(
-    class_update: ClassUpdate,
-    class_: Class = Depends(class_by_id),
-    session: AsyncSession = Depends(db_helper.scoped_session_dependency),
-):
-    return await crud.update_class(
-        session=session,
-        class_=class_,
-        class_update=class_update,
-    )
+# @classes_router.put("/update/{class_id}/")
+# async def update_class(
+#     class_update: ClassUpdate,
+#     class_: Class = Depends(class_by_id),
+#     session: AsyncSession = Depends(db_helper.scoped_session_dependency),
+# ):
+#     return await crud.update_class(
+#         session=session,
+#         class_=class_,
+#         class_update=class_update,
+#     )
 
 
 @classes_router.delete("/delete/{class_id}/", status_code=status.HTTP_204_NO_CONTENT)
