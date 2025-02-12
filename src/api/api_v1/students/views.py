@@ -55,7 +55,6 @@ async def create_student(
         )
 
 
-
 @students_router.put("/update/{student_id}/")
 async def update_student(
     student_update: StudentUpdate,
