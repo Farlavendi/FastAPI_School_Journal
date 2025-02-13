@@ -2,9 +2,8 @@ from typing import Sequence
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import joinedload
 
-from api.api_v1.models import Student
+from api.api_v1.models import Student, Marks
 from .schemas import StudentCreate, StudentUpdate, StudentPartialUpdate
 
 
@@ -27,8 +26,8 @@ async def get_student_by_id(session: AsyncSession, student_id: int) -> Student |
 
 async def get_marks(session: AsyncSession, student_id: int):
     stmt = (
-        select(Student)
-        .options(joinedload(Student.marks))
+        select(Marks)
+        .join(Student, Student.id == Marks.student_id)
         .where(Student.id == student_id)
     )
     return await session.scalar(stmt)

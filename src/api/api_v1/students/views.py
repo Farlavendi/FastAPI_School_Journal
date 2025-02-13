@@ -11,6 +11,7 @@ from .schemas import (
     StudentPartialUpdate,
 )
 from .dependencies import student_by_id
+from .marks.schemas import Mark
 
 students_router = APIRouter(tags=["Students"])
 
@@ -29,7 +30,7 @@ async def get_student_by_id(
     return student
 
 
-@students_router.get("/{student_id}/marks", response_model=Student)
+@students_router.get("/{student_id}/marks", response_model=Mark)
 async def get_marks(
     student_id: int,
     session: AsyncSession = Depends(db_helper.scoped_session_dependency),
