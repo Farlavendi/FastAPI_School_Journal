@@ -23,6 +23,8 @@ class Teacher(User):
     )
 
     class_: Mapped["Class"] = relationship(back_populates="teacher", single_parent=True)
-    profile: Mapped[Optional["Profile"]] = relationship(back_populates="teacher", uselist=False)
+    profile: Mapped[Optional["Profile"]] = relationship(
+        back_populates="teacher", uselist=False
+    )
 
     __table_args__ = (UniqueConstraint("class_id"),)

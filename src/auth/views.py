@@ -30,9 +30,7 @@ def auth_user_issue_jwt(
 @auth_router.post(
     "/refresh/", response_model=TokenInfo, response_model_exclude_none=True
 )
-def refresh_jwt(
-    user: UserSchemaForAuth = Depends(UserGetterFromToken("refresh"))
-):
+def refresh_jwt(user: UserSchemaForAuth = Depends(UserGetterFromToken("refresh"))):
     access_token = create_access_token(user)
 
     return TokenInfo(

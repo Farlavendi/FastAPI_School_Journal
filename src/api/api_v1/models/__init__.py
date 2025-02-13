@@ -1,12 +1,4 @@
-__all__ = (
-    "Base",
-    "User",
-    "Student",
-    "Class",
-    "Teacher",
-    "Marks",
-    "Profile"
-)
+__all__ = ("Base", "User", "Student", "Class", "Teacher", "Marks", "Profile")
 
 from .base import Base
 from .users import User
