@@ -1,14 +1,16 @@
 from pydantic import Field
+from pydantic.json_schema import SkipJsonSchema
 
+from api.api_v1.models.users import RoleEnum
 from users.schemas import BaseUser
 
 
 class BaseTeacher(BaseUser):
-    class_id: int = Field(..., ge=1)
+    class_id: int = Field(..., ge=0)
 
 
 class TeacherCreate(BaseTeacher):
-    pass
+    role: SkipJsonSchema[RoleEnum] = 'teacher'
 
 
 class TeacherUpdate(TeacherCreate):
@@ -27,3 +29,4 @@ class TeacherPartialUpdate(TeacherCreate):
 
 class Teacher(BaseTeacher):
     id: int
+    role: SkipJsonSchema[RoleEnum] = RoleEnum.TEACHER
