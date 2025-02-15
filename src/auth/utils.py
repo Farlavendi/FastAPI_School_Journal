@@ -73,6 +73,7 @@ sam = UserSchemaForAuth(
     first_name="sam",
     second_name="",
     last_name="johnson",
+    role="student",
 )
 
 users_db: dict[str, UserSchemaForAuth] = {

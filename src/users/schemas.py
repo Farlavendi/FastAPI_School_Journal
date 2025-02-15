@@ -1,4 +1,5 @@
 from pydantic import BaseModel, EmailStr, ConfigDict, Field
+from pydantic.json_schema import SkipJsonSchema
 
 
 class BaseUser(BaseModel):
@@ -17,11 +18,12 @@ class UserSchemaForAuth(BaseModel):
     # id: int = Field(ge=1)
     email: EmailStr = Field(...)
     username: str = Field(..., min_length=3, max_length=50)
-    hashed_password: bytes = Field(...)
+    hashed_password: SkipJsonSchema[bytes] = Field(...)
     first_name: str | None = Field(..., min_length=1, max_length=100)
     second_name: str | None = Field(max_length=100)
     last_name: str | None = Field(..., min_length=1, max_length=100)
-    is_active: bool = True
+    is_active: SkipJsonSchema[bool] = True
+    role: str = Field(...)
 
 
 class UserCreate(BaseUser):

@@ -45,4 +45,12 @@ def auth_user_check_self_info(
     return {
         "username": user.username,
         "email": user.email,
+        "role": user.role
     }
+
+
+@auth_router.post("/check_role", response_model=UserSchemaForAuth)
+def check_role(
+    user: UserSchemaForAuth = Depends(get_current_active_user),
+):
+    return user.role
