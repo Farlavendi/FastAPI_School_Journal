@@ -7,10 +7,11 @@ from users.schemas import BaseUser
 
 class BaseTeacher(BaseUser):
     class_id: int = Field(..., ge=0)
+    role: SkipJsonSchema[RoleEnum] = 'teacher'
 
 
 class TeacherCreate(BaseTeacher):
-    role: SkipJsonSchema[RoleEnum] = 'teacher'
+    pass
 
 
 class TeacherUpdate(TeacherCreate):
@@ -29,4 +30,3 @@ class TeacherPartialUpdate(TeacherCreate):
 
 class Teacher(BaseTeacher):
     id: int
-    role: SkipJsonSchema[RoleEnum] = RoleEnum.TEACHER

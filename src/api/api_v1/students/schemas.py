@@ -7,11 +7,11 @@ from users.schemas import BaseUser
 
 class BaseStudent(BaseUser):
     class_num: int = Field(..., ge=1)
-
+    role: SkipJsonSchema[RoleEnum] = 'student'
 
 
 class StudentCreate(BaseStudent):
-    role: SkipJsonSchema[RoleEnum] = 'student'
+    pass
 
 
 class StudentUpdate(StudentCreate):
@@ -30,4 +30,3 @@ class StudentPartialUpdate(StudentCreate):
 
 class Student(BaseStudent):
     id: int
-    role: SkipJsonSchema[RoleEnum] = RoleEnum.STUDENT
