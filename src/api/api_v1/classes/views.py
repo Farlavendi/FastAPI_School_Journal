@@ -18,11 +18,7 @@ classes_router = APIRouter(tags=["Classes"])
 
 @classes_router.get("/", response_model=list[Class])
 async def get_classes(
-    # session: AsyncSession = Depends(db_helper.scoped_session_dependency),
-    session: Annotated[
-        AsyncSession,
-        Depends(db_helper.scoped_session_dependency),
-    ]
+    session: AsyncSession = Depends(db_helper.scoped_session_dependency),
 ):
     return await crud.get_classes(session=session)
 

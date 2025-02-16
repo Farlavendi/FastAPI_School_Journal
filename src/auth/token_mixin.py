@@ -23,7 +23,6 @@ def create_access_token(
     user: UserSchemaForAuth,
 ) -> str:
     jwt_payload = {
-        # "sub": user.id,
         "sub": user.username,
         "username": user.username,
         "email": user.email,

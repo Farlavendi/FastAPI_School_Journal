@@ -1,9 +1,14 @@
 from enum import Enum
+from typing import TYPE_CHECKING
+
 import sqlalchemy as sa
 from sqlalchemy import String
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from . import Base
+
+if TYPE_CHECKING:
+    from . import Profile
 
 
 class RoleEnum(Enum):
@@ -13,7 +18,9 @@ class RoleEnum(Enum):
 
 
 class User(Base):
-    __abstract__ = True
+    __tablename__ = "users"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
 
     email: Mapped[str] = mapped_column(
         unique=True,
@@ -29,6 +36,8 @@ class User(Base):
         String(50), default="", server_default=""
     )
     last_name: Mapped[str] = mapped_column(String(50))
+
+    # profile: Mapped["Profile"] = relationship(back_populates="user")
 
     role: Mapped[RoleEnum] = mapped_column(sa.Enum(RoleEnum), default=RoleEnum.STUDENT, nullable=False)
 

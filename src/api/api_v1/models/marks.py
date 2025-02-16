@@ -12,6 +12,8 @@ if TYPE_CHECKING:
 class Marks(Base):
     __tablename__ = "marks"
 
+    id: Mapped[int] = mapped_column(primary_key=True)
+
     maths: Mapped[int] = mapped_column()
     english: Mapped[int] = mapped_column()
     history: Mapped[int] = mapped_column()

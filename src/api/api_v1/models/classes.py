@@ -13,6 +13,8 @@ if TYPE_CHECKING:
 class Class(Base):
     __tablename__ = "classes"
 
+    id: Mapped[int] = mapped_column(primary_key=True)
+
     class_num: Mapped[int] = mapped_column(unique=True)
 
     students: Mapped[list["Student"]] = relationship(back_populates="class_")

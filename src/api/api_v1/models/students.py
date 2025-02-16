@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING, Optional
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from . import User
+from . import User, Base
 from .users import RoleEnum
 
 if TYPE_CHECKING:
@@ -14,18 +14,27 @@ if TYPE_CHECKING:
 import sqlalchemy as sa
 
 
-class Student(User):
+class Student(Base):
     __tablename__ = "students"
 
-    class_num: Mapped[int] = mapped_column(
-        ForeignKey(
-            "classes.class_num",
-            ondelete="CASCADE",
-            name="fk_student_class_num",
-        ),
-        nullable=False,
-    )
-    role: Mapped[RoleEnum] = mapped_column(sa.Enum(RoleEnum), default=RoleEnum.STUDENT, nullable=False)
-    class_: Mapped["Class"] = relationship(back_populates="students")
-    profile: Mapped[Optional["Profile"]] = relationship(back_populates="student")
+    id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), primary_key=True)
+    class_id: Mapped[int] = mapped_column(ForeignKey("classes.id", ondelete="CASCADE"))
+
+    user: Mapped["User"] = relationship(back_populates="student")
     marks: Mapped["Marks"] = relationship(back_populates="student")
+    class_: Mapped["Class"] = relationship(back_populates="students")
+
+
+
+    # class_num: Mapped[int] = mapped_column(
+    #     ForeignKey(
+    #         "classes.class_num",
+    #         ondelete="CASCADE",
+    #         name="fk_student_class_num",
+    #     ),
+    #     nullable=False,
+    # )
+    # role: Mapped[RoleEnum] = mapped_column(sa.Enum(RoleEnum), default=RoleEnum.STUDENT, nullable=False)
+    # class_: Mapped["Class"] = relationship(back_populates="students")
+    # profile: Mapped[Optional["Profile"]] = relationship(back_populates="student")
+    # marks: Mapped["Marks"] = relationship(back_populates="student")
