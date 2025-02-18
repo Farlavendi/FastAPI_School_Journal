@@ -18,6 +18,7 @@ class Marks(Base):
     physics: Mapped[int] = mapped_column()
     geography: Mapped[int] = mapped_column()
     literature: Mapped[int] = mapped_column()
+    science: Mapped[int] = mapped_column()
 
     student_id: Mapped[int] = mapped_column(
         ForeignKey("students.id", ondelete="CASCADE"), nullable=True
