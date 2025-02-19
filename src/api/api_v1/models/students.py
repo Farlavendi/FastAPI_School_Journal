@@ -16,14 +16,14 @@ import sqlalchemy as sa
 class Student(Base):
     __tablename__ = "students"
 
-    # user_id: Mapped[int] = mapped_column(
-    #     ForeignKey(
-    #         column="users.id",
-    #         ondelete="CASCADE",
-    #         name="fk_student_user_id",
-    #     ),
-    #     nullable=False,
-    # )
+    user_id: Mapped[int] = mapped_column(
+        ForeignKey(
+            column="users.id",
+            ondelete="CASCADE",
+            name="fk_student_user_id",
+        ),
+        nullable=False,
+    )
 
     class_num: Mapped[int] = mapped_column(
         ForeignKey(
@@ -34,9 +34,9 @@ class Student(Base):
         nullable=False,
     )
 
-    # user: Mapped["User"] = relationship(back_populates="student")
-    role: Mapped[RoleEnum] = mapped_column(
-        sa.Enum(RoleEnum), default=RoleEnum.STUDENT, nullable=False
-    )
+    user: Mapped["User"] = relationship(back_populates="student")
+    # role: Mapped[RoleEnum] = mapped_column(
+    #     sa.Enum(RoleEnum), default=RoleEnum.STUDENT, nullable=False
+    # )
     class_: Mapped["Class"] = relationship(back_populates="students")
     marks: Mapped["Marks"] = relationship(back_populates="student")
