@@ -25,11 +25,11 @@ class Student(Base):
         nullable=False,
     )
 
-    class_num: Mapped[int] = mapped_column(
+    class_id: Mapped[int] = mapped_column(
         ForeignKey(
-            "classes.class_num",
+            column="classes.id",
             ondelete="CASCADE",
-            name="fk_student_class_num",
+            name="fk_student_class_id",
         ),
         nullable=False,
     )

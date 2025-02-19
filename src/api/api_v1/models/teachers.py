@@ -27,7 +27,7 @@ class Teacher(Base):
 
     class_id: Mapped[int] = mapped_column(
         ForeignKey(
-            "classes.id",
+            column="classes.id",
             ondelete="CASCADE",
             name="fk_teacher_class_id",
         ),
