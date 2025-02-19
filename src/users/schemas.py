@@ -6,10 +6,11 @@ class BaseUser(BaseModel):
     email: EmailStr = Field(...)
     username: str = Field(..., min_length=3, max_length=50)
     password: str = Field(...)
-    first_name: str | None = Field(..., min_length=1, max_length=100)
+    first_name: str = Field(..., min_length=1, max_length=100)
     second_name: str | None = Field(max_length=100)
-    last_name: str | None = Field(..., min_length=1, max_length=100)
+    last_name: str = Field(..., min_length=1, max_length=100)
     role: str = Field(...)
+    class_num: int | None = Field()
 
 
 class UserSchemaForAuth(BaseModel):
