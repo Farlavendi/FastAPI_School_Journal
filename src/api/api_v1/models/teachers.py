@@ -34,7 +34,7 @@ class Teacher(Base):
         nullable=False,
     )
 
-    user: Mapped["User"] = relationship(back_populates="student")
+    user: Mapped["User"] = relationship(back_populates="teacher")
 
     # role: Mapped[RoleEnum] = mapped_column(sa.Enum(RoleEnum), default=RoleEnum.TEACHER, nullable=False)
 
