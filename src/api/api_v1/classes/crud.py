@@ -1,18 +1,12 @@
 from typing import Sequence
 
+from fastapi import HTTPException, status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload
 
-from .schemas import ClassCreate
 from api.api_v1.models import Class
-
-
-async def create_class(session: AsyncSession, class_in: ClassCreate) -> Class:
-    class_ = Class(**class_in.model_dump())
-    session.add(class_)
-    await session.commit()
-    return class_
+from .schemas import ClassCreate
 
 
 async def get_classes(session: AsyncSession) -> Sequence[Class]:
@@ -28,7 +22,7 @@ async def get_class_by_id(session: AsyncSession, class_id: int) -> Class | None:
 async def get_class_by_num(
     session: AsyncSession,
     class_num: int,
-) -> Class | None:
+) -> Class:
     stmt = (
         select(Class)
         .options(joinedload(Class.teacher))
@@ -36,6 +30,20 @@ async def get_class_by_num(
     )
 
     class_: Class | None = await session.scalar(stmt)
+
+    if class_ is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Class with number {class_num} not found",
+        )
+
+    return class_
+
+
+async def create_class(session: AsyncSession, class_in: ClassCreate) -> Class:
+    class_ = Class(**class_in.model_dump())
+    session.add(class_)
+    await session.commit()
     return class_
 
 

@@ -10,7 +10,6 @@ class BaseUser(BaseModel):
     second_name: str | None = Field(max_length=100)
     last_name: str = Field(..., min_length=1, max_length=100)
     role: str = Field(...)
-    class_num: int | None = Field()
 
 
 class UserSchemaForAuth(BaseModel):

@@ -7,7 +7,7 @@ from users.schemas import BaseUser
 
 class BaseTeacher(BaseUser):
     class_id: int = Field(..., ge=0)
-    role: SkipJsonSchema[RoleEnum] = 'teacher'
+    role: SkipJsonSchema[RoleEnum] = "teacher"
 
 
 class TeacherCreate(BaseTeacher):

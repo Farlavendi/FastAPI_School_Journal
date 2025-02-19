@@ -27,7 +27,7 @@ class Marks(Base):
             ondelete="CASCADE",
             name="fk_marks_student_id",
         ),
-        nullable=True
+        nullable=True,
     )
 
     student: Mapped["Student"] = relationship(back_populates="marks")

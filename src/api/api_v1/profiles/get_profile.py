@@ -17,11 +17,15 @@ class UserProfile(BaseModel):
 
 @app.get("/users/{user_id}/profile", response_model=UserProfile)
 async def get_user_profile(user_id: int, db: Session = Depends(get_db)):
-    user = db.execute(
-        select(User)
-        .options(joinedload(User.student), joinedload(User.teacher))
-        .filter(User.id == user_id)
-    ).scalars().first()
+    user = (
+        db.execute(
+            select(User)
+            .options(joinedload(User.student), joinedload(User.teacher))
+            .filter(User.id == user_id)
+        )
+        .scalars()
+        .first()
+    )
 
     if not user:
         raise HTTPException(status_code=404, detail="User not found")

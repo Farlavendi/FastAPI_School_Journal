@@ -42,11 +42,7 @@ def refresh_jwt(user: UserSchemaForAuth = Depends(UserGetterFromToken("refresh")
 def auth_user_check_self_info(
     user: UserSchemaForAuth = Depends(get_current_active_user),
 ):
-    return {
-        "username": user.username,
-        "email": user.email,
-        "role": user.role
-    }
+    return {"username": user.username, "email": user.email, "role": user.role}
 
 
 @auth_router.post("/check_role", response_model=UserSchemaForAuth)

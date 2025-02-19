@@ -34,7 +34,9 @@ class User(Base):
     )
     last_name: Mapped[str] = mapped_column(String(50))
 
-    role: Mapped[RoleEnum] = mapped_column(sa.Enum(RoleEnum), default=RoleEnum.STUDENT, nullable=False)
+    role: Mapped[RoleEnum] = mapped_column(
+        sa.Enum(RoleEnum), default=RoleEnum.STUDENT, nullable=False
+    )
 
     student: Mapped["Student"] = relationship(back_populates="user")
     teacher: Mapped["Teacher"] = relationship(back_populates="user")

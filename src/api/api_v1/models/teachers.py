@@ -17,13 +17,13 @@ class Teacher(Base):
     __tablename__ = "teachers"
 
     user_id: Mapped[int] = mapped_column(
-            ForeignKey(
-                column="users.id",
-                ondelete="CASCADE",
-                name="fk_student_user_id",
-            ),
-            nullable=False,
-        )
+        ForeignKey(
+            column="users.id",
+            ondelete="CASCADE",
+            name="fk_student_user_id",
+        ),
+        nullable=False,
+    )
 
     class_id: Mapped[int] = mapped_column(
         ForeignKey(
