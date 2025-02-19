@@ -5,9 +5,9 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from . import Base
 
+
 if TYPE_CHECKING:
-    from . import Student
-    from . import Teacher
+    from . import Student, Teacher
 
 
 class Class(Base):

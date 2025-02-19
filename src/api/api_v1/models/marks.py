@@ -5,6 +5,7 @@ from sqlalchemy.orm import Mapped, relationship, mapped_column
 
 from . import Base
 
+
 if TYPE_CHECKING:
     from . import Student
 
@@ -21,7 +22,12 @@ class Marks(Base):
     science: Mapped[int] = mapped_column()
 
     student_id: Mapped[int] = mapped_column(
-        ForeignKey("students.id", ondelete="CASCADE"), nullable=True
+        ForeignKey(
+            column="students.id",
+            ondelete="CASCADE",
+            name="fk_marks_student_id",
+        ),
+        nullable=True
     )
 
     student: Mapped["Student"] = relationship(back_populates="marks")

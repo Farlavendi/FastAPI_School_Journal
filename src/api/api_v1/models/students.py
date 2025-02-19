@@ -3,19 +3,27 @@ from typing import TYPE_CHECKING, Optional
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from . import User
 from .users import RoleEnum
+from . import Base
+
 
 if TYPE_CHECKING:
-    from . import Class
-    from . import Marks
-    from . import Profile
+    from . import User, Class, Marks
 
 import sqlalchemy as sa
 
 
-class Student(User):
+class Student(Base):
     __tablename__ = "students"
+
+    # user_id: Mapped[int] = mapped_column(
+    #     ForeignKey(
+    #         column="users.id",
+    #         ondelete="CASCADE",
+    #         name="fk_student_user_id",
+    #     ),
+    #     nullable=False,
+    # )
 
     class_num: Mapped[int] = mapped_column(
         ForeignKey(
@@ -25,7 +33,10 @@ class Student(User):
         ),
         nullable=False,
     )
-    role: Mapped[RoleEnum] = mapped_column(sa.Enum(RoleEnum), default=RoleEnum.STUDENT, nullable=False)
+
+    # user: Mapped["User"] = relationship(back_populates="student")
+    role: Mapped[RoleEnum] = mapped_column(
+        sa.Enum(RoleEnum), default=RoleEnum.STUDENT, nullable=False
+    )
     class_: Mapped["Class"] = relationship(back_populates="students")
-    profile: Mapped[Optional["Profile"]] = relationship(back_populates="student")
     marks: Mapped["Marks"] = relationship(back_populates="student")
