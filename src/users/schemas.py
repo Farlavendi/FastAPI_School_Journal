@@ -1,6 +1,8 @@
 from pydantic import BaseModel, EmailStr, ConfigDict, Field
 from pydantic.json_schema import SkipJsonSchema
 
+from api.api_v1.models.users import RoleEnum
+
 
 class BaseUser(BaseModel):
     email: EmailStr = Field(...)
@@ -9,7 +11,7 @@ class BaseUser(BaseModel):
     first_name: str = Field(..., min_length=1, max_length=100)
     second_name: str | None = Field(max_length=100)
     last_name: str = Field(..., min_length=1, max_length=100)
-    role: str = Field(...)
+    role: RoleEnum
 
 
 class UserSchemaForAuth(BaseModel):
@@ -23,7 +25,7 @@ class UserSchemaForAuth(BaseModel):
     second_name: str | None = Field(max_length=100)
     last_name: str | None = Field(..., min_length=1, max_length=100)
     is_active: SkipJsonSchema[bool] = True
-    role: str = Field(...)
+    role: RoleEnum
 
 
 class UserCreate(BaseUser):

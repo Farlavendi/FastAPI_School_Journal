@@ -8,6 +8,7 @@ from fastapi.security import OAuth2PasswordBearer
 from jwt.exceptions import InvalidTokenError
 from starlette import status
 
+from api.api_v1.models.users import RoleEnum
 from core import config
 from users.schemas import UserSchemaForAuth
 
@@ -73,7 +74,7 @@ sam = UserSchemaForAuth(
     first_name="sam",
     second_name="",
     last_name="johnson",
-    role="student",
+    role=RoleEnum.STUDENT,
 )
 
 users_db: dict[str, UserSchemaForAuth] = {

@@ -1,6 +1,6 @@
-from sqlalchemy import select
 from typing import Sequence
 
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from api.api_v1.models import User
