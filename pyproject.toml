@@ -1,34 +1,25 @@
-[tool.poetry]
+[project]
 name = "fastapi-school-journal"
 version = "0.1.0"
-description = "School journal API."
-authors = ["Denis Bichuk <denisbicuk18@gmail.com>"]
-license = ""
-readme = "README.md"
+description = "Add your description here"
+requires-python = ">=3.13"
+dependencies = [
+    "alembic>=1.15.1",
+    "asyncpg>=0.30.0",
+    "bcrypt>=4.3.0",
+    "fastapi[standard,standart]>=0.115.11",
+    "orjson>=3.10.15",
+    "pydantic[email]>=2.10.6",
+    "pydantic-settings>=2.8.1",
+    "pyjwt>=2.10.1",
+    "python-dotenv>=1.0.1",
+    "sqlalchemy>=2.0.39",
+    "uvicorn>=0.34.0",
+    "python-multipart>=0.0.20",
+]
 
-[tool.poetry.dependencies]
-python = "^3.13"
-fastapi = {extras = ["standart"], version = "^0.115.8"}
-uvicorn = "^0.34.0"
-pydantic = {extras = ["email"], version = "^2.10.4"}
-sqlalchemy = "^2.0.36"
-asyncpg = "^0.30.0"
-python-dotenv = "^1.0.1"
-pydantic-settings = "^2.7.1"
-greenlet = "^3.1.1"
-alembic = "^1.14.0"
-bcrypt = "^4.2.1"
-pyjwt = {extras = ["crypto"], version = "^2.10.1"}
-python-multipart = "^0.0.20"
-orjson = "^3.10.15"
-poetry-plugin-export = "^1.9.0"
-
-
-[tool.poetry.group.dev.dependencies]
-pytest = "^8.3.4"
-black = "^24.10.0"
-flake8 = "^7.1.1"
-
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+[dependency-groups]
+dev = [
+    "pytest>=8.3.5",
+    "ruff>=0.11.0",
+]
