@@ -229,7 +229,7 @@ requires-dist = [
     { name = "alembic", specifier = ">=1.15.1" },
     { name = "asyncpg", specifier = ">=0.30.0" },
     { name = "bcrypt", specifier = ">=4.3.0" },
-    { name = "fastapi", extras = ["standard", "standart"], specifier = ">=0.115.11" },
+    { name = "fastapi", extras = ["standard"], specifier = ">=0.115.11" },
     { name = "orjson", specifier = ">=3.10.15" },
     { name = "pydantic", extras = ["email"], specifier = ">=2.10.6" },
     { name = "pydantic-settings", specifier = ">=2.8.1" },
