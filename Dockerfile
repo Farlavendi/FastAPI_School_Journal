@@ -1,6 +1,12 @@
 FROM python:3.13-slim
 
+ENV PYTHONUNBUFFERED=1
+
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
+
+ENV UV_COMPILE_BYTE=1
+
+ENV UV_LINK_MODE=copy
 
 COPY . /app
 

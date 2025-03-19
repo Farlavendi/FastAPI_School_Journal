@@ -13,11 +13,14 @@ services:
       - "5432"
 
   web:
-    build: .
+    build:
+      context: .
+      dockerfile: .sample.Dockerfile
     container_name: fastapi
+    working_dir: /src
     restart: always
     volumes:
-      - .:/app
+      - ./src:/app/src
     ports:
       - "8000:8000"
     env_file:
