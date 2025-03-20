@@ -8,9 +8,9 @@ from fastapi.security import OAuth2PasswordBearer
 from jwt.exceptions import InvalidTokenError
 from starlette import status
 
-from api.api_v1.models.users import RoleEnum
-from core import config
-from users.schemas import UserSchemaForAuth
+from src.api.api_v1.models.users import RoleEnum
+from src.core import config
+from src.users.schemas import UserSchemaForAuth
 
 oauth2_scheme = OAuth2PasswordBearer(
     tokenUrl="/jwt/login",

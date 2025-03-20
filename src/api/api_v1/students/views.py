@@ -2,13 +2,12 @@ import sqlalchemy
 from fastapi import APIRouter, status, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from core import db_helper
+from src.core import db_helper
 from . import crud
 from .schemas import (
     Student,
     StudentCreate,
     StudentUpdate,
-    StudentPartialUpdate,
 )
 from .dependencies import student_by_id
 from .marks.schemas import Mark
@@ -52,7 +51,7 @@ async def create_student(
     except sqlalchemy.exc.IntegrityError:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
-            detail="Student with this username or email already exists.",
+            detail="Invalid data input.",
         )
 
 
@@ -71,7 +70,7 @@ async def update_student(
 
 @students_router.patch("/update/{student_id}/")
 async def update_student_partial(
-    student_update: StudentPartialUpdate,
+    student_update: StudentUpdate,
     student: Student = Depends(student_by_id),
     session: AsyncSession = Depends(db_helper.scoped_session_dependency),
 ):

@@ -3,7 +3,7 @@ from fastapi.security import HTTPBearer
 
 from .utils import validate_auth_user, get_current_active_user, UserGetterFromToken
 from .schemas import TokenInfo
-from users.schemas import UserSchemaForAuth
+from src.users.schemas import UserSchemaForAuth
 from .token_mixin import create_access_token, create_refresh_token
 
 http_bearer = HTTPBearer(auto_error=False)

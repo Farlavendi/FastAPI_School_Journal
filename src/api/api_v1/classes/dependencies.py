@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from starlette import status
 
 from .schemas import Class
-from core import db_helper
+from src.core import db_helper
 from .crud import get_class_by_id
 
 

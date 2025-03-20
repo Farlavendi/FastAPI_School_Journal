@@ -3,8 +3,8 @@ from typing import Sequence
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from api.api_v1.models import Teacher
-from .schemas import TeacherCreate, TeacherUpdate, TeacherPartialUpdate
+from src.api.api_v1.models import Teacher
+from .schemas import TeacherCreate, TeacherUpdate
 
 
 async def create_teacher(
@@ -30,7 +30,7 @@ async def get_teacher_by_id(session: AsyncSession, teacher_id: int) -> Teacher |
 async def update_teacher(
     session: AsyncSession,
     teacher: Teacher,
-    teacher_update: TeacherUpdate | TeacherPartialUpdate,
+    teacher_update: TeacherUpdate,
     partial: bool = False,
 ) -> Teacher:
     for username, value in teacher_update.model_dump(exclude_unset=partial).items():

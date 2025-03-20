@@ -9,8 +9,8 @@ from .get_profile import UserProfile
 
 class UserProfileUpdate(BaseModel):
     username: str = None
-    grade: str = None  # Для студентов
-    subject: str = None  # Для учителей
+    grade: str = None  # For students
+    subject: str = None  # For teachers
 
 
 @app.patch("/users/{user_id}/profile", response_model=UserProfile)

@@ -3,8 +3,8 @@ from typing import Sequence
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from api.api_v1.models import Student, Marks
-from .schemas import StudentCreate, StudentUpdate, StudentPartialUpdate
+from src.api.api_v1.models import Student, Marks
+from .schemas import StudentCreate, StudentUpdate
 
 
 async def create_student(session: AsyncSession, student_in: StudentCreate) -> Student:
@@ -36,7 +36,7 @@ async def get_marks(session: AsyncSession, student_id: int):
 async def update_student(
     session: AsyncSession,
     student: Student,
-    student_update: StudentUpdate | StudentPartialUpdate,
+    student_update: StudentUpdate,
     partial: bool = False,
 ) -> Student:
     for username, value in student_update.model_dump(exclude_unset=partial).items():

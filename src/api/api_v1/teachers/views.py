@@ -2,13 +2,12 @@ import sqlalchemy
 from fastapi import APIRouter, status, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from core import db_helper
+from src.core import db_helper
 from . import crud
 from .schemas import (
     Teacher,
     TeacherCreate,
     TeacherUpdate,
-    TeacherPartialUpdate,
 )
 from .dependencies import teacher_by_id
 
@@ -62,7 +61,7 @@ async def update_teacher(
 
 @teachers_router.patch("/update/{teacher_id}/")
 async def update_teacher_partial(
-    teacher_update: TeacherPartialUpdate,
+    teacher_update: TeacherUpdate,
     teacher: Teacher = Depends(teacher_by_id),
     session: AsyncSession = Depends(db_helper.scoped_session_dependency),
 ):

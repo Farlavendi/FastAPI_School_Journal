@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from users.views import users_router
+from src.users.views import users_router
 from .classes.views import classes_router
 from .students.views import students_router
 from .teachers.views import teachers_router

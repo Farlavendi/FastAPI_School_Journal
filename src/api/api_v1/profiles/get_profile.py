@@ -4,7 +4,7 @@ from sqlalchemy import select
 from pydantic import BaseModel
 from sqlalchemy.orm import joinedload
 
-from api.api_v1.models.users import RoleEnum, User
+from src.api.api_v1.models.users import RoleEnum, User
 
 
 class UserProfile(BaseModel):

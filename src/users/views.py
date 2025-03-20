@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette import status
 
-from core import db_helper
+from src.core import db_helper
 from . import crud
 from .dependencies import user_by_id
 from .schemas import User, UserCreate
