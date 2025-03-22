@@ -5,13 +5,15 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.api.api_v1.models import Teacher
 from .schemas import TeacherCreate, TeacherUpdate
+from ..models.users import RoleEnum
 
 
 async def create_teacher(
+    user_id: int,
     session: AsyncSession,
     teacher_in: TeacherCreate,
 ) -> Teacher:
-    teacher = Teacher(**teacher_in.model_dump())
+    teacher = Teacher(user_id=user_id, **teacher_in.model_dump())
     session.add(teacher)
     await session.commit()
     return teacher

@@ -32,5 +32,13 @@ class UserCreate(BaseUser):
     password: str
 
 
+class StudentUserCreate(BaseUser):
+    role: SkipJsonSchema[RoleEnum] = RoleEnum.STUDENT
+
+
+class TeacherUserCreate(BaseUser):
+    role: SkipJsonSchema[RoleEnum] = RoleEnum.TEACHER
+
+
 class User(BaseUser):
     id: int

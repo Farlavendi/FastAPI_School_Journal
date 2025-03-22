@@ -7,7 +7,10 @@ from src.api.api_v1.models import Student, Marks
 from .schemas import StudentCreate, StudentUpdate
 
 
-async def create_student(session: AsyncSession, student_in: StudentCreate) -> Student:
+async def create_student(
+    session: AsyncSession,
+    student_in: StudentCreate,
+) -> Student:
     student = Student(**student_in.model_dump())
     session.add(student)
     await session.commit()

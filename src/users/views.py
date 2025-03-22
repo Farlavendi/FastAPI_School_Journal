@@ -1,12 +1,13 @@
 import sqlalchemy
 from fastapi import APIRouter, Depends, HTTPException
+from fastapi.responses import ORJSONResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette import status
-from fastapi.responses import RedirectResponse, ORJSONResponse
+
 from src.core import db_helper
 from . import crud
 from .dependencies import user_by_id
-from .schemas import User, UserCreate
+from .schemas import User, UserCreate, StudentUserCreate
 from ..api.api_v1.models.users import RoleEnum
 from ..api.api_v1.students.crud import create_student
 from ..api.api_v1.students.schemas import StudentCreate
@@ -49,14 +50,13 @@ async def choose_role(role: RoleEnum):
 
 @users_router.post("/create-student")
 async def create_user_student(
-    user_in: UserCreate,
+    user_in: StudentUserCreate,
     student_in: StudentCreate,
     session: AsyncSession = Depends(db_helper.scoped_session_dependency),
 ):
-    """Создаёт юзера и затем студента."""
     try:
-        user = await crud.create_user(session=session, user_in=user_in, role=RoleEnum.STUDENT)
-        student = await create_student(session=session, student_in=student_in, user_id=user.id)
+        user = await crud.create_user_student(session=session, user_in=user_in)
+        student = await create_student(session=session, student_in=student_in)
         await session.commit()
         return {"user": user, "student": student}
     except sqlalchemy.exc.IntegrityError:
@@ -70,7 +70,6 @@ async def create_user_teacher(
     teacher_in: TeacherCreate,
     session: AsyncSession = Depends(db_helper.scoped_session_dependency),
 ):
-    """Создаёт юзера и затем учителя."""
     try:
         user = await crud.create_user(session=session, user_in=user_in, role=RoleEnum.TEACHER)
         teacher = await create_teacher(session=session, teacher_in=teacher_in, user_id=user.id)
