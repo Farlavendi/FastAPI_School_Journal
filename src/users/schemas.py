@@ -1,7 +1,7 @@
 from pydantic import BaseModel, EmailStr, ConfigDict, Field
 from pydantic.json_schema import SkipJsonSchema
 
-from src.api.api_v1.models.users import RoleEnum
+from src.api.models.users import RoleEnum
 
 
 class BaseUser(BaseModel):

@@ -3,9 +3,8 @@ from typing import Sequence
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.api.api_v1.models import Teacher
+from src.api.models import Teacher
 from .schemas import TeacherCreate, TeacherUpdate
-from ..models.users import RoleEnum
 
 
 async def create_teacher(

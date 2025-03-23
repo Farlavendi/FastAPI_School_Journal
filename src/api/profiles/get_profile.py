@@ -1,10 +1,10 @@
-from fastapi import FastAPI, HTTPException, Depends
-from sqlalchemy.orm import Session
-from sqlalchemy import select
+from fastapi import HTTPException, Depends
 from pydantic import BaseModel
+from sqlalchemy import select
+from sqlalchemy.orm import Session
 from sqlalchemy.orm import joinedload
 
-from src.api.api_v1.models.users import RoleEnum, User
+from src.api.models.users import RoleEnum, User
 
 
 class UserProfile(BaseModel):

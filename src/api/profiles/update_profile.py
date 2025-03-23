@@ -1,5 +1,5 @@
+from api.models.users import RoleEnum, User
 from fastapi import HTTPException, Depends
-from api.api_v1.models.users import RoleEnum, User
 from pydantic import BaseModel
 from sqlalchemy import select
 from sqlalchemy.orm import Session

@@ -8,11 +8,11 @@ from src.core import db_helper
 from . import crud
 from .dependencies import user_by_id
 from .schemas import User, UserCreate, StudentUserCreate
-from ..api.api_v1.models.users import RoleEnum
-from ..api.api_v1.students.crud import create_student
-from ..api.api_v1.students.schemas import StudentCreate
-from ..api.api_v1.teachers.crud import create_teacher
-from ..api.api_v1.teachers.schemas import TeacherCreate
+from ..api.models.users import RoleEnum
+from ..api.students.crud import create_student
+from ..api.students.schemas import StudentCreate
+from ..api.teachers.crud import create_teacher
+from ..api.teachers.schemas import TeacherCreate
 
 users_router = APIRouter(tags=["Users"])
 

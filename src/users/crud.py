@@ -3,9 +3,9 @@ from typing import Sequence
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.api.api_v1.models import User
+from src.api.models import User
 from .schemas import UserCreate, StudentUserCreate
-from ..api.api_v1.models.users import RoleEnum
+from ..api.models.users import RoleEnum
 
 
 async def get_users(session: AsyncSession) -> Sequence[User]:

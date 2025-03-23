@@ -3,7 +3,7 @@ from typing import Sequence
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.api.api_v1.models import Student, Marks
+from src.api.models import Student, Marks
 from .schemas import StudentCreate, StudentUpdate
 
 
