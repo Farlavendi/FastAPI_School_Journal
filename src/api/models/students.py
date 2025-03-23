@@ -1,16 +1,12 @@
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from .users import RoleEnum
 from . import Base
-
 
 if TYPE_CHECKING:
     from . import User, Class, Marks
-
-import sqlalchemy as sa
 
 
 class Student(Base):
@@ -35,8 +31,5 @@ class Student(Base):
     )
 
     user: Mapped["User"] = relationship(back_populates="student")
-    # role: Mapped[RoleEnum] = mapped_column(
-    #     sa.Enum(RoleEnum), default=RoleEnum.STUDENT, nullable=False
-    # )
     class_: Mapped["Class"] = relationship(back_populates="students")
     marks: Mapped["Marks"] = relationship(back_populates="student")

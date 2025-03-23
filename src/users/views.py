@@ -4,15 +4,14 @@ from fastapi.responses import ORJSONResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette import status
 
+from src.api.models.users import RoleEnum
+from src.api.teachers.crud import create_teacher
+from src.api.teachers.schemas import TeacherCreate
 from src.core import db_helper
 from . import crud
 from .dependencies import user_by_id
 from .schemas import User, UserCreate, StudentUserCreate
-from ..api.models.users import RoleEnum
-from ..api.students.crud import create_student
 from ..api.students.schemas import StudentCreate
-from ..api.teachers.crud import create_teacher
-from ..api.teachers.schemas import TeacherCreate
 
 users_router = APIRouter(tags=["Users"])
 
@@ -54,14 +53,16 @@ async def create_user_student(
     student_in: StudentCreate,
     session: AsyncSession = Depends(db_helper.scoped_session_dependency),
 ):
+    # new_user = User(name="John Doe", profile=Profile(bio="This is John's bio"))
+    # session.add(new_user)
+    # session.commit()
     try:
-        user = await crud.create_user_student(session=session, user_in=user_in)
-        student = await create_student(session=session, student_in=student_in)
+        user = await crud.create_user_student(session=session, user_in=user_in, student_in=student_in)
         await session.commit()
-        return {"user": user, "student": student}
+        return user
     except sqlalchemy.exc.IntegrityError:
         await session.rollback()
-        raise HTTPException(status_code=400, detail="Error creating student")
+        raise HTTPException(status_code=400, detail="Error creating user.")
 
 
 @users_router.post("/create-teacher")

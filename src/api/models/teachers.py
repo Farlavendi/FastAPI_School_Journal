@@ -1,16 +1,12 @@
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 from sqlalchemy import ForeignKey, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from .users import RoleEnum
 from . import Base
-
 
 if TYPE_CHECKING:
     from . import Class, User
-
-import sqlalchemy as sa
 
 
 class Teacher(Base):
@@ -35,9 +31,6 @@ class Teacher(Base):
     )
 
     user: Mapped["User"] = relationship(back_populates="teacher")
-
-    # role: Mapped[RoleEnum] = mapped_column(sa.Enum(RoleEnum), default=RoleEnum.TEACHER, nullable=False)
-
     class_: Mapped["Class"] = relationship(back_populates="teacher", single_parent=True)
 
     __table_args__ = (UniqueConstraint("class_id"),)
