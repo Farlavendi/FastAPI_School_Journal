@@ -1,7 +1,10 @@
+from typing import Optional
+
 from pydantic import BaseModel, EmailStr, ConfigDict, Field
 from pydantic.json_schema import SkipJsonSchema
 
 from src.api.models.users import RoleEnum
+from src.api.students.schemas import Student
 
 
 class BaseUser(BaseModel):
@@ -42,3 +45,4 @@ class TeacherUserCreate(BaseUser):
 
 class User(BaseUser):
     id: int
+    student: Optional[Student]

@@ -1,12 +1,14 @@
 from typing import Sequence
 
+from fastapi import HTTPException
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import joinedload
 
 from src.api.models import User, Student
 from src.api.models.users import RoleEnum
+from src.api.students.schemas import StudentCreate
 from .schemas import UserCreate, StudentUserCreate
-from ..api.students.schemas import StudentCreate
 
 
 async def get_users(session: AsyncSession) -> Sequence[User]:
@@ -15,8 +17,14 @@ async def get_users(session: AsyncSession) -> Sequence[User]:
     return list(classes)
 
 
-async def get_user_by_id(session: AsyncSession, user_id: int) -> User | None:
-    return await session.get(User, user_id)
+async def get_user_by_id(session: AsyncSession, user_id: int):
+    result = await session.execute(
+        select(User).options(joinedload(User.student)).filter(User.id == user_id)
+    )
+    user = result.scalar_one_or_none()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    return user
 
 
 async def create_user(
