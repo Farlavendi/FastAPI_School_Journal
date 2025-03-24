@@ -4,8 +4,8 @@ from pydantic import BaseModel, EmailStr, ConfigDict, Field
 from pydantic.json_schema import SkipJsonSchema
 
 from src.api.models.users import RoleEnum
-from .student_schemas import Student
-from .teacher_schemas import Teacher
+from .students.schemas import Student
+from .teachers.schemas import Teacher
 
 
 class BaseUser(BaseModel):

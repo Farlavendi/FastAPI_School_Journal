@@ -13,7 +13,7 @@ from .schemas import (
     ClassCreate,
 )
 
-classes_router = APIRouter(tags=["Classes"])
+classes_router = APIRouter(prefix="/classes", tags=["Classes"])
 
 
 @classes_router.get("/", response_model=list[Class])

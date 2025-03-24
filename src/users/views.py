@@ -1,4 +1,3 @@
-import sqlalchemy
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import ORJSONResponse
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -8,11 +7,9 @@ from src.api.models.users import RoleEnum
 from src.core import db_helper
 from . import crud
 from .dependencies import user_by_id
-from .schemas import User, StudentUserCreate, TeacherUserCreate
-from .student_schemas import StudentCreate
-from .teacher_schemas import TeacherCreate
+from .schemas import User
 
-users_router = APIRouter(tags=["Users"])
+users_router = APIRouter(prefix="/users", tags=["Users"])
 
 
 @users_router.get("/", response_model=list[User], response_model_exclude_none=True)
@@ -43,37 +40,7 @@ async def choose_role(role: RoleEnum):
                 "next_step": "/api/users/create-teacher",
             }
         )
-    raise HTTPException(status_code=400, detail="Invalid role")
-
-
-@users_router.post("/create-student")
-async def create_user_student(
-    user_in: StudentUserCreate,
-    student_in: StudentCreate,
-    session: AsyncSession = Depends(db_helper.scoped_session_dependency),
-):
-    try:
-        user = await crud.create_user_student(session=session, user_in=user_in, student_in=student_in)
-        await session.commit()
-        return user
-    except sqlalchemy.exc.IntegrityError:
-        await session.rollback()
-        raise HTTPException(status_code=400, detail="Error creating user.")
-
-
-@users_router.post("/create-teacher")
-async def create_user_teacher(
-    user_in: TeacherUserCreate,
-    teacher_in: TeacherCreate,
-    session: AsyncSession = Depends(db_helper.scoped_session_dependency),
-):
-    try:
-        user = await crud.create_user_teacher(session=session, user_in=user_in, teacher_in=teacher_in)
-        await session.commit()
-        return user
-    except sqlalchemy.exc.IntegrityError:
-        await session.rollback()
-        raise HTTPException(status_code=400, detail="Error creating user.")
+    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Invalid role")
 
 
 @users_router.delete("/delete/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
