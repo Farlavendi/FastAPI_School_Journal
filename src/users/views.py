@@ -5,17 +5,17 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from starlette import status
 
 from src.api.models.users import RoleEnum
-from src.api.students.schemas import StudentCreate
 from src.core import db_helper
 from . import crud
 from .dependencies import user_by_id
-from .schemas import User, UserCreate, StudentUserCreate, TeacherUserCreate
-from ..api.teachers.schemas import TeacherCreate
+from .schemas import User, StudentUserCreate, TeacherUserCreate
+from .student_schemas import StudentCreate
+from .teacher_schemas import TeacherCreate
 
 users_router = APIRouter(tags=["Users"])
 
 
-@users_router.get("/", response_model=list[User])
+@users_router.get("/", response_model=list[User], response_model_exclude_none=True)
 async def get_users(
     session: AsyncSession = Depends(db_helper.scoped_session_dependency),
 ):
@@ -74,20 +74,6 @@ async def create_user_teacher(
     except sqlalchemy.exc.IntegrityError:
         await session.rollback()
         raise HTTPException(status_code=400, detail="Error creating user.")
-
-
-@users_router.post("/create", response_model=User)
-async def create_user(
-    user_in: UserCreate,
-    session: AsyncSession = Depends(db_helper.scoped_session_dependency),
-):
-    try:
-        return await crud.create_user(session=session, user_in=user_in)
-    except sqlalchemy.exc.IntegrityError:
-        raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT,
-            detail="User with this number already exists.",
-        )
 
 
 @users_router.delete("/delete/{user_id}", status_code=status.HTTP_204_NO_CONTENT)

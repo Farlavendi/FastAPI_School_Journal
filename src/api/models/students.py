@@ -32,4 +32,4 @@ class Student(Base):
 
     user: Mapped["User"] = relationship(back_populates="student")
     class_: Mapped["Class"] = relationship(back_populates="students")
-    marks: Mapped["Marks"] = relationship(back_populates="student")
+    marks: Mapped["Marks"] = relationship(back_populates="student", cascade="all, delete-orphan")

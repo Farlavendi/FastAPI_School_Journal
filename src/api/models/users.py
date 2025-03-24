@@ -39,8 +39,8 @@ class User(Base):
         sa.Enum(RoleEnum), default=RoleEnum.STUDENT, nullable=False
     )
 
-    student: Mapped["Student"] = relationship(back_populates="user")
-    teacher: Mapped["Teacher"] = relationship(back_populates="user")
+    student: Mapped["Student"] = relationship(back_populates="user", cascade="all, delete-orphan")
+    teacher: Mapped["Teacher"] = relationship(back_populates="user", cascade="all, delete-orphan")
 
     def __str__(self):
         return f"{self.__class__.__name__}(id={self.id}, username={self.username!r})"

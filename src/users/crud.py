@@ -7,15 +7,20 @@ from sqlalchemy.orm import joinedload
 
 from src.api.models import User, Student, Teacher
 from src.api.models.users import RoleEnum
-from src.api.students.schemas import StudentCreate
-from src.api.teachers.schemas import TeacherCreate
 from .schemas import UserCreate, StudentUserCreate, TeacherUserCreate
+from .student_schemas import StudentCreate
+from .teacher_schemas import TeacherCreate
 
 
 async def get_users(session: AsyncSession) -> Sequence[User]:
-    stmt = select(User).order_by(User.id)
-    classes = await session.scalars(stmt)
-    return list(classes)
+    stmt = (
+        select(User)
+        .options(joinedload(User.student), joinedload(User.teacher))  # eagerly load student and teacher
+        .order_by(User.id)
+    )
+    result = await session.execute(stmt)
+    users = result.scalars().all()
+    return users
 
 
 async def get_user_by_id(session: AsyncSession, user_id: int):
