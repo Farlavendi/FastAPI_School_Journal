@@ -5,6 +5,7 @@ from pydantic.json_schema import SkipJsonSchema
 
 from src.api.models.users import RoleEnum
 from src.api.students.schemas import Student
+from src.api.teachers.schemas import Teacher
 
 
 class BaseUser(BaseModel):
@@ -46,3 +47,4 @@ class TeacherUserCreate(BaseUser):
 class User(BaseUser):
     id: int
     student: Optional[Student]
+    teacher: Optional[Teacher]

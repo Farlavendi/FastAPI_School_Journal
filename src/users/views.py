@@ -6,12 +6,11 @@ from starlette import status
 
 from src.api.models.users import RoleEnum
 from src.api.students.schemas import StudentCreate
-from src.api.teachers.crud import create_teacher
-from src.api.teachers.schemas import TeacherCreate
 from src.core import db_helper
 from . import crud
 from .dependencies import user_by_id
-from .schemas import User, UserCreate, StudentUserCreate
+from .schemas import User, UserCreate, StudentUserCreate, TeacherUserCreate
+from ..api.teachers.schemas import TeacherCreate
 
 users_router = APIRouter(tags=["Users"])
 
@@ -23,7 +22,7 @@ async def get_users(
     return await crud.get_users(session=session)
 
 
-@users_router.get("/{users_id}", response_model=User)
+@users_router.get("/{users_id}", response_model=User, response_model_exclude_none=True)
 async def get_user_by_id(
     user: User = Depends(user_by_id),
 ):
@@ -35,13 +34,13 @@ async def choose_role(role: RoleEnum):
     if role == RoleEnum.STUDENT:
         return ORJSONResponse(
             content={
-                "next_step": "/api/v1/users/create-student",
+                "next_step": "/api/users/create-student",
             }
         )
     elif role == RoleEnum.TEACHER:
         return ORJSONResponse(
             content={
-                "next_step": "/api/v1/users/create-teacher",
+                "next_step": "/api/users/create-teacher",
             }
         )
     raise HTTPException(status_code=400, detail="Invalid role")
@@ -64,18 +63,17 @@ async def create_user_student(
 
 @users_router.post("/create-teacher")
 async def create_user_teacher(
-    user_in: UserCreate,
+    user_in: TeacherUserCreate,
     teacher_in: TeacherCreate,
     session: AsyncSession = Depends(db_helper.scoped_session_dependency),
 ):
     try:
-        user = await crud.create_user(session=session, user_in=user_in, role=RoleEnum.TEACHER)
-        teacher = await create_teacher(session=session, teacher_in=teacher_in, user_id=user.id)
+        user = await crud.create_user_teacher(session=session, user_in=user_in, teacher_in=teacher_in)
         await session.commit()
-        return {"user": user, "teacher": teacher}
+        return user
     except sqlalchemy.exc.IntegrityError:
         await session.rollback()
-        raise HTTPException(status_code=400, detail="Error creating teacher")
+        raise HTTPException(status_code=400, detail="Error creating user.")
 
 
 @users_router.post("/create", response_model=User)

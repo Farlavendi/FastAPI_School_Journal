@@ -5,10 +5,11 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload
 
-from src.api.models import User, Student
+from src.api.models import User, Student, Teacher
 from src.api.models.users import RoleEnum
 from src.api.students.schemas import StudentCreate
-from .schemas import UserCreate, StudentUserCreate
+from src.api.teachers.schemas import TeacherCreate
+from .schemas import UserCreate, StudentUserCreate, TeacherUserCreate
 
 
 async def get_users(session: AsyncSession) -> Sequence[User]:
@@ -19,13 +20,19 @@ async def get_users(session: AsyncSession) -> Sequence[User]:
 
 async def get_user_by_id(session: AsyncSession, user_id: int):
     result = await session.execute(
-        select(User).options(joinedload(User.student)).filter(User.id == user_id)
+        select(User)
+        .filter(User.id == user_id)
+        .options(
+            joinedload(User.student),
+            joinedload(User.teacher)
+        )
     )
     user = result.scalar_one_or_none()
+
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
-    return user
 
+    return user
 
 async def create_user(
     session: AsyncSession,
@@ -48,6 +55,20 @@ async def create_user_student(
 
     student = Student(user_id=user.id, **student_in.model_dump())
     session.add(student)
+
+    return user
+
+async def create_user_teacher(
+    session: AsyncSession,
+    user_in: TeacherUserCreate,
+    teacher_in: TeacherCreate
+) -> User:
+    user = User(**user_in.model_dump())
+    session.add(user)
+    await session.flush()
+
+    teacher = Teacher(user_id=user.id, **teacher_in.model_dump())
+    session.add(teacher)
 
     return user
 
