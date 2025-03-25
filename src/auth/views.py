@@ -1,10 +1,27 @@
-from fastapi import APIRouter, Depends
-from fastapi.security import HTTPBearer
+from datetime import timedelta
+from typing import Annotated
 
-from .utils import validate_auth_user, get_current_active_user, UserGetterFromToken
+from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi.security import HTTPBearer, OAuth2PasswordRequestForm
+from pydantic import BaseModel
+
+from src.core import config
+from src.users.schemas import User
 from .schemas import TokenInfo
-from src.users.schemas import UserSchemaForAuth
 from .token_mixin import create_access_token, create_refresh_token
+from .utils import (
+    validate_auth_user, encode_jwt, get_current_active_user,
+    # get_user_by_token,
+    # validate_token_type
+)
+
+auth_jwt_config = config.AuthJWT()
+
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
 
 http_bearer = HTTPBearer(auto_error=False)
 auth_router = APIRouter(
@@ -15,8 +32,8 @@ auth_router = APIRouter(
 
 
 @auth_router.post("/login/", response_model=TokenInfo)
-def auth_user_issue_jwt(
-    user: UserSchemaForAuth = Depends(validate_auth_user),
+async def auth_user_issue_jwt(
+    user: User = Depends(validate_auth_user),
 ):
     access_token = create_access_token(user)
     refresh_token = create_refresh_token(user)
@@ -27,26 +44,48 @@ def auth_user_issue_jwt(
     )
 
 
-@auth_router.post(
-    "/refresh/", response_model=TokenInfo, response_model_exclude_none=True
-)
-def refresh_jwt(user: UserSchemaForAuth = Depends(UserGetterFromToken("refresh"))):
-    access_token = create_access_token(user)
 
-    return TokenInfo(
-        access_token=access_token,
+@auth_router.post("/token")
+async def login_for_access_token(
+    form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
+    user: User = Depends(validate_auth_user)
+) -> Token:
+    authenticated_user = user
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect username or password",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    access_token_expires = timedelta(minutes=auth_jwt_config.access_token_expire_minutes)
+    access_token = encode_jwt(
+        payload={"sub": user.username}, expires_delta=access_token_expires
     )
+    return Token(access_token=access_token, token_type="bearer")
+
+
+
+# @auth_router.post(
+#     "/refresh/", response_model=TokenInfo, response_model_exclude_none=True
+# )
+
+# async def refresh_jwt(
+#     payload: dict = Depends(get_token_payload),
+#     user: User = Depends(get_user_by_token)
+# ):
+#     await validate_token_type(payload=payload, expected_type="refresh")
+#
+#     access_token = create_access_token(user)
+#
+#     return TokenInfo(
+#         access_token=access_token,
+#     )
 
 
 @auth_router.post("/users/me")
-def auth_user_check_self_info(
-    user: UserSchemaForAuth = Depends(get_current_active_user),
+async def auth_user_check_self_info(
+    # user: User = Depends(get_current_active_user),
+    current_user: Annotated[User, Depends(get_current_active_user)],
 ):
-    return {"username": user.username, "email": user.email, "role": user.role}
+    return {"username": current_user.username, "email": current_user.email, "role": current_user.role}
 
-
-@auth_router.post("/check_role", response_model=UserSchemaForAuth)
-def check_role(
-    user: UserSchemaForAuth = Depends(get_current_active_user),
-):
-    return user.role

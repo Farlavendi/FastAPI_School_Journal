@@ -37,11 +37,19 @@ class Settings(BaseSettings):
 
 
 class AuthJWT(BaseModel):
-    private_key_path: Path = BASE_DIR / "certs" / "jwt-private.pem"
-    public_key_path: Path = BASE_DIR / "certs" / "jwt-public.pem"
+    private_key_path: Path = BASE_DIR / "certs" / "private.pem"
+    public_key_path: Path = BASE_DIR / "certs" / "public.pem"
     algorithm: str = "RS256"
     access_token_expire_minutes: int = 15
     refresh_token_expire_days: int = 30
+
+    @property
+    def private_key(self):
+        return self.private_key_path.read_text()
+
+    @property
+    def public_key(self):
+        return self.public_key_path.read_text()
 
 
 settings = Settings()
