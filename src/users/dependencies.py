@@ -11,10 +11,10 @@ async def user_by_id(
     user_id: Annotated[int, Path],
     session: AsyncSession = Depends(db_helper.scoped_session_dependency),
 ):
-    student = await crud.get_user_by_id(session=session, user_id=user_id)
-    if student is None:
+    user = await crud.get_user_by_id(session=session, user_id=user_id)
+    if user is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Student with id {user_id} not found.",
+            detail=f"User with id {user_id} not found.",
         )
-    return student
+    return user
