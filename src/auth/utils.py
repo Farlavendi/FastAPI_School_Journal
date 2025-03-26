@@ -120,18 +120,6 @@ async def get_token_payload(
 #
 #     return user
 
-
-# async def get_current_active_user(
-#     user: User = Depends(get_user_by_token),
-# ):
-#     if not user.is_active:
-#         raise HTTPException(
-#             status_code=status.HTTP_403_FORBIDDEN,
-#             detail="User is inactive.",
-#         )
-#
-#     return user
-
 async def get_current_user(
     token: Annotated[str, Depends(oauth2_scheme)],
     session: AsyncSession = Depends(db_helper.scoped_session_dependency)
@@ -161,11 +149,11 @@ async def get_current_user(
 async def get_current_active_user(
     current_user: Annotated[User, Depends(get_current_user)],
 ):
-    # if current_user.disabled:
-    #     raise HTTPException(
-    #         status_code=status.HTTP_400_BAD_REQUEST,
-    #         detail="Inactive user"
-    #     )
+    if not current_user.is_active:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Inactive user"
+        )
     return current_user
 
 
@@ -183,10 +171,10 @@ async def validate_auth_user(
             detail="Incorrect username or password.",
         )
 
-    # if not user.is_active:
-    #     raise HTTPException(
-    #         status_code=status.HTTP_403_FORBIDDEN,
-    #         detail="User is inactive.",
-    #     )
+    if not user.is_active:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="User is inactive.",
+        )
 
     return user

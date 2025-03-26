@@ -38,7 +38,7 @@ class User(Base):
     role: Mapped[RoleEnum] = mapped_column(
         sa.Enum(RoleEnum), default=RoleEnum.STUDENT, nullable=False
     )
-    is_active: Mapped[bool] = mapped_column(default=True)
+    is_active: Mapped[bool] = mapped_column(default=True, nullable=False)
 
     student: Mapped["Student"] = relationship(back_populates="user", cascade="all, delete-orphan")
     teacher: Mapped["Teacher"] = relationship(back_populates="user", cascade="all, delete-orphan")

@@ -18,11 +18,12 @@ class BaseUser(BaseModel):
     role: RoleEnum
 
 
+
 # class UserSchemaForAuth(BaseUser):
 #     model_config = ConfigDict(from_attributes=True, strict=True)
 #     id: int
 #     # hashed_password: SkipJsonSchema[str] = Field(...)
-#     # is_active: SkipJsonSchema[bool] = True
+#     is_active: SkipJsonSchema[bool] = True
 
 
 class UserCreate(BaseUser):
@@ -39,5 +40,6 @@ class TeacherUserCreate(BaseUser):
 
 class User(BaseUser):
     id: int
+    is_active: bool
     student: Optional[Student]
     teacher: Optional[Teacher]
