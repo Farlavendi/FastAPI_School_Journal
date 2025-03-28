@@ -16,20 +16,30 @@ async def get_classes(session: AsyncSession) -> Sequence[Class]:
 
 
 async def get_class_by_id(session: AsyncSession, class_id: int) -> Class | None:
-    return await session.get(Class, class_id)
+    return await session.get(
+        Class,
+        class_id,
+        options=[
+            joinedload(Class.students),
+            joinedload(Class.teacher)
+        ]
+    )
 
 
 async def get_class_by_num(
     session: AsyncSession,
     class_num: int,
 ) -> Class:
-    stmt = (
+    result = await session.execute(
         select(Class)
-        .options(joinedload(Class.teacher))
-        .where(Class.class_num == class_num)
+        .filter(Class.class_num == class_num)
+        .options(
+            joinedload(Class.teacher),
+            joinedload(Class.students)
+        )
     )
 
-    class_: Class | None = await session.scalar(stmt)
+    class_ = result.unique().scalar_one_or_none()
 
     if class_ is None:
         raise HTTPException(

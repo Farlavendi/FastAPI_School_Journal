@@ -1,4 +1,9 @@
+from typing import Optional, List
+
 from pydantic import BaseModel, Field
+
+from src.users.students.schemas import Student
+from src.users.teachers.schemas import Teacher
 
 
 class ClassCreate(BaseModel):
@@ -7,3 +12,5 @@ class ClassCreate(BaseModel):
 
 class Class(ClassCreate):
     id: int = Field(..., ge=0)
+    students: Optional[List[Student]]
+    teacher: Optional[Teacher]
