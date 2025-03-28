@@ -1,7 +1,5 @@
-from typing import Annotated
-
 import sqlalchemy
-from fastapi import APIRouter, Depends, HTTPException, Path
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette import status
 
@@ -24,26 +22,11 @@ async def get_classes(
     return await crud.get_classes(session=session)
 
 
-@classes_router.get("/{class_id}", response_model=Class)
-async def get_class_by_id(
+@classes_router.get("/{value}", response_model=Class)
+async def get_class(
     class_: Class = Depends(class_by_id),
 ):
     return class_
-
-
-@classes_router.get("/{class_num}/", response_model=Class)
-async def get_class_by_num(
-    class_num: Annotated[int, Path],
-    session: AsyncSession = Depends(db_helper.scoped_session_dependency),
-):
-    class_ = await crud.get_class_by_num(session=session, class_num=class_num)
-    if class_:
-        return class_
-    else:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Class not found",
-        )
 
 
 @classes_router.post(
