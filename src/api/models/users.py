@@ -22,21 +22,21 @@ class User(Base):
 
     email: Mapped[str] = mapped_column(
         unique=True,
+        index=True
     )
     username: Mapped[str] = mapped_column(
         unique=True,
+        index=True
     )
-    password: Mapped[str] = mapped_column(
-        unique=True,
-    )
-    first_name: Mapped[str] = mapped_column(String(50))
+    password: Mapped[str] = mapped_column()
+    first_name: Mapped[str] = mapped_column(String(100))
     second_name: Mapped[str | None] = mapped_column(
         String(50), default="", server_default=""
     )
-    last_name: Mapped[str] = mapped_column(String(50))
+    last_name: Mapped[str] = mapped_column(String(100))
 
     role: Mapped[RoleEnum] = mapped_column(
-        sa.Enum(RoleEnum), default=RoleEnum.STUDENT, nullable=False
+        sa.Enum(RoleEnum), default=RoleEnum.STUDENT, nullable=False, index=True
     )
     is_active: Mapped[bool] = mapped_column(default=True, nullable=False)
 
@@ -44,7 +44,7 @@ class User(Base):
     teacher: Mapped["Teacher"] = relationship(back_populates="user", cascade="all, delete-orphan")
 
     def __str__(self):
-        return f"{self.__class__.__name__}(id={self.id}, username={self.username!r})"
+        return f"{self.__class__.__name__}(id={self.id}, username={self.username!r}, email={self.email!r})"
 
     def __repr__(self):
         return str(self)

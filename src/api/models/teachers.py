@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING
 
-from sqlalchemy import ForeignKey, UniqueConstraint
+from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from . import Base
@@ -16,9 +16,10 @@ class Teacher(Base):
         ForeignKey(
             column="users.id",
             ondelete="CASCADE",
-            name="fk_student_user_id",
+            name="fk_teacher_user_id",
         ),
         nullable=False,
+        index=True
     )
 
     class_id: Mapped[int] = mapped_column(
@@ -28,9 +29,9 @@ class Teacher(Base):
             name="fk_teacher_class_id",
         ),
         nullable=False,
+        unique=True,
+        index=True
     )
 
     user: Mapped["User"] = relationship(back_populates="teacher")
     class_: Mapped["Class"] = relationship(back_populates="teacher", single_parent=True)
-
-    __table_args__ = (UniqueConstraint("class_id"),)

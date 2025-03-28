@@ -1,10 +1,9 @@
 from typing import TYPE_CHECKING
 
-from sqlalchemy import ForeignKey, UniqueConstraint
+from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, relationship, mapped_column
 
 from . import Base
-
 
 if TYPE_CHECKING:
     from . import Student
@@ -27,9 +26,8 @@ class Marks(Base):
             ondelete="CASCADE",
             name="fk_marks_student_id",
         ),
-        nullable=True,
+        nullable=False,
+        index=True
     )
 
     student: Mapped["Student"] = relationship(back_populates="marks")
-
-    __table_args__ = (UniqueConstraint("student_id"),)
