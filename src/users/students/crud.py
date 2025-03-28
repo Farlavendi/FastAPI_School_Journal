@@ -6,6 +6,7 @@ from sqlalchemy.orm import joinedload
 
 from src.api.models import User, Student
 from src.api.models.users import RoleEnum
+from src.auth.utils import hash_password
 from src.users.schemas import StudentUserCreate
 from src.users.students.schemas import StudentCreate
 
@@ -27,7 +28,10 @@ async def create_student(
     user_in: StudentUserCreate,
     student_in: StudentCreate
 ) -> User:
-    user = User(**user_in.model_dump())
+    hashed_password = hash_password(user_in.password)
+    user_data = user_in.model_dump(exclude={"password"})
+    
+    user = User(**user_data, password=hashed_password)
     session.add(user)
     await session.flush()
 

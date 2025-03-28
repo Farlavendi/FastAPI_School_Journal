@@ -84,7 +84,6 @@ async def login_for_access_token(
 
 @auth_router.post("/users/me")
 async def auth_user_check_self_info(
-    # user: User = Depends(get_current_active_user),
     current_user: Annotated[User, Depends(get_current_active_user)],
 ):
     return {"username": current_user.username, "email": current_user.email, "role": current_user.role}
