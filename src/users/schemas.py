@@ -1,11 +1,14 @@
+import re
 from typing import Optional
 
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, EmailStr, Field, field_validator
 from pydantic.json_schema import SkipJsonSchema
 
 from src.api.models.users import RoleEnum
 from .students.schemas import Student
 from .teachers.schemas import Teacher
+
+password_regex = r'^[A-Za-z0-9]+$'
 
 
 class BaseUser(BaseModel):
@@ -18,17 +21,16 @@ class BaseUser(BaseModel):
     role: RoleEnum
 
 
+    @field_validator("password", mode="after")
+    @classmethod
+    def validate_password(cls, password: str):
+        if len(password) < 8 or len(password) > 20:
+            raise ValueError("Password must contain between 8 and 20 characters.")
 
-# class UserSchemaForAuth(BaseUser):
-#     model_config = ConfigDict(from_attributes=True, strict=True)
-#     id: int
-#     # hashed_password: SkipJsonSchema[str] = Field(...)
-#     is_active: SkipJsonSchema[bool] = True
+        if not re.match(password_regex, password):
+            raise ValueError("Password can only contain letters and digits.")
 
-
-class UserCreate(BaseUser):
-    password: str
-
+        return password
 
 class StudentUserCreate(BaseUser):
     role: SkipJsonSchema[RoleEnum] = RoleEnum.STUDENT
