@@ -3,7 +3,7 @@ from typing import Sequence
 from fastapi import HTTPException, status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import joinedload
+from sqlalchemy.orm import joinedload, selectinload
 
 from src.api.models import Class
 from .schemas import ClassCreate
@@ -15,36 +15,29 @@ async def get_classes(session: AsyncSession) -> Sequence[Class]:
     return list(classes)
 
 
-async def get_class_by_id(session: AsyncSession, class_id: int) -> Class | None:
-    return await session.get(
-        Class,
-        class_id,
-        options=[
-            joinedload(Class.students),
-            joinedload(Class.teacher)
-        ]
-    )
-
-
-async def get_class_by_num(
+async def get_class(
     session: AsyncSession,
-    class_num: int,
-) -> Class:
-    result = await session.execute(
-        select(Class)
-        .filter(Class.class_num == class_num)
-        .options(
+    value: int,
+    by_id: bool = False
+) -> Class| None:
+
+    query = select(Class).options(
             joinedload(Class.teacher),
-            joinedload(Class.students)
-        )
+            selectinload(Class.students)
     )
 
+    if by_id:
+        query = query.filter(Class.id == value)
+    else:
+        query = query.filter(Class.class_num == value)
+
+    result = await session.execute(query)
     class_ = result.unique().scalar_one_or_none()
 
     if class_ is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Class with number {class_num} not found",
+            detail="Class not found",
         )
 
     return class_
