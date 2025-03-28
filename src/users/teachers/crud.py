@@ -4,6 +4,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload
 
+from src.api.classes.dependencies import class_id_by_number
 from src.api.models import User, Teacher
 from src.api.models.users import RoleEnum
 from src.auth.utils import hash_password
@@ -35,7 +36,9 @@ async def create_teacher(
     session.add(user)
     await session.flush()
 
-    teacher = Teacher(user_id=user.id, **teacher_in.model_dump())
+    class_id = await class_id_by_number(teacher_in.class_num, session=session)
+    teacher_data = teacher_in.model_dump(exclude={"class_id", "class_num"})
+    teacher = Teacher(user_id=user.id, class_id=class_id, **teacher_data)
     session.add(teacher)
 
     return user

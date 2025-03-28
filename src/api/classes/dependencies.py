@@ -7,7 +7,7 @@ from starlette import status
 
 from src.core import db_helper
 from .crud import get_class_by_id
-from .schemas import Class
+from ..models import Class
 
 
 async def class_by_id(
@@ -25,9 +25,10 @@ async def class_by_id(
 async def class_id_by_number(
     class_num: Annotated[int, Path],
     session: AsyncSession = Depends(db_helper.scoped_session_dependency),
-) -> int | None:
+) -> int:
     result = await session.execute(
-        select(Class.id).filter(Class.class_num == class_num)
+        select(Class.id)
+        .filter(Class.class_num == class_num)
     )
     class_id = result.scalar_one_or_none()
 

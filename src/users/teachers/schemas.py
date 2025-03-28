@@ -1,4 +1,5 @@
 from pydantic import Field, BaseModel
+from pydantic.json_schema import SkipJsonSchema
 
 
 class BaseTeacher(BaseModel):
@@ -6,7 +7,8 @@ class BaseTeacher(BaseModel):
 
 
 class TeacherCreate(BaseTeacher):
-    pass
+    class_id: SkipJsonSchema[int] = None
+    class_num: int
 
 
 class TeacherUpdate(TeacherCreate):

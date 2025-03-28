@@ -10,7 +10,7 @@ from .schemas import ClassCreate
 
 
 async def get_classes(session: AsyncSession) -> Sequence[Class]:
-    stmt = select(Class).order_by(Class.id)
+    stmt = select(Class)
     classes = await session.scalars(stmt)
     return list(classes)
 

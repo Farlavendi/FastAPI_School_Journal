@@ -11,12 +11,13 @@ from .dependencies import class_by_id
 from .schemas import (
     Class,
     ClassCreate,
+    ClassResponse,
 )
 
 classes_router = APIRouter(prefix="/classes", tags=["Classes"])
 
 
-@classes_router.get("/", response_model=list[Class])
+@classes_router.get("/", response_model=list[ClassResponse])
 async def get_classes(
     session: AsyncSession = Depends(db_helper.scoped_session_dependency),
 ):

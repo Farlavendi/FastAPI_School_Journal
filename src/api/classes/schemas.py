@@ -14,3 +14,8 @@ class Class(ClassCreate):
     id: int = Field(..., ge=0)
     students: Optional[List[Student]]
     teacher: Optional[Teacher]
+
+
+class ClassResponse(BaseModel):
+    id: int
+    class_num: int
