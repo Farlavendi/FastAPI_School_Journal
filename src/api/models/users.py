@@ -12,9 +12,9 @@ if TYPE_CHECKING:
 
 
 class RoleEnum(Enum):
-    STUDENT = "student"
-    TEACHER = "teacher"
-    SUPERUSER = "superuser"
+    STUDENT = "STUDENT"
+    TEACHER = "TEACHER"
+    SUPERUSER = "SUPERUSER"
 
 
 class User(Base):
@@ -36,7 +36,7 @@ class User(Base):
     last_name: Mapped[str] = mapped_column(String(100))
 
     role: Mapped[RoleEnum] = mapped_column(
-        sa.Enum(RoleEnum), default=RoleEnum.STUDENT, nullable=False, index=True
+        sa.Enum(RoleEnum, name='role_enum'), nullable=False, index=True
     )
     is_active: Mapped[bool] = mapped_column(default=True, nullable=False)
 

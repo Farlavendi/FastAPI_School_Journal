@@ -1,5 +1,7 @@
+from enum import Enum
 from typing import TYPE_CHECKING
 
+import sqlalchemy as sa
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -7,6 +9,16 @@ from . import Base
 
 if TYPE_CHECKING:
     from . import Class, User
+
+
+class SubjectEnum(Enum):
+    MATH = "MATH"
+    ENGLISH = "ENGLISH"
+    PHYSICS = "PHYSICS"
+    CHEMISTRY = "CHEMISTRY"
+    HISTORY = "HISTORY"
+    GEOGRAPHY = "GEOGRAPHY"
+    LITERATURE = "LITERATURE"
 
 
 class Teacher(Base):
@@ -31,6 +43,9 @@ class Teacher(Base):
         nullable=False,
         unique=True,
         index=True
+    )
+    subject: Mapped[SubjectEnum] = mapped_column(
+        sa.Enum(SubjectEnum, name='subject_enum'), nullable=True, index=True
     )
 
     user: Mapped["User"] = relationship(back_populates="teacher")

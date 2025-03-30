@@ -1,7 +1,10 @@
+from typing import Annotated, Optional
+
 import sqlalchemy
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Path
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from src.api.models.teachers import SubjectEnum
 from src.core import db_helper
 from src.users.schemas import TeacherUserCreate
 from src.users.teachers import crud
@@ -22,10 +25,11 @@ async def get_teachers(
 async def create_user_teacher(
     user_in: TeacherUserCreate,
     teacher_in: TeacherCreate,
+    subject: Optional[Annotated[SubjectEnum, Path]],
     session: AsyncSession = Depends(db_helper.scoped_session_dependency),
 ):
     try:
-        user = await create_teacher(session=session, user_in=user_in, teacher_in=teacher_in)
+        user = await create_teacher(session=session, user_in=user_in, teacher_in=teacher_in, subject=subject)
         await session.commit()
         return user
     except sqlalchemy.exc.IntegrityError:

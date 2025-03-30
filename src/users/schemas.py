@@ -8,7 +8,7 @@ from src.api.models.users import RoleEnum
 from .students.schemas import Student
 from .teachers.schemas import Teacher
 
-password_regex = r'^[A-Za-z0-9]+$'
+password_regex = r'^[A-Za-z0-9_]+$'
 
 
 class BaseUser(BaseModel):
