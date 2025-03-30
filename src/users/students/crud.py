@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload
 
 from src.api.classes.dependencies import class_id_by_number
-from src.api.models import User, Student
+from src.api.models import User, Student, Marks
 from src.api.models.users import RoleEnum
 from src.auth.utils import hash_password
 from src.users.schemas import StudentUserCreate
@@ -39,5 +39,9 @@ async def create_student(
     student_data = student_in.model_dump(exclude={"class_id", "class_num"})
     student = Student(user_id=user.id, class_id=class_id, **student_data)
     session.add(student)
+    await session.flush()
+
+    marks = Marks(student_id=student.id)
+    session.add(marks)
 
     return user

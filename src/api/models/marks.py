@@ -12,13 +12,13 @@ if TYPE_CHECKING:
 class Marks(Base):
     __tablename__ = "marks"
 
-    maths: Mapped[int] = mapped_column()
-    english: Mapped[int] = mapped_column()
-    physics: Mapped[int] = mapped_column()
-    chemistry: Mapped[int] = mapped_column()
-    history: Mapped[int] = mapped_column()
-    geography: Mapped[int] = mapped_column()
-    literature: Mapped[int] = mapped_column()
+    maths: Mapped[int] = mapped_column(nullable=True)
+    english: Mapped[int] = mapped_column(nullable=True)
+    physics: Mapped[int] = mapped_column(nullable=True)
+    chemistry: Mapped[int] = mapped_column(nullable=True)
+    history: Mapped[int] = mapped_column(nullable=True)
+    geography: Mapped[int] = mapped_column(nullable=True)
+    literature: Mapped[int] = mapped_column(nullable=True)
 
     student_id: Mapped[int] = mapped_column(
         ForeignKey(
