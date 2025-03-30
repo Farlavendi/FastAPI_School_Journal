@@ -1,8 +1,11 @@
+from typing import Annotated
+
 import sqlalchemy
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Path
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.core import db_helper
+from src.users.marks_schemas import Marks
 from src.users.schemas import StudentUserCreate
 from src.users.students import crud
 from src.users.students.crud import create_student
@@ -16,6 +19,14 @@ async def get_students(
     session: AsyncSession = Depends(db_helper.scoped_session_dependency),
 ):
     return await crud.get_students(session=session)
+
+
+@students_router.get("/get-marks", response_model=Marks)
+async def get_marks(
+    student_id: Annotated[int, Path],
+    session: AsyncSession = Depends(db_helper.scoped_session_dependency)
+):
+    return await crud.get_marks(session=session, student_id=student_id)
 
 
 @students_router.post("/create-student")

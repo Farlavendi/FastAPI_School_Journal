@@ -1,5 +1,6 @@
 from typing import Sequence
 
+from fastapi import HTTPException, status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload
@@ -21,6 +22,25 @@ async def get_students(session: AsyncSession) -> Sequence[User]:
     )
     students = result.scalars().all()
     return students
+
+
+async def get_marks(
+    session: AsyncSession,
+    student_id: int
+):
+    result = await session.execute(
+        select(Marks)
+        .filter(Marks.student_id == student_id)
+    )
+    marks = result.scalar_one_or_none()
+
+    if not marks:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail='Marks not found.'
+        )
+
+    return marks
 
 
 async def create_student(
