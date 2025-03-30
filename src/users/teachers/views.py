@@ -25,7 +25,7 @@ async def get_teachers(
 async def create_user_teacher(
     user_in: TeacherUserCreate,
     teacher_in: TeacherCreate,
-    subject: Optional[Annotated[SubjectEnum, Path]],
+    subject: Optional[Annotated[SubjectEnum, Path]] = None,
     session: AsyncSession = Depends(db_helper.scoped_session_dependency),
 ):
     try:

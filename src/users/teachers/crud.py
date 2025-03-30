@@ -40,7 +40,7 @@ async def create_teacher(
 
     class_id = await class_id_by_number(teacher_in.class_num, session=session)
     teacher_data = teacher_in.model_dump(exclude={"class_id", "class_num", "subject"})
-    teacher = Teacher(user_id=user.id, class_id=class_id, subject=subject.value ,**teacher_data)
+    teacher = Teacher(user_id=user.id, class_id=class_id, subject=subject ,**teacher_data)
     session.add(teacher)
 
     return user

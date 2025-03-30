@@ -28,7 +28,7 @@ class TeacherResponse(BaseModel):
     id: int
     user_id: int
     class_id: int
-    subject: SubjectEnum
+    subject: SubjectEnum | None
 
 
 class UserResponse(BaseModel):
