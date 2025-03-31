@@ -16,6 +16,7 @@ dependencies = [
     "uvicorn>=0.34.0",
     "python-multipart>=0.0.20",
     "fastapi[standard]>=0.115.11",
+    "passlib[argon2]>=1.7.4",
 ]
 
 [dependency-groups]

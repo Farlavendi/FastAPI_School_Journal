@@ -1,15 +1,15 @@
 from datetime import timedelta, datetime, timezone
 from typing import Annotated
 
-import bcrypt
 import jwt
 from fastapi import HTTPException, Depends, Form
 from fastapi.security import OAuth2PasswordBearer
 from jwt.exceptions import InvalidTokenError
-from pydantic import BaseModel
+from passlib.context import CryptContext
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette import status
 
+from src.auth.schemas import TokenData
 from src.core import config, db_helper
 from src.users import crud
 from src.users.schemas import User
@@ -17,11 +17,10 @@ from src.users.schemas import User
 oauth2_scheme = OAuth2PasswordBearer(
     tokenUrl="/jwt/login",
 )
+
+pwd_context = CryptContext(schemes=['argon2'], deprecated='auto')
+
 auth_jwt_config = config.AuthJWT()
-
-class TokenData(BaseModel):
-    username: str | None = None
-
 
 
 def encode_jwt(
@@ -68,11 +67,11 @@ def decode_jwt(
 
 
 def hash_password(password: str) -> str:
-    return bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
+    return pwd_context.hash(secret=password)
 
 
 def validate_password_hash(password: str, hashed_password: str) -> bool:
-    return bcrypt.checkpw(password.encode("utf-8"), hashed_password.encode("utf-8"))
+    return pwd_context.verify(secret=password, hash=hashed_password)
 
 
 async def get_token_payload(
@@ -86,40 +85,6 @@ async def get_token_payload(
             detail="Invalid token.",
         )
 
-
-# async def validate_token_type(payload: dict, expected_type: str) -> bool:
-#     current_token_type = payload.get("type")
-#
-#     if current_token_type != expected_type:
-#         raise HTTPException(
-#             status_code=status.HTTP_401_UNAUTHORIZED,
-#             detail="Invalid token type.",
-#         )
-#
-#     return True
-
-
-# async def get_user_by_token(
-#     payload: dict = Depends(get_token_payload),
-#     session: AsyncSession = Depends(db_helper.scoped_session_dependency),
-# ):
-#     await validate_token_type(payload=payload, expected_type="access")
-#     user_id = payload.get("sub")
-#
-#     if not user_id:
-#         raise HTTPException(
-#             status_code=status.HTTP_401_UNAUTHORIZED,
-#             detail="Invalid token: missing user ID.",
-#         )
-#
-#     user = await crud.get_user_by_id(session=session, user_id=user_id)
-#
-#     if not user:
-#         raise HTTPException(
-#             status_code=status.HTTP_404_NOT_FOUND, detail="User not found."
-#         )
-#
-#     return user
 
 async def get_current_user(
     token: Annotated[str, Depends(oauth2_scheme)],
