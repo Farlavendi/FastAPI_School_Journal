@@ -1,9 +1,8 @@
 import sqlalchemy
 from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.ext.asyncio import AsyncSession
 from starlette import status
 
-from src.core import db_helper
+from src.core.db_utils import SessionDep
 from . import crud
 from .dependencies import class_by_id
 from .schemas import (
@@ -17,7 +16,7 @@ classes_router = APIRouter(prefix="/classes", tags=["Classes"])
 
 @classes_router.get("/", response_model=list[ClassResponse])
 async def get_classes(
-    session: AsyncSession = Depends(db_helper.scoped_session_dependency),
+    session: SessionDep,
 ):
     return await crud.get_classes(session=session)
 
@@ -36,7 +35,7 @@ async def get_class(
 )
 async def create_class(
     class_in: ClassCreate,
-    session: AsyncSession = Depends(db_helper.scoped_session_dependency),
+    session: SessionDep,
 ):
     try:
         return await crud.create_class(session=session, class_in=class_in)
@@ -51,7 +50,7 @@ async def create_class(
 # async def update_class(
 #     class_update: ClassUpdate,
 #     class_: Class = Depends(class_by_id),
-#     session: AsyncSession = Depends(db_helper.scoped_session_dependency),
+#     session: SessionDep,
 # ):
 #     return await crud.update_class(
 #         session=session,
@@ -62,7 +61,7 @@ async def create_class(
 
 @classes_router.delete("/delete/{class_id}/", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_class(
+    session: SessionDep,
     class_: Class = Depends(class_by_id),
-    session: AsyncSession = Depends(db_helper.scoped_session_dependency),
 ):
     return await crud.delete_class(class_=class_, session=session)

@@ -10,9 +10,9 @@ from src.users.schemas import User
 from .schemas import TokenInfo
 from .token_mixin import create_access_token, create_refresh_token
 from .utils import (
-    validate_auth_user, encode_jwt, get_current_active_user,
-    # get_user_by_token,
-    # validate_token_type
+    validate_auth_user,
+    encode_jwt,
+    CurrentUser,
 )
 
 auth_jwt_config = config.AuthJWT()
@@ -25,8 +25,8 @@ class Token(BaseModel):
 
 http_bearer = HTTPBearer(auto_error=False)
 auth_router = APIRouter(
-    prefix="/jwt",
-    tags=["JWT"],
+    prefix="/auth",
+    tags=["Auth"],
     dependencies=[Depends(http_bearer)],
 )
 
@@ -42,7 +42,6 @@ async def auth_user_issue_jwt(
         access_token=access_token,
         refresh_token=refresh_token,
     )
-
 
 
 @auth_router.post("/token")
@@ -64,7 +63,6 @@ async def login_for_access_token(
     return Token(access_token=access_token, token_type="bearer")
 
 
-
 # @auth_router.post(
 #     "/refresh/", response_model=TokenInfo, response_model_exclude_none=True
 # )
@@ -82,9 +80,16 @@ async def login_for_access_token(
 #     )
 
 
-@auth_router.post("/users/me")
+@auth_router.get("/users/me")
 async def auth_user_check_self_info(
-    current_user: Annotated[User, Depends(get_current_active_user)],
+    # current_user: Annotated[User, Depends(get_current_user)],
+    current_user: CurrentUser
 ):
-    return {"username": current_user.username, "email": current_user.email, "role": current_user.role}
-
+    return {
+        "username": current_user.username,
+        "email": current_user.email,
+        "first_name": current_user.first_name,
+        "second_name": current_user.second_name,
+        "last_name": current_user.last_name,
+        "role": current_user.role
+    }

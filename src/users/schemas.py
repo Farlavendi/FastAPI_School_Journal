@@ -20,7 +20,6 @@ class BaseUser(BaseModel):
     last_name: str = Field(..., min_length=1, max_length=100)
     role: RoleEnum
 
-
     @field_validator("password", mode="after")
     @classmethod
     def validate_password(cls, password: str):
@@ -32,6 +31,7 @@ class BaseUser(BaseModel):
 
         return password
 
+
 class StudentUserCreate(BaseUser):
     role: SkipJsonSchema[RoleEnum] = RoleEnum.STUDENT
 
@@ -40,8 +40,23 @@ class TeacherUserCreate(BaseUser):
     role: SkipJsonSchema[RoleEnum] = RoleEnum.TEACHER
 
 
-class User(BaseUser):
+class User(BaseModel):
     id: int
+    email: EmailStr
+    username: str
+    password: str
+    first_name: str
+    second_name: str
+    last_name: str
+    role: RoleEnum
     is_active: bool
     student: Optional[Student]
     teacher: Optional[Teacher]
+
+
+class UserUpdate(BaseModel):
+    email: Optional[EmailStr] = None
+    username: Optional[str] = None
+    first_name: Optional[str] = None
+    second_name: Optional[str] = None
+    last_name: Optional[str] = None

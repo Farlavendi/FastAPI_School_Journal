@@ -1,11 +1,12 @@
 from typing import Sequence
 
 from fastapi import HTTPException, status
-from sqlalchemy import select
+from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload
 
 from src.api.models import User
+from src.users.schemas import UserUpdate
 
 
 async def get_users(session: AsyncSession) -> Sequence[User]:
@@ -52,3 +53,19 @@ async def delete_user(
 ) -> None:
     await session.delete(user)
     await session.commit()
+
+
+async def update_user(
+    session: AsyncSession,
+    user_id: int,
+    user_in: UserUpdate
+):
+    stmt = (
+        update(User)
+        .where(User.id == user_id)
+        .values(**user_in.model_dump(exclude_unset=True))
+        .returning(User)
+    )
+    result = await session.execute(stmt)
+    await session.commit()
+    return result.scalar_one()

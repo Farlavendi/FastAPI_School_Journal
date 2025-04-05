@@ -1,10 +1,9 @@
 from typing import Annotated
 
 import sqlalchemy
-from fastapi import APIRouter, Depends, HTTPException, status, Path
-from sqlalchemy.ext.asyncio import AsyncSession
+from fastapi import APIRouter, HTTPException, status, Path
 
-from src.core import db_helper
+from src.core.db_utils import SessionDep
 from src.users.marks_schemas import Marks
 from src.users.schemas import StudentUserCreate
 from src.users.students import crud
@@ -16,7 +15,7 @@ students_router = APIRouter(prefix="/students")
 
 @students_router.get("/get-students", response_model=list[UserResponse])
 async def get_students(
-    session: AsyncSession = Depends(db_helper.scoped_session_dependency),
+    session: SessionDep,
 ):
     return await crud.get_students(session=session)
 
@@ -24,7 +23,7 @@ async def get_students(
 @students_router.get("/get-marks", response_model=Marks)
 async def get_marks(
     student_id: Annotated[int, Path],
-    session: AsyncSession = Depends(db_helper.scoped_session_dependency)
+    session: SessionDep,
 ):
     return await crud.get_marks(session=session, student_id=student_id)
 
@@ -33,7 +32,7 @@ async def get_marks(
 async def create_user_student(
     user_in: StudentUserCreate,
     student_in: StudentCreate,
-    session: AsyncSession = Depends(db_helper.scoped_session_dependency),
+    session: SessionDep,
 ):
     try:
         user = await create_student(session=session, user_in=user_in, student_in=student_in)

@@ -6,11 +6,12 @@ from fastapi import HTTPException, Depends, Form
 from fastapi.security import OAuth2PasswordBearer
 from jwt.exceptions import InvalidTokenError
 from passlib.context import CryptContext
-from sqlalchemy.ext.asyncio import AsyncSession
+from pydantic import ValidationError
 from starlette import status
 
 from src.auth.schemas import TokenData
-from src.core import config, db_helper
+from src.core import config
+from src.core.db_utils import SessionDep
 from src.users import crud
 from src.users.schemas import User
 
@@ -88,12 +89,11 @@ async def get_token_payload(
 
 async def get_current_user(
     token: Annotated[str, Depends(oauth2_scheme)],
-    session: AsyncSession = Depends(db_helper.scoped_session_dependency)
+    session: SessionDep,
 ):
     credentials_exception = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
+        status_code=status.HTTP_403_FORBIDDEN,
         detail="Could not validate credentials",
-        headers={"WWW-Authenticate": "Bearer"},
     )
     try:
         payload = jwt.decode(
@@ -101,32 +101,32 @@ async def get_current_user(
             auth_jwt_config.public_key,
             algorithms=[auth_jwt_config.algorithm])
         username = payload.get("sub")
-        if username is None:
+        if not username:
             raise credentials_exception
         token_data = TokenData(username=username)
-    except InvalidTokenError:
+    except (InvalidTokenError, ValidationError):
         raise credentials_exception
     user = await crud.get_user_by_username(session=session, username=username)
-    if user is None:
-        raise credentials_exception
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User not found"
+        )
+    if not user.is_active:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Inactive user"
+        )
     return user
 
 
-async def get_current_active_user(
-    current_user: Annotated[User, Depends(get_current_user)],
-):
-    if not current_user.is_active:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Inactive user"
-        )
-    return current_user
+CurrentUser = Annotated[User, Depends(get_current_user)]
 
 
 async def validate_auth_user(
+    session: SessionDep,
     username: str = Form(),
     password: str = Form(),
-    session: AsyncSession = Depends(db_helper.scoped_session_dependency),
 ):
     user = await crud.get_user_by_username(session, username)
 

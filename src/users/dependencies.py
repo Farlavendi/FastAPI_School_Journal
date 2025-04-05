@@ -1,15 +1,14 @@
 from typing import Annotated
 
-from fastapi import Path, Depends, HTTPException, status
-from sqlalchemy.ext.asyncio import AsyncSession
+from fastapi import Path, HTTPException, status
 
-from src.core import db_helper
+from src.core.db_utils import SessionDep
 from . import crud
 
 
 async def user_by_id(
     user_id: Annotated[int, Path],
-    session: AsyncSession = Depends(db_helper.scoped_session_dependency),
+    session: SessionDep,
 ):
     user = await crud.get_user_by_id(session=session, user_id=user_id)
     if user is None:

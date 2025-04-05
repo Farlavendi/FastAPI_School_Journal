@@ -1,26 +1,25 @@
 from typing import Annotated
 
-from fastapi import Path, Depends, HTTPException
+from fastapi import Path, HTTPException
 from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
 from starlette import status
 
 from src.api.models import Class
-from src.core import db_helper
+from src.core.db_utils import SessionDep
 from .crud import get_class
 
 
 async def class_by_id(
     value: Annotated[int, Path],
     by_id: Annotated[bool, Path],
-    session: AsyncSession = Depends(db_helper.scoped_session_dependency),
+    session: SessionDep,
 ):
     return await get_class(session=session, value=value, by_id=by_id)
 
 
 async def class_id_by_number(
     class_num: Annotated[int, Path],
-    session: AsyncSession = Depends(db_helper.scoped_session_dependency),
+    session: SessionDep,
 ) -> int:
     result = await session.execute(
         select(Class.id)
