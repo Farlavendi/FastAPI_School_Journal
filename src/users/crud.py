@@ -60,12 +60,11 @@ async def update_user(
     user_id: int,
     user_in: UserUpdate
 ):
-    stmt = (
+    result = await session.execute(
         update(User)
-        .where(User.id == user_id)
+        .filter(User.id == user_id)
         .values(**user_in.model_dump(exclude_unset=True))
         .returning(User)
     )
-    result = await session.execute(stmt)
     await session.commit()
     return result.scalar_one()

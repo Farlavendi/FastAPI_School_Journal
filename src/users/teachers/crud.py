@@ -1,14 +1,16 @@
 from typing import Sequence
 
-from sqlalchemy import select
+from fastapi import HTTPException, status
+from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload
 
 from src.api.classes.dependencies import class_id_by_number
-from src.api.models import User, Teacher
+from src.api.models import User, Teacher, Marks
 from src.api.models.teachers import SubjectEnum
 from src.api.models.users import RoleEnum
-from src.auth.utils import hash_password
+from src.auth.utils import hash_password, CurrentUser
+from src.users.marks_schemas import MarksUpdate
 from src.users.schemas import TeacherUserCreate
 from src.users.teachers.schemas import TeacherCreate
 
@@ -40,7 +42,28 @@ async def create_teacher(
 
     class_id = await class_id_by_number(teacher_in.class_num, session=session)
     teacher_data = teacher_in.model_dump(exclude={"class_id", "class_num", "subject"})
-    teacher = Teacher(user_id=user.id, class_id=class_id, subject=subject ,**teacher_data)
+    teacher = Teacher(user_id=user.id, class_id=class_id, subject=subject, **teacher_data)
     session.add(teacher)
 
     return user
+
+
+async def update_marks(
+    session: AsyncSession,
+    user: CurrentUser,
+    marks: MarksUpdate
+):
+    if user.role != RoleEnum.TEACHER:
+        return HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Only teachers can edit marks!"
+        )
+
+    result = await session.execute(
+        update(Marks)
+        .filter(Marks.student_id == marks.student_id)
+        .values(**marks.model_dump(exclude_unset=True))
+        .returning(Marks)
+    )
+    await session.commit()
+    return result.scalar_one()

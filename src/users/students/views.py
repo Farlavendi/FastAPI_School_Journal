@@ -7,7 +7,6 @@ from src.core.db_utils import SessionDep
 from src.users.marks_schemas import Marks
 from src.users.schemas import StudentUserCreate
 from src.users.students import crud
-from src.users.students.crud import create_student
 from src.users.students.schemas import StudentCreate, UserResponse
 
 students_router = APIRouter(prefix="/students")
@@ -35,7 +34,7 @@ async def create_user_student(
     session: SessionDep,
 ):
     try:
-        user = await create_student(session=session, user_in=user_in, student_in=student_in)
+        user = await crud.create_student(session=session, user_in=user_in, student_in=student_in)
         await session.commit()
         return user
     except sqlalchemy.exc.IntegrityError:
