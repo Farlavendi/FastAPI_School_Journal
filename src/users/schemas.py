@@ -1,6 +1,7 @@
 import re
 from typing import Optional
 
+from fastapi import HTTPException, status
 from pydantic import BaseModel, EmailStr, Field, field_validator
 from pydantic.json_schema import SkipJsonSchema
 
@@ -8,26 +9,31 @@ from src.api.models.users import RoleEnum
 from .students.schemas import Student
 from .teachers.schemas import Teacher
 
-password_regex = r'^[A-Za-z0-9_]+$'
+password_regex = r'^[a-zA-Z0-9_]+$'
 
 
 class BaseUser(BaseModel):
     email: EmailStr = Field(...)
     username: str = Field(..., min_length=3, max_length=50)
-    password: str = Field(...)
+    password: str = Field(..., min_length=8, max_length=20, pattern=password_regex)
     first_name: str = Field(..., min_length=1, max_length=100)
     second_name: str | None = Field(max_length=100)
     last_name: str = Field(..., min_length=1, max_length=100)
     role: RoleEnum
 
-    @field_validator("password", mode="after")
+    @field_validator("password", mode="plain")
     @classmethod
     def validate_password(cls, password: str):
         if len(password) < 8 or len(password) > 20:
-            raise ValueError("Password must contain between 8 and 20 characters.")
-
+            raise HTTPException(
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                detail="Password must contain between 8 and 20 characters."
+            )
         if not re.match(password_regex, password):
-            raise ValueError("Password can only contain letters and digits.")
+            raise HTTPException(
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                detail="Password can only contain letters, digits or _ sign."
+            )
 
         return password
 
