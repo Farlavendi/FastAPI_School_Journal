@@ -16,7 +16,7 @@ from src.users import crud
 from src.users.schemas import User
 
 oauth2_scheme = OAuth2PasswordBearer(
-    tokenUrl="/jwt/login",
+    tokenUrl="/auth/login",
 )
 
 pwd_context = CryptContext(schemes=['argon2'], deprecated='auto')
