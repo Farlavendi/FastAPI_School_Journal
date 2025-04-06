@@ -16,8 +16,9 @@ class TeacherCreate(BaseTeacher):
     class_num: int
     subject: SkipJsonSchema[SubjectEnum] = None
 
-class TeacherUpdate(TeacherCreate):
-    id: int
+
+class TeacherUpdate(BaseTeacher):
+    subject: SubjectEnum
 
 
 class Teacher(BaseTeacher):

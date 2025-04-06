@@ -50,3 +50,17 @@ async def update_marks(
     )
 
     return updated_marks
+
+
+@teachers_router.patch("/update-subject")
+async def update_subject(
+    session: SessionDep,
+    user: CurrentUser,
+    subject: SubjectEnum
+):
+    updated_subject = await crud.update_subject(
+        session=session,
+        user=user,
+        subject=subject
+    )
+    return updated_subject

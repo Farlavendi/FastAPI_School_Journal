@@ -58,12 +58,31 @@ async def update_marks(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Only teachers can edit marks!"
         )
-
     result = await session.execute(
         update(Marks)
         .filter(Marks.student_id == marks.student_id)
         .values(**marks.model_dump(exclude_unset=True))
         .returning(Marks)
+    )
+    await session.commit()
+    return result.scalar_one()
+
+
+async def update_subject(
+    session: AsyncSession,
+    user: CurrentUser,
+    subject: SubjectEnum,
+):
+    if user.role != RoleEnum.TEACHER:
+        return HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Only teachers have subject to update."
+        )
+    result = await session.execute(
+        update(Teacher)
+        .filter(Teacher.user_id == user.id)
+        .values(subject=subject)
+        .returning(Teacher)
     )
     await session.commit()
     return result.scalar_one()
