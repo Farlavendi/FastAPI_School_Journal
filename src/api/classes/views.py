@@ -46,7 +46,7 @@ async def create_class(
         )
 
 
-# @classes_router.put("/update/{class_id}/")
+# @classes_router.patch("/update/{class_id}/")
 # async def update_class(
 #     class_update: ClassUpdate,
 #     class_: Class = Depends(class_by_id),
