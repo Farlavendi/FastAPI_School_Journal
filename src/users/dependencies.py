@@ -1,9 +1,10 @@
 from typing import Annotated
 
-from fastapi import Path, HTTPException, status
+from fastapi import Path, HTTPException, status, Depends
 
 from src.core.db_utils import SessionDep
 from . import crud
+from .schemas import User
 
 
 async def user_by_id(
@@ -17,3 +18,5 @@ async def user_by_id(
             detail=f"User with id {user_id} not found.",
         )
     return user
+
+UserByIdDep = Annotated[User, Depends(user_by_id)]

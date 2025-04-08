@@ -3,11 +3,11 @@ from fastapi.responses import ORJSONResponse
 from starlette import status
 
 from src.api.models.users import RoleEnum
-from src.auth.utils import CurrentUser
+from src.auth.utils import CurrentUserDep
 from src.auth.views import http_bearer
 from src.core.db_utils import SessionDep
 from . import crud
-from .dependencies import user_by_id
+from .dependencies import UserByIdDep
 from .schemas import User, UserUpdate
 
 users_router = APIRouter(prefix="/users", tags=["Users"], dependencies=[Depends(http_bearer)])
@@ -22,7 +22,7 @@ async def get_users(
 
 @users_router.get("/{users_id}", response_model=User, response_model_exclude_none=True)
 async def get_user_by_id(
-    user: User = Depends(user_by_id),
+    user: UserByIdDep,
 ):
     return user
 
@@ -46,7 +46,7 @@ async def choose_role(role: RoleEnum):
 
 @users_router.get("/users/me")
 async def auth_user_check_self_info(
-    current_user: CurrentUser,
+    current_user: CurrentUserDep,
 ):
     return {
         "username": current_user.username,
@@ -62,7 +62,7 @@ async def auth_user_check_self_info(
 async def update_user(
     user_update: UserUpdate,
     session: SessionDep,
-    user: CurrentUser
+    user: CurrentUserDep
 ):
     updated_user = await crud.update_user(
         session=session,
@@ -75,6 +75,6 @@ async def update_user(
 @users_router.delete("/delete/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_user(
     session: SessionDep,
-    user: User = Depends(user_by_id),
+    user: UserByIdDep,
 ):
     return await crud.delete_user(user=user, session=session)

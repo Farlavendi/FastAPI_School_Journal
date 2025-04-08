@@ -120,10 +120,7 @@ async def get_current_user(
     return user
 
 
-CurrentUser = Annotated[User, Depends(get_current_user)]
-
-
-async def validate_auth_user(
+async def validate_user(
     session: SessionDep,
     username: str = Form(),
     password: str = Form(),
@@ -149,3 +146,7 @@ async def validate_auth_user(
         )
 
     return user
+
+
+CurrentUserDep = Annotated[User, Depends(get_current_user)]
+ValidateUserDep = Annotated[User, Depends(validate_user)]

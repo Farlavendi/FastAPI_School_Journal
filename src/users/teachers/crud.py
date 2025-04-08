@@ -9,7 +9,7 @@ from src.api.classes.dependencies import class_id_by_number
 from src.api.models import User, Teacher, Marks
 from src.api.models.teachers import SubjectEnum
 from src.api.models.users import RoleEnum
-from src.auth.utils import hash_password, CurrentUser
+from src.auth.utils import hash_password, CurrentUserDep
 from src.users.marks_schemas import MarksUpdate
 from src.users.schemas import TeacherUserCreate
 from src.users.teachers.schemas import TeacherCreate
@@ -50,7 +50,7 @@ async def create_teacher(
 
 async def update_marks(
     session: AsyncSession,
-    user: CurrentUser,
+    user: CurrentUserDep,
     marks: MarksUpdate
 ):
     if user.role != RoleEnum.TEACHER:
@@ -70,7 +70,7 @@ async def update_marks(
 
 async def update_subject(
     session: AsyncSession,
-    user: CurrentUser,
+    user: CurrentUserDep,
     subject: SubjectEnum,
 ):
     if user.role != RoleEnum.TEACHER:

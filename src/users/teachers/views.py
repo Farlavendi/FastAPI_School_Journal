@@ -4,7 +4,7 @@ import sqlalchemy
 from fastapi import APIRouter, HTTPException, status, Path
 
 from src.api.models.teachers import SubjectEnum
-from src.auth.utils import CurrentUser
+from src.auth.utils import CurrentUserDep
 from src.core.db_utils import SessionDep
 from src.users.marks_schemas import MarksUpdate
 from src.users.schemas import TeacherUserCreate
@@ -40,7 +40,7 @@ async def create_user_teacher(
 @teachers_router.patch("/edit-marks")
 async def update_marks(
     session: SessionDep,
-    user: CurrentUser,
+    user: CurrentUserDep,
     marks: MarksUpdate,
 ):
     updated_marks = await crud.update_marks(
@@ -55,7 +55,7 @@ async def update_marks(
 @teachers_router.patch("/update-subject")
 async def update_subject(
     session: SessionDep,
-    user: CurrentUser,
+    user: CurrentUserDep,
     subject: SubjectEnum
 ):
     updated_subject = await crud.update_subject(

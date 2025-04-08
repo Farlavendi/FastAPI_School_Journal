@@ -1,10 +1,10 @@
 import sqlalchemy
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, HTTPException
 from starlette import status
 
 from src.core.db_utils import SessionDep
 from . import crud
-from .dependencies import class_by_id
+from .dependencies import ClassByValueDep
 from .schemas import (
     Class,
     ClassCreate,
@@ -23,7 +23,7 @@ async def get_classes(
 
 @classes_router.get("/{value}", response_model=Class)
 async def get_class(
-    class_: Class = Depends(class_by_id),
+    class_: ClassByValueDep,
 ):
     return class_
 
@@ -62,6 +62,6 @@ async def create_class(
 @classes_router.delete("/delete/{class_id}/", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_class(
     session: SessionDep,
-    class_: Class = Depends(class_by_id),
+    class_: ClassByValueDep,
 ):
     return await crud.delete_class(class_=class_, session=session)

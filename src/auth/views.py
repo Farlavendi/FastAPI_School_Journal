@@ -6,13 +6,12 @@ from fastapi.security import HTTPBearer, OAuth2PasswordRequestForm
 from pydantic import BaseModel
 
 from src.core import config
-from src.users.schemas import User
 from .schemas import TokenInfo
 from .token_mixin import create_access_token, create_refresh_token
 from .utils import (
-    validate_auth_user,
     encode_jwt,
-    CurrentUser,
+    CurrentUserDep,
+    ValidateUserDep,
 )
 
 auth_jwt_config = config.AuthJWT()
@@ -32,8 +31,8 @@ auth_router = APIRouter(
 
 
 @auth_router.post("/login/", response_model=TokenInfo)
-async def auth_user_issue_jwt(
-    user: User = Depends(validate_auth_user),
+async def issue_jwt(
+    user: ValidateUserDep,
 ):
     access_token = create_access_token(user)
     refresh_token = create_refresh_token(user)
@@ -47,7 +46,7 @@ async def auth_user_issue_jwt(
 @auth_router.post("/token")
 async def login_for_access_token(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
-    user: User = Depends(validate_auth_user)
+    user: ValidateUserDep
 ) -> Token:
     authenticated_user = user
     if not user:
@@ -81,9 +80,8 @@ async def login_for_access_token(
 
 
 @auth_router.get("/users/me")
-async def auth_user_check_self_info(
-    # current_user: Annotated[User, Depends(get_current_user)],
-    current_user: CurrentUser
+async def check_self_info(
+    current_user: CurrentUserDep
 ):
     return {
         "username": current_user.username,
