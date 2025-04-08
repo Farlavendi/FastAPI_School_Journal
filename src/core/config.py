@@ -31,7 +31,7 @@ class Settings(BaseSettings):
         env_file_encoding="utf-8",
         extra="ignore",
     )
-    api_prefix: str = "/api"
+    api_v1_prefix: str = "/api/v1"
 
     db: DatabaseConfig
 

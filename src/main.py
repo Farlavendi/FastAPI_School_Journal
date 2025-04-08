@@ -20,7 +20,7 @@ app = FastAPI(
     default_response_class=ORJSONResponse,
     lifespan=lifespan,
 )
-app.include_router(router=api_router, prefix=settings.api_prefix)
+app.include_router(router=api_router, prefix=settings.api_v1_prefix)
 app.include_router(router=auth_router)
 
 
