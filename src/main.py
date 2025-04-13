@@ -5,6 +5,7 @@ from fastapi import FastAPI
 from fastapi.responses import RedirectResponse, ORJSONResponse
 
 from src.api import router as api_router
+from src.auth.middlewares import AutoRefreshTokenMiddleware
 from src.auth.views import auth_router
 from src.core.config import settings
 from src.core.db_utils import db_helper
@@ -22,6 +23,7 @@ app = FastAPI(
 )
 app.include_router(router=api_router, prefix=settings.api_v1_prefix)
 app.include_router(router=auth_router)
+app.add_middleware(AutoRefreshTokenMiddleware)
 
 
 @app.get("/")

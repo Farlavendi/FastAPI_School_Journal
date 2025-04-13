@@ -5,7 +5,7 @@ from typing import Annotated
 import jwt
 from fastapi import HTTPException, Depends, Form
 from fastapi.security import OAuth2PasswordBearer
-from jwt.exceptions import InvalidTokenError
+from jwt.exceptions import InvalidTokenError, ExpiredSignatureError
 from passlib.context import CryptContext
 from pydantic import ValidationError
 from starlette import status
@@ -61,6 +61,11 @@ def decode_jwt(
 ):
     try:
         return jwt.decode(jwt=token, key=public_key, algorithms=[algorithm])
+    except ExpiredSignatureError:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Token has expired"
+        )
     except InvalidTokenError:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
