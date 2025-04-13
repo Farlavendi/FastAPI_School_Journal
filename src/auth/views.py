@@ -5,6 +5,7 @@ from src.core import config
 from .schemas import TokenInfo
 from .token_mixin import create_access_token, create_refresh_token, refresh_jwt_token
 from .utils import CurrentUserDep, ValidateUserDep
+from ..core.db_utils import SessionDep
 
 auth_jwt_config = config.AuthJWT()
 
@@ -16,14 +17,15 @@ auth_router = APIRouter(
 )
 
 
-@auth_router.get("/refresh", response_model=TokenInfo)
+@auth_router.get("/refresh", response_model=TokenInfo, response_model_exclude_none=True)
 async def refresh_jwt(
     request: Request,
     response: Response,
+    session: SessionDep
 ):
     refresh_token = request.cookies.get("refresh_token")
 
-    token_info = await refresh_jwt_token(refresh_token)
+    token_info = await refresh_jwt_token(session=session, refresh_token=refresh_token)
 
     response.set_cookie(
         key="access_token",

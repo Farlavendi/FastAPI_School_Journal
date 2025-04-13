@@ -1,11 +1,11 @@
 from datetime import timedelta
 
 from fastapi import HTTPException, status
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.auth.schemas import TokenInfo
 from src.auth.utils import encode_jwt, decode_jwt
 from src.core import config
-from src.core.db_utils import SessionDep
 from src.users.crud import get_user_by_username
 from src.users.schemas import User
 
@@ -54,7 +54,7 @@ def create_refresh_token(
     )
 
 
-async def refresh_jwt_token(session: SessionDep, refresh_token: str) -> TokenInfo:
+async def refresh_jwt_token(session: AsyncSession, refresh_token: str) -> TokenInfo:
     if not refresh_token:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
