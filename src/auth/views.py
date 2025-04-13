@@ -2,10 +2,10 @@ from fastapi import APIRouter, Depends, Response, Request
 from fastapi.security import HTTPBearer
 
 from src.core import config
+from src.core.db_utils import SessionDep
 from .schemas import TokenInfo
 from .token_mixin import create_access_token, create_refresh_token, refresh_jwt_token
 from .utils import CurrentUserDep, ValidateUserDep
-from ..core.db_utils import SessionDep
 
 auth_jwt_config = config.AuthJWT()
 
@@ -42,7 +42,7 @@ async def refresh_jwt(
 @auth_router.post("/login/", response_model=TokenInfo)
 async def issue_jwt(
     user: ValidateUserDep,
-    response: Response
+    response: Response,
 ):
     access_token = create_access_token(user)
     refresh_token = create_refresh_token(user)

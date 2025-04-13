@@ -19,4 +19,5 @@ async def user_by_id(
         )
     return user
 
+
 UserByIdDep = Annotated[User, Depends(user_by_id)]

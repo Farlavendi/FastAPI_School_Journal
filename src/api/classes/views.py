@@ -46,19 +46,6 @@ async def create_class(
         )
 
 
-# @classes_router.patch("/update/{class_id}/")
-# async def update_class(
-#     class_update: ClassUpdate,
-#     class_: Class = Depends(class_by_id),
-#     session: SessionDep,
-# ):
-#     return await crud.update_class(
-#         session=session,
-#         class_=class_,
-#         class_update=class_update,
-#     )
-
-
 @classes_router.delete("/delete/{class_id}/", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_class(
     session: SessionDep,

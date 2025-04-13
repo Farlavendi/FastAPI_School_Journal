@@ -101,6 +101,11 @@ async def get_current_user(
         status_code=status.HTTP_403_FORBIDDEN,
         detail="Could not validate credentials",
     )
+    if not token:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Not authenticated",
+        )
     try:
         payload = jwt.decode(
             token,
