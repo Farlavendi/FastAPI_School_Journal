@@ -1,3 +1,4 @@
+import uuid
 from datetime import timedelta, datetime, timezone
 from typing import Annotated
 
@@ -9,7 +10,6 @@ from passlib.context import CryptContext
 from pydantic import ValidationError
 from starlette import status
 
-from src.auth.schemas import TokenData
 from src.core import config
 from src.core.db_utils import SessionDep
 from src.users import crud
@@ -39,12 +39,13 @@ def encode_jwt(
     else:
         expire_time = now + timedelta(minutes=expire_minutes)
 
-    # to_encode.update(
-    #     exp=expire_time,
-    #     iat=now,
-    #     jti=str(uuid.uuid4()),
-    # )
-    to_encode.update({"exp": expire_time})
+    to_encode.update(
+        {
+            "exp": expire_time,
+            "iat": now,
+            "jti": str(uuid.uuid4())
+        }
+    )
     encoded_jwt = jwt.encode(
         payload=to_encode,
         key=private_key,
@@ -103,7 +104,6 @@ async def get_current_user(
         username = payload.get("sub")
         if not username:
             raise credentials_exception
-        token_data = TokenData(username=username)
     except (InvalidTokenError, ValidationError):
         raise credentials_exception
     user = await crud.get_user_by_username(session=session, username=username)

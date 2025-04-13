@@ -48,7 +48,6 @@ async def login_for_access_token(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
     user: ValidateUserDep
 ) -> Token:
-    authenticated_user = user
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -60,23 +59,6 @@ async def login_for_access_token(
         payload={"sub": user.username}, expires_delta=access_token_expires
     )
     return Token(access_token=access_token, token_type="bearer")
-
-
-# @auth_router.post(
-#     "/refresh/", response_model=TokenInfo, response_model_exclude_none=True
-# )
-
-# async def refresh_jwt(
-#     payload: dict = Depends(get_token_payload),
-#     user: User = Depends(get_user_by_token)
-# ):
-#     await validate_token_type(payload=payload, expected_type="refresh")
-#
-#     access_token = create_access_token(user)
-#
-#     return TokenInfo(
-#         access_token=access_token,
-#     )
 
 
 @auth_router.get("/users/me")
