@@ -1,1 +1,8 @@
 .venv/
+.idea/
+
+Dockerfile
+docker-compose.yaml
+
+__pycache__/
+*.pyo

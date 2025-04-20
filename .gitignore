@@ -1,5 +1,8 @@
 .idea/
+.venv/
 git/
-venv/
+
 .env
 certs/
+
+__pycache__/
