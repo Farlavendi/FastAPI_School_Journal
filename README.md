@@ -8,6 +8,7 @@ Follow these simple steps to local deploy.
 ```
 git@github.com:DenisBichuk/Django_School_Journal.git
 ```
+* Configure environment variables. The needed variables can be found in .sample.env file.
 * Run Docker app and docker-compose:
 ```
 docker-compose up -d
