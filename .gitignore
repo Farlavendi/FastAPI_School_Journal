@@ -2,7 +2,6 @@
 .venv/
 git/
 
-.env
 certs/
 
 __pycache__/
