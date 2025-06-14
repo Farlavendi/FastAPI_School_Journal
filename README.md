@@ -1,4 +1,4 @@
-# This is my pet project, a prototype of school journal app.
+# This is my project, a prototype of school journal app.
 *This is its FastAPI based version, you can find Django based one [here](https://github.com/DenisBichuk/Django_School_Journal)*
 
 ---
