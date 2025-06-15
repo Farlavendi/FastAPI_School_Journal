@@ -5,9 +5,9 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload
 
-from src.api.classes.dependencies import class_id_by_number
-from src.api.models import User, Student, Marks
-from src.api.models.users import RoleEnum
+from src.api.v1.classes.dependencies import class_id_by_number
+from src.api.v1.models import User, Student, Marks
+from src.api.v1.models.users import RoleEnum
 from src.auth.utils import hash_password
 from src.users.schemas import StudentUserCreate
 from src.users.students.schemas import StudentCreate

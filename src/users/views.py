@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import ORJSONResponse
 from starlette import status
 
-from src.api.models.users import RoleEnum
+from src.api.v1.models.users import RoleEnum
 from src.auth.utils import CurrentUserDep
 from src.auth.views import http_bearer
 from src.core.db_utils import SessionDep
@@ -10,7 +10,11 @@ from . import crud
 from .dependencies import UserByIdDep
 from .schemas import User, UserUpdate
 
-users_router = APIRouter(prefix="/users", tags=["Users"], dependencies=[Depends(http_bearer)])
+users_router = APIRouter(
+    prefix="/users",
+    tags=["Users"],
+    dependencies=[Depends(http_bearer)]
+)
 
 
 @users_router.get("/", response_model=list[User], response_model_exclude_none=True)

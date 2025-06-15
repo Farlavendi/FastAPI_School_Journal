@@ -3,7 +3,7 @@ from typing import Annotated, Optional
 import sqlalchemy
 from fastapi import APIRouter, HTTPException, status, Path
 
-from src.api.models.teachers import SubjectEnum
+from src.api.v1.models.teachers import SubjectEnum
 from src.auth.utils import CurrentUserDep
 from src.core.db_utils import SessionDep
 from src.users.marks_schemas import MarksUpdate

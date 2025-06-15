@@ -4,7 +4,7 @@ from fastapi import Path, HTTPException, Depends
 from sqlalchemy import select
 from starlette import status
 
-from src.api.models import Class
+from src.api.v1.models import Class
 from src.core.db_utils import SessionDep
 from . import schemas
 from .crud import get_class
@@ -35,6 +35,7 @@ async def class_id_by_number(
         )
 
     return class_id
+
 
 ClassByValueDep = Annotated[schemas.Class, Depends(class_by_id)]
 ClassIdByNumberDep = Annotated[schemas.Class, Depends(class_id_by_number)]

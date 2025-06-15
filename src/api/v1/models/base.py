@@ -5,7 +5,6 @@ from src.core.config import settings
 
 
 class Base(DeclarativeBase):
-
     __abstract__ = True
 
     id: Mapped[int] = mapped_column(

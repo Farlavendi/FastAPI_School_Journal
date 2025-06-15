@@ -5,7 +5,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload, selectinload
 
-from src.api.models import Class
+from src.api.v1.models import Class
 from .schemas import ClassCreate
 
 
@@ -19,11 +19,10 @@ async def get_class(
     session: AsyncSession,
     value: int,
     by_id: bool = False
-) -> Class| None:
-
+) -> Class | None:
     query = select(Class).options(
-            joinedload(Class.teacher),
-            selectinload(Class.students)
+        joinedload(Class.teacher),
+        selectinload(Class.students)
     )
 
     if by_id:

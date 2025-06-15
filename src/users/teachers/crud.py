@@ -5,10 +5,10 @@ from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload
 
-from src.api.classes.dependencies import class_id_by_number
-from src.api.models import User, Teacher, Marks
-from src.api.models.teachers import SubjectEnum
-from src.api.models.users import RoleEnum
+from src.api.v1.classes.dependencies import class_id_by_number
+from src.api.v1.models import User, Teacher, Marks
+from src.api.v1.models.teachers import SubjectEnum
+from src.api.v1.models.users import RoleEnum
 from src.auth.utils import hash_password, CurrentUserDep
 from src.users.marks_schemas import MarksUpdate
 from src.users.schemas import TeacherUserCreate
@@ -42,7 +42,12 @@ async def create_teacher(
 
     class_id = await class_id_by_number(teacher_in.class_num, session=session)
     teacher_data = teacher_in.model_dump(exclude={"class_id", "class_num", "subject"})
-    teacher = Teacher(user_id=user.id, class_id=class_id, subject=subject, **teacher_data)
+    teacher = Teacher(
+        user_id=user.id,
+        class_id=class_id,
+        subject=subject,
+        **teacher_data
+    )
     session.add(teacher)
 
     return user

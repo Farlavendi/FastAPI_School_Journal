@@ -24,6 +24,7 @@ class StudentResponse(BaseModel):
     user_id: int
     class_id: int
 
+
 class UserResponse(BaseModel):
     id: int
     email: str

@@ -3,7 +3,7 @@ from typing import Optional
 from pydantic import Field, BaseModel
 from pydantic.json_schema import SkipJsonSchema
 
-from src.api.models.teachers import SubjectEnum
+from src.api.v1.models.teachers import SubjectEnum
 
 
 class BaseTeacher(BaseModel):

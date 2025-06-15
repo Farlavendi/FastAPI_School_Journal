@@ -5,11 +5,11 @@ from fastapi import HTTPException, status
 from pydantic import BaseModel, EmailStr, Field, field_validator
 from pydantic.json_schema import SkipJsonSchema
 
-from src.api.models.users import RoleEnum
+from src.api.v1.models.users import RoleEnum
 from .students.schemas import Student
 from .teachers.schemas import Teacher
 
-password_regex = r'^[a-zA-Z0-9_]+$'
+password_regex = r"^[a-zA-Z0-9_]+$"
 
 
 class BaseUser(BaseModel):
