@@ -3,10 +3,10 @@ from typing import TYPE_CHECKING
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from . import Base
+from src.core.models import Base, User
 
 if TYPE_CHECKING:
-    from . import User, Class, Marks
+    from . import Class, Marks
 
 
 class Student(Base):

@@ -5,10 +5,10 @@ import sqlalchemy as sa
 from sqlalchemy import String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from . import Base
+from src.core.models import Base
 
 if TYPE_CHECKING:
-    from . import Student, Teacher
+    from src.api.v1.models import Student, Teacher
 
 
 class RoleEnum(Enum):

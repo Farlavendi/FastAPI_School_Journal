@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, relationship, mapped_column
 
-from . import Base
+from src.core.models import Base
 
 if TYPE_CHECKING:
     from . import Student

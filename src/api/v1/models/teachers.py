@@ -5,10 +5,10 @@ import sqlalchemy as sa
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from . import Base
+from src.core.models import Base, User
 
 if TYPE_CHECKING:
-    from . import Class, User
+    from . import Class
 
 
 class SubjectEnum(Enum):
