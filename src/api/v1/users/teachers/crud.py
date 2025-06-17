@@ -8,12 +8,12 @@ from sqlalchemy.orm import joinedload
 from src.api.v1.classes.dependencies import class_id_by_number
 from src.api.v1.models import Teacher, Marks
 from src.api.v1.models.teachers import SubjectEnum
+from src.api.v1.users.marks_schemas import MarksUpdate
+from src.api.v1.users.schemas import TeacherUserCreate
 from src.auth.utils import hash_password, CurrentUserDep
 from src.core.models import User
 from src.core.models.users import RoleEnum
-from src.users.marks_schemas import MarksUpdate
-from src.users.schemas import TeacherUserCreate
-from src.users.teachers.schemas import TeacherCreate
+from .schemas import TeacherCreate
 
 
 async def get_teachers(session: AsyncSession) -> Sequence[User]:

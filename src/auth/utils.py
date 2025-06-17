@@ -10,10 +10,10 @@ from passlib.context import CryptContext
 from pydantic import ValidationError
 from starlette import status
 
+from src.api.v1.users import crud
+from src.api.v1.users.schemas import User
 from src.core import config
 from src.core.db_utils import SessionDep
-from src.users import crud
-from src.users.schemas import User
 
 oauth2_scheme = OAuth2PasswordBearer(
     tokenUrl="/auth/login",

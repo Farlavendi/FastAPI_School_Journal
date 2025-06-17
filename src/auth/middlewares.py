@@ -5,11 +5,11 @@ from fastapi.logger import logger
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.types import ASGIApp
 
+from src.api.v1.users.crud import get_user_by_username
 from src.auth.token_mixin import create_access_token
 from src.auth.utils import decode_jwt
 from src.core import config
 from src.core.db_utils import SessionDep
-from src.users.crud import get_user_by_username
 
 auth_jwt_config = config.AuthJWT()
 

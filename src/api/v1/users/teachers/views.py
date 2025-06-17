@@ -4,12 +4,12 @@ import sqlalchemy
 from fastapi import APIRouter, HTTPException, status, Path
 
 from src.api.v1.models.teachers import SubjectEnum
+from src.api.v1.users.marks_schemas import MarksUpdate
+from src.api.v1.users.schemas import TeacherUserCreate
 from src.auth.utils import CurrentUserDep
 from src.core.db_utils import SessionDep
-from src.users.marks_schemas import MarksUpdate
-from src.users.schemas import TeacherUserCreate
-from src.users.teachers import crud
-from src.users.teachers.schemas import TeacherCreate, UserResponse
+from . import crud
+from .schemas import TeacherCreate, UserResponse
 
 teachers_router = APIRouter(prefix="/teachers")
 

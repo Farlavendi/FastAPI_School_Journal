@@ -2,8 +2,8 @@ from typing import Optional, List
 
 from pydantic import BaseModel, Field
 
-from src.users.students.schemas import Student
-from src.users.teachers.schemas import Teacher
+from src.api.v1.users.students.schemas import Student
+from src.api.v1.users.teachers.schemas import Teacher
 
 
 class ClassCreate(BaseModel):

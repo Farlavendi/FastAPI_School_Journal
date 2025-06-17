@@ -7,11 +7,11 @@ from sqlalchemy.orm import joinedload
 
 from src.api.v1.classes.dependencies import class_id_by_number
 from src.api.v1.models import Student, Marks
+from src.api.v1.users.schemas import StudentUserCreate
 from src.auth.utils import hash_password
 from src.core.models import User
 from src.core.models.users import RoleEnum
-from src.users.schemas import StudentUserCreate
-from src.users.students.schemas import StudentCreate
+from .schemas import StudentCreate
 
 
 async def get_students(session: AsyncSession) -> Sequence[User]:

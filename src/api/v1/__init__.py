@@ -1,10 +1,10 @@
 from fastapi import APIRouter
 
 from src.core.config import settings
-from src.users.students.views import students_router
-from src.users.teachers.views import teachers_router
-from src.users.views import users_router
 from .classes.views import classes_router
+from .users.students.views import students_router
+from .users.teachers.views import teachers_router
+from .users.views import users_router
 
 router = APIRouter(
     prefix=settings.api.v1.prefix,

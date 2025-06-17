@@ -3,11 +3,11 @@ from datetime import timedelta
 from fastapi import HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from src.api.v1.users.crud import get_user_by_username
+from src.api.v1.users.schemas import User
 from src.auth.schemas import TokenInfo
 from src.auth.utils import encode_jwt, decode_jwt
 from src.core import config
-from src.users.crud import get_user_by_username
-from src.users.schemas import User
 
 auth_jwt_config = config.AuthJWT()
 

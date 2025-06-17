@@ -3,11 +3,11 @@ from typing import Annotated
 import sqlalchemy
 from fastapi import APIRouter, HTTPException, status, Path
 
+from src.api.v1.users.marks_schemas import Marks
+from src.api.v1.users.schemas import StudentUserCreate
 from src.core.db_utils import SessionDep
-from src.users.marks_schemas import Marks
-from src.users.schemas import StudentUserCreate
-from src.users.students import crud
-from src.users.students.schemas import StudentCreate, UserResponse
+from . import crud
+from .schemas import StudentCreate, UserResponse
 
 students_router = APIRouter(prefix="/students")
 

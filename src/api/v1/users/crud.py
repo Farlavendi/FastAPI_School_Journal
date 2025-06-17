@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload
 
 from src.core.models import User
-from src.users.schemas import UserUpdate
+from .schemas import UserUpdate
 
 
 async def get_users(session: AsyncSession) -> Sequence[User]:
