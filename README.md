@@ -8,7 +8,7 @@ Follow these simple steps to local deploy.
 ```
 git@github.com:Farlavendi/FastAPI_School_Journal.git
 ```
-* Configure environment variables. The needed variables can be found in .sample.env file.
+* Configure environment variables. The needed variables can be found in .env.template file.
 * Run Docker app and docker-compose:
 ```
 docker-compose up -d
