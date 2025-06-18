@@ -1,13 +1,14 @@
 from typing import Annotated, Optional
 
 import sqlalchemy
-from fastapi import APIRouter, HTTPException, status, Path
+from fastapi import APIRouter, HTTPException, status, Path, BackgroundTasks
 
 from src.api.v1.models.teachers import SubjectEnum
 from src.api.v1.users.marks_schemas import MarksUpdate
 from src.api.v1.users.schemas import TeacherUserCreate
 from src.auth.utils import CurrentUserDep
 from src.core.db_utils import SessionDep
+from src.mailing.send_welcome_email import send_welcome_email
 from . import crud
 from .schemas import TeacherCreate, UserResponse
 
@@ -26,11 +27,13 @@ async def create_user_teacher(
     user_in: TeacherUserCreate,
     teacher_in: TeacherCreate,
     session: SessionDep,
+    background_tasks: BackgroundTasks,
     subject: Optional[Annotated[SubjectEnum, Path]] = None,
 ):
     try:
         user = await crud.create_teacher(session=session, user_in=user_in, teacher_in=teacher_in, subject=subject)
         await session.commit()
+        background_tasks.add_task(send_welcome_email, user.id)
         return user
     except sqlalchemy.exc.IntegrityError:
         await session.rollback()

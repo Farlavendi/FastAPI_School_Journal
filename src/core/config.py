@@ -48,6 +48,12 @@ class LoggingConfig(BaseModel):
         return logging.getLevelNamesMapping()[self.log_level.upper()]
 
 
+class MailingConfig(BaseModel):
+    host: str = "localhost"
+    port: int = 1025
+    sender: str = "fastapi-journal@example.com"
+
+
 class DatabaseConfig(BaseModel):
     url: PostgresDsn
     echo: bool = False
@@ -71,10 +77,11 @@ class Settings(BaseSettings):
         env_prefix="APP_CONFIG__",
         extra="ignore",
     )
-    logging: LoggingConfig = LoggingConfig()
     gunicorn: GunicornConfig = GunicornConfig()
+    logging: LoggingConfig = LoggingConfig()
     api: ApiPrefix = ApiPrefix()
     db: DatabaseConfig
+    mailing: MailingConfig = MailingConfig()
 
 
 class AuthJWT(BaseModel):
