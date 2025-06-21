@@ -8,11 +8,11 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 DEFAULT_LOG_FORMAT = (
-    "[%(asctime)s.%(msecs)03d] %(module)10s:%(lineno)-3d %(levelname)-7s - %(message)s"
+    "[%(asctime)s] %(module)15s:%(lineno)-3d %(levelname)8s - %(message)s"
 )
 
 WORKER_DEFAULT_LOG_FORMAT = (
-    "[%(asctime)s.%(msecs)03d] [%(processName)s] %(module)10s:%(lineno)-3d %(levelname)-7s - %(message)s"
+    "[%(asctime)s] [%(processName)s] %(module)15s:%(lineno)-3d %(levelname)8s - %(message)s"
 )
 
 
@@ -40,6 +40,7 @@ class LoggingConfig(BaseModel):
         "error",
         "critical",
     ] = "info"
+    logging.Formatter.default_msec_format = '%s.%03d'
     log_format: str = DEFAULT_LOG_FORMAT
     log_date_format: str = "%Y-%m-%d %H:%M:%S"
 
