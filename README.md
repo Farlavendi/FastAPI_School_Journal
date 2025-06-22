@@ -1,20 +1,44 @@
 # This is my project, a prototype of school journal app.
-*This is its FastAPI based version, you can find Django based one [here](https://github.com/DenisBichuk/Django_School_Journal)*
 
 ---
+
+## Tech stack:
+
+- Framework: FastAPI
+- ORM: SQLAlchemy 2.0
+- Database: PostgreSQL
+- Migrations: Alembic
+- Message broker: RabbitMQ
+- Task manager: TaskIQ
+
+---
+
 ## Installation and local deploy
-Follow these simple steps to local deploy.
-* Clone the repo:
+
+Follow these simple steps to deploy locally.
+
+### Clone the repo:
+
 ```
 git@github.com:Farlavendi/FastAPI_School_Journal.git
 ```
-* Configure environment variables. The needed variables can be found in .env.template file.
-* Run Docker app and docker-compose:
-```
-docker-compose up -d
+
+#### Don't forget to configure environment variables. The required variables can be found in .env.template file.
+
+### Launch Docker containers:
+
+```shell
+  docker-compose up -d 
 ```
 
-* App is available. Follow the link to see docs
+### Apply migrations
+
+```shell
+  alembic upgrade head
 ```
-http://127.0.0.1:8000/
+
+### App is available. Follow the link to see docs
+
+```shell
+  http://127.0.0.1:8000/
 ```
