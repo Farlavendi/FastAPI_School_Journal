@@ -8,7 +8,7 @@
 - ORM: SQLAlchemy 2.0
 - Database: PostgreSQL
 - Migrations: Alembic
-- Message broker: RabbitMQ
+- Message-broker: RabbitMQ
 - Task manager: TaskIQ
 
 ---
