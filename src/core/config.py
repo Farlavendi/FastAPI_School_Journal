@@ -54,7 +54,6 @@ class LoggingConfig(BaseModel):
 
 class TaskiqConfig(BaseModel):
     url: AmqpDsn = TASKIQ_URL
-    # for local launch replace "rabbitmq"(docker container name) with "localhost"
     log_format: str = WORKER_DEFAULT_LOG_FORMAT
 
 
