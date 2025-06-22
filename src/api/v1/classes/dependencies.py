@@ -12,8 +12,8 @@ from .crud import get_class
 
 async def class_by_id(
     value: Annotated[int, Path],
-    by_id: Annotated[bool, Path],
     session: SessionDep,
+    by_id: Annotated[bool, Path] = False,
 ):
     return await get_class(session=session, value=value, by_id=by_id)
 
