@@ -1,5 +1,5 @@
 services:
-  web:
+  fastapi:
     build:
       context: .
       dockerfile: Dockerfile
@@ -11,6 +11,7 @@ services:
       - "8000:8000"
     environment:
       APP_CONFIG__DB__URL: ${APP_CONFIG__DB__URL}
+      TASKIQ_URL: ${TASKIQ_URL}
     depends_on:
       - postgres
 
