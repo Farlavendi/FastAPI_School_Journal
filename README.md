@@ -20,7 +20,7 @@ Follow these steps to set up the application.
 ### 1. Clone the repository:
 
 ```shell
-  git clone git@github.com:Farlavendi/FastAPI_School_Journal.git
+git clone git@github.com:Farlavendi/FastAPI_School_Journal.git
 ```
 
 > [!IMPORTANT]
@@ -29,20 +29,20 @@ Follow these steps to set up the application.
 ### 2. Launch Docker containers:
 
 ```shell
-  docker-compose up -d 
+docker-compose up -d 
 ```
 
 ### 3. Apply migrations
 
 ```shell
-  alembic upgrade head
+alembic upgrade head
 ```
 
 ### 4. Access the application.
 
+```shell
+http://127.0.0.1:8000/
+```
+
 > [!NOTE]
 > You will be automaticly redirected to docs page.
-
-```shell
-  http://127.0.0.1:8000/
-```
