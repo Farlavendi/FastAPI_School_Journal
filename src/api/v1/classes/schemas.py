@@ -1,6 +1,7 @@
 from typing import Optional, List
 
 from pydantic import BaseModel, Field
+from pydantic.json_schema import SkipJsonSchema
 
 from src.api.v1.users.students.schemas import Student
 from src.api.v1.users.teachers.schemas import Teacher
@@ -8,6 +9,8 @@ from src.api.v1.users.teachers.schemas import Teacher
 
 class ClassCreate(BaseModel):
     class_num: int = Field(..., ge=1)
+    students: SkipJsonSchema[Optional[List[Student]]] = []
+    teacher: SkipJsonSchema[Optional[Teacher]] = None
 
 
 class Class(ClassCreate):
