@@ -1,4 +1,5 @@
 import logging
+import os
 from pathlib import Path
 from typing import Literal
 
@@ -14,6 +15,8 @@ DEFAULT_LOG_FORMAT = (
 WORKER_DEFAULT_LOG_FORMAT = (
     "[%(asctime)s] [%(processName)s] %(module)15s:%(lineno)-3d %(levelname)8s - %(message)s"
 )
+
+TASKIQ_URL = os.getenv("TASKIQ_URL")
 
 
 class GunicornConfig(BaseModel):
@@ -50,7 +53,8 @@ class LoggingConfig(BaseModel):
 
 
 class TaskiqConfig(BaseModel):
-    url: AmqpDsn = "amqp://guest:guest@localhost:5672//"
+    url: AmqpDsn = TASKIQ_URL
+    # for local launch replace "rabbitmq"(docker container name) with "localhost"
     log_format: str = WORKER_DEFAULT_LOG_FORMAT
 
 
