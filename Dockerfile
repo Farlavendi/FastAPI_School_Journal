@@ -24,5 +24,4 @@ COPY ./src /app/src
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --frozen --no-dev
 
-CMD ["/app/.venv/bin/uvicorn", "src.main:main_app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
-#CMD ["python", "src/main.py"]
+CMD ["python", "-m", "src.main"]
