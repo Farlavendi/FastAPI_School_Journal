@@ -4,40 +4,44 @@
 
 ## Tech stack:
 
-- Framework: FastAPI
-- ORM: SQLAlchemy 2.0
-- Database: PostgreSQL
-- Migrations: Alembic
-- Message-broker: RabbitMQ
-- Task manager: TaskIQ
+- **Framework:** FastAPI
+- **ORM:** SQLAlchemy 2.0
+- **Database:** PostgreSQL
+- **Migrations:** Alembic
+- **Message-broker:** RabbitMQ
+- **Task manager:** TaskIQ
 
 ---
 
-## Installation and local deploy
+## Installation and deployment.
 
-Follow these simple steps to deploy locally.
+Follow these steps to set up the application.
 
-### Clone the repo:
+### 1. Clone the repository:
 
+```shell
+  git clone git@github.com:Farlavendi/FastAPI_School_Journal.git
 ```
-git@github.com:Farlavendi/FastAPI_School_Journal.git
-```
 
-#### Don't forget to configure environment variables. The required variables can be found in .env.template file.
+> [!IMPORTANT]
+> Configure environment variables. The required variables can be found in .env.template file.
 
-### Launch Docker containers:
+### 2. Launch Docker containers:
 
 ```shell
   docker-compose up -d 
 ```
 
-### Apply migrations
+### 3. Apply migrations
 
 ```shell
   alembic upgrade head
 ```
 
-### App is available. Follow the link to see docs
+### 4. Access the application.
+
+> [!NOTE]
+> You will be automaticly redirected to docs page.
 
 ```shell
   http://127.0.0.1:8000/
