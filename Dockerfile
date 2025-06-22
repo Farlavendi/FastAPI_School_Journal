@@ -10,7 +10,7 @@ ENV UV_LINK_MODE=copy
 
 WORKDIR /app
 
-COPY ./pyproject.toml ./uv.lock ./.python-version /app/
+COPY ./pyproject.toml ./uv.lock ./.python-version ./alembic.ini /app/
 
 ENV PATH="/app/.venv/bin:$PATH"
 
@@ -24,4 +24,5 @@ COPY ./src /app/src
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --frozen --no-dev
 
-CMD ["/app/.venv/bin/uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+CMD ["/app/.venv/bin/uvicorn", "src.main:main_app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+#CMD ["python", "src/main.py"]

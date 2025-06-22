@@ -10,6 +10,7 @@ from src.auth.views import auth_router
 from src.core.config import settings
 from src.core.db_utils import db_helper
 from src.core.gunicorn import Application, get_app_options
+from src.core.taskiq import broker
 
 logging.basicConfig(
     level=settings.logging.log_level_value,
@@ -20,8 +21,10 @@ logging.basicConfig(
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    await broker.startup()
     yield
     await db_helper.dispose()
+    await broker.shutdown()
 
 
 main_app = FastAPI(
