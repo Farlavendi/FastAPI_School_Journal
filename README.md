@@ -51,16 +51,18 @@ Follow these steps to set up the application.
 ```shell
   docker-compose up -d 
 ```
+
 > [!TIP]
 > You can also you Makefile commands. In this case you can just use "make up".
 
 ### 4. Apply migrations
 
 ```shell
-  alembic upgrade head
+  docker compose exec fastapi alembic upgrade head
 ```
 
 ### 5. 🔗 Available links:
+
 - http://localhost:8000/docs - Swagger UI
 - http://localhost:8000/redoc - ReDoc
 - http://localhost:8080/ - Maildev
