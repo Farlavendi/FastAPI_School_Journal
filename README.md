@@ -33,19 +33,35 @@ Follow these steps to set up the application.
 > [!IMPORTANT]
 > Configure environment variables. The required variables can be found in .env.template file.
 
-### 2. Launch Docker containers:
+### 2. Generate openssl private and public keys:
+
+```shell
+  openssl genpkey -algorithm RSA -out src/certs/private.pem -pkeyopt rsa_keygen_bits:2048
+```
+
+```shell
+  openssl rsa -pubout -in src/certs/private.pem -out certs/public.pem
+```
+
+> [!NOTE]
+> These keys are required for JWT auth.
+
+### 3. Launch Docker containers:
 
 ```shell
   docker-compose up -d 
 ```
+> [!TIP]
+> You can also you Makefile commands. In this case you can just use "make up".
 
-### 3. Apply migrations
+### 4. Apply migrations
 
 ```shell
   alembic upgrade head
 ```
 
-### 4. The application is available here: http://127.0.0.1:8000/
-
-> [!NOTE]
-> You will be automatically redirected to the docs page.
+### 5. 🔗 Available links:
+- http://localhost:8000/docs - Swagger UI
+- http://localhost:8000/redoc - ReDoc
+- http://localhost:8080/ - Maildev
+- [http://localhost:15672/](http://localhost:8000/redoc) - RabbitMQ 
