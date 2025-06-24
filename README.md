@@ -66,4 +66,4 @@ Follow these steps to set up the application.
 - http://localhost:8000/docs - Swagger UI
 - http://localhost:8000/redoc - ReDoc
 - http://localhost:8080/ - Maildev
-- [http://localhost:15672/](http://localhost:8000/redoc) - RabbitMQ 
+- http://localhost:15672/ - RabbitMQ 
