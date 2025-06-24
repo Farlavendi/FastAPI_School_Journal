@@ -8,3 +8,6 @@ up-build:
 
 down:
 	docker compose down -v
+
+config:
+	docker compose config
