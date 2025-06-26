@@ -23,10 +23,12 @@ dependencies = [
     "taskiq-aio-pika>=0.4.2",
     "taskiq-fastapi>=0.3.5",
     "taskiq>=0.11.17",
+    "pytest>=8.3.5",
 ]
 
 [dependency-groups]
 dev = [
     "pytest>=8.3.5",
+    "pytest-coverage>=0.0",
     "ruff>=0.11.0",
 ]
