@@ -1,7 +1,5 @@
 import pytest
 
-from .conftest import async_client
-
 pytestmark = pytest.mark.anyio
 
 
