@@ -11,3 +11,6 @@ down:
 
 config:
 	docker compose config
+
+upgrade:
+	alembic upgrade head
