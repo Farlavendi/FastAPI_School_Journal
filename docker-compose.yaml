@@ -13,15 +13,15 @@ services:
       APP_CONFIG__DB__URL: ${APP_CONFIG__DB__URL}
       TASKIQ_URL: ${TASKIQ_URL}
     depends_on:
-      postgres:
+      postgres-dev:
         condition: service_healthy
   
-  postgres:
+  postgres-dev:
     image: postgres:17.2-alpine
-    container_name: postgres
+    container_name: postgres-dev
     restart: always
     volumes:
-      - postgres-data:/var/lib/postgresql/data
+      - postgres-dev-data:/var/lib/postgresql/data
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
@@ -34,6 +34,25 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+
+  #  postgres-test:
+  #    image: postgres:17.2-alpine
+  #    container_name: postgres-test
+  #    restart: always
+  #    volumes:
+  #      - postgres-test-data:/var/lib/postgresql/data
+  #    environment:
+  #      POSTGRES_DB: ${POSTGRES_TEST_DB}
+  #      POSTGRES_USER: ${POSTGRES_TEST_USER}
+  #      POSTGRES_PASSWORD: ${POSTGRES_TEST_PASSWORD}
+  #      POSTGRES_DATA: /var/lib/postgresql/data
+  #    ports:
+  #      - "5432:5432"
+  #    healthcheck:
+  #      test: [ "CMD-SHELL", "sh -c 'pg_isready -U ${POSTGRES_TEST_USER} -d ${POSTGRES_TEST_DB}'" ]
+  #      interval: 10s
+  #      timeout: 5s
+  #      retries: 5
 
   rabbitmq:
     image: rabbitmq:4-management-alpine
@@ -63,5 +82,6 @@ services:
         max-size: "1m"
 
 volumes:
-  postgres-data:
+  postgres-dev-data:
   rabbitmq-data:
+  postgres-test-data:
