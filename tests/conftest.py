@@ -3,13 +3,21 @@ import os
 import pytest
 from httpx import AsyncClient, ASGITransport
 
-from src.core import db_helper
+from src.core import db_helper, DatabaseHelper
 from src.core.config import settings
 from src.core.models import Base
 from src.main import main_app
-from .testing_db_utils import test_db_helper
 
 TEST_DB_URL = os.getenv("TEST_DB_URL")
+
+test_db_helper = DatabaseHelper(
+    url=TEST_DB_URL,
+    echo=False,
+    echo_pool=False,
+    pool_size=5,
+    max_overflow=10,
+)
+
 API_PREFIX = settings.api.prefix + settings.api.v1.prefix
 
 
