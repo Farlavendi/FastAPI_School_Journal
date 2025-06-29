@@ -84,4 +84,4 @@ services:
 volumes:
   postgres-dev-data:
   rabbitmq-data:
-  postgres-test-data:
+#  postgres-test-data:
