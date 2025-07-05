@@ -13,7 +13,7 @@ from src.api.v1.users.schemas import TeacherUserCreate
 from src.auth.utils import hash_password, CurrentUserDep
 from src.core.models import User
 from src.core.models.users import RoleEnum
-from .schemas import TeacherCreate
+from .schemas import TeacherCreate, TeacherUpdate
 
 
 async def get_teachers(session: AsyncSession) -> Sequence[User]:
@@ -54,6 +54,25 @@ async def create_teacher(
     return user
 
 
+async def update_teacher(
+    session: AsyncSession,
+    teacher: TeacherUpdate,
+    subject: SubjectEnum,
+):
+    class_id = await class_id_by_number(teacher.class_num, session=session)
+    result = await session.execute(
+        update(Teacher)
+        .filter(Teacher.user_id == teacher.teacher_id)
+        .values(
+            subject=subject,
+            class_id=class_id
+        )
+        .returning(Teacher)
+    )
+    await session.commit()
+    return result.scalar_one()
+
+
 async def update_marks(
     session: AsyncSession,
     user: CurrentUserDep,
@@ -69,26 +88,6 @@ async def update_marks(
         .filter(Marks.student_id == marks.student_id)
         .values(**marks.model_dump(exclude_unset=True))
         .returning(Marks)
-    )
-    await session.commit()
-    return result.scalar_one()
-
-
-async def update_subject(
-    session: AsyncSession,
-    user: CurrentUserDep,
-    subject: SubjectEnum,
-):
-    if user.role != RoleEnum.TEACHER:
-        return HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Only teachers have subject to update."
-        )
-    result = await session.execute(
-        update(Teacher)
-        .filter(Teacher.user_id == user.id)
-        .values(subject=subject)
-        .returning(Teacher)
     )
     await session.commit()
     return result.scalar_one()

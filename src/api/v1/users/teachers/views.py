@@ -10,7 +10,7 @@ from src.auth.utils import CurrentUserDep
 from src.core.db_utils import SessionDep
 from src.tasks import send_welcome_email
 from . import crud
-from .schemas import TeacherCreate, UserResponse
+from .schemas import TeacherCreate, UserResponse, TeacherUpdate
 
 teachers_router = APIRouter(prefix="/teachers")
 
@@ -39,6 +39,20 @@ async def create_user_teacher(
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Error creating user.")
 
 
+@teachers_router.patch("/update-subject")
+async def update_teacher(
+    session: SessionDep,
+    teacher: TeacherUpdate,
+    subject: SubjectEnum,
+):
+    updated_subject = await crud.update_teacher(
+        session=session,
+        teacher=teacher,
+        subject=subject,
+    )
+    return updated_subject
+
+
 @teachers_router.patch("/edit-marks")
 async def update_marks(
     session: SessionDep,
@@ -52,17 +66,3 @@ async def update_marks(
     )
 
     return updated_marks
-
-
-@teachers_router.patch("/update-subject")
-async def update_subject(
-    session: SessionDep,
-    user: CurrentUserDep,
-    subject: SubjectEnum
-):
-    updated_subject = await crud.update_subject(
-        session=session,
-        user=user,
-        subject=subject
-    )
-    return updated_subject
