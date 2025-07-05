@@ -12,7 +12,10 @@ from .schemas import UserUpdate
 async def get_users(session: AsyncSession) -> Sequence[User]:
     stmt = (
         select(User)
-        .options(joinedload(User.student), joinedload(User.teacher))
+        .options(
+            joinedload(User.student),
+            joinedload(User.teacher)
+        )
         .order_by(User.id)
     )
     result = await session.execute(stmt)
@@ -23,7 +26,7 @@ async def get_users(session: AsyncSession) -> Sequence[User]:
 async def get_user_by_id(session: AsyncSession, user_id: int):
     result = await session.execute(
         select(User)
-        .filter(User.id == user_id)
+        .where(User.id == user_id)
         .options(
             joinedload(User.student),
             joinedload(User.teacher)
@@ -42,7 +45,7 @@ async def get_user_by_id(session: AsyncSession, user_id: int):
 async def get_user_by_username(session: AsyncSession, username: str):
     result = await session.execute(
         select(User)
-        .filter(User.username == username)
+        .where(User.username == username)
     )
     return result.scalar_one_or_none()
 
@@ -62,7 +65,7 @@ async def update_user(
 ):
     result = await session.execute(
         update(User)
-        .filter(User.id == user_id)
+        .where(User.id == user_id)
         .values(**user_in.model_dump(exclude_unset=True))
         .returning(User)
     )

@@ -8,7 +8,7 @@ from src.api.v1.users.schemas import StudentUserCreate
 from src.core.db_utils import SessionDep
 from src.tasks import send_welcome_email
 from . import crud
-from .schemas import StudentCreate, UserResponse
+from .schemas import StudentCreate, UserResponse, StudentUpdate
 
 students_router = APIRouter(prefix="/students")
 
@@ -28,7 +28,7 @@ async def get_marks(
     return await crud.get_marks(session=session, student_id=student_id)
 
 
-@students_router.post("/create-student")
+@students_router.post("/create")
 async def create_user_student(
     user_in: StudentUserCreate,
     student_in: StudentCreate,
@@ -42,3 +42,15 @@ async def create_user_student(
     except sqlalchemy.exc.IntegrityError:
         await session.rollback()
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Error creating user.")
+
+
+@students_router.patch("/update")
+async def update_student(
+    student: StudentUpdate,
+    session: SessionDep,
+):
+    updated_student = await crud.update_student(
+        session=session,
+        student=student
+    )
+    return updated_student

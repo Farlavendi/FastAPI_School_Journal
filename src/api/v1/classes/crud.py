@@ -26,9 +26,9 @@ async def get_class(
     )
 
     if by_id:
-        query = query.filter(Class.id == value)
+        query = query.where(Class.id == value)
     else:
-        query = query.filter(Class.class_num == value)
+        query = query.where(Class.class_num == value)
 
     result = await session.execute(query)
     class_ = result.unique().scalar_one_or_none()

@@ -18,7 +18,7 @@ class TeacherCreate(BaseTeacher):
 
 
 class TeacherUpdate(BaseModel):
-    teacher_id: int = Field(..., ge=0)
+    id: int = Field(..., ge=0)
     class_num: Optional[int] = None
 
 

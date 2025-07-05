@@ -17,13 +17,12 @@ from .schemas import TeacherCreate, TeacherUpdate
 
 
 async def get_teachers(session: AsyncSession) -> Sequence[User]:
-    stmt = (
+    result = await session.execute(
         select(User)
-        .filter(User.role == RoleEnum.TEACHER)
+        .where(User.role == RoleEnum.TEACHER)
         .options(joinedload(User.teacher))
         .order_by(User.id)
     )
-    result = await session.execute(stmt)
     teachers = result.scalars().all()
     return teachers
 
@@ -62,7 +61,7 @@ async def update_teacher(
     class_id = await class_id_by_number(teacher.class_num, session=session)
     result = await session.execute(
         update(Teacher)
-        .filter(Teacher.user_id == teacher.teacher_id)
+        .where(Teacher.user_id == teacher.id)
         .values(
             subject=subject,
             class_id=class_id
@@ -85,7 +84,7 @@ async def update_marks(
         )
     result = await session.execute(
         update(Marks)
-        .filter(Marks.student_id == marks.student_id)
+        .where(Marks.student_id == marks.student_id)
         .values(**marks.model_dump(exclude_unset=True))
         .returning(Marks)
     )

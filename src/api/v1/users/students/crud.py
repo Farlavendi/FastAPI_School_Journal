@@ -1,7 +1,7 @@
 from typing import Sequence
 
 from fastapi import HTTPException, status
-from sqlalchemy import select
+from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload
 
@@ -11,13 +11,13 @@ from src.api.v1.users.schemas import StudentUserCreate
 from src.auth.utils import hash_password
 from src.core.models import User
 from src.core.models.users import RoleEnum
-from .schemas import StudentCreate
+from .schemas import StudentCreate, StudentUpdate
 
 
 async def get_students(session: AsyncSession) -> Sequence[User]:
     result = await session.execute(
         select(User)
-        .filter(User.role == RoleEnum.STUDENT)
+        .where(User.role == RoleEnum.STUDENT)
         .options(joinedload(User.student))
         .order_by(User.id)
     )
@@ -31,7 +31,7 @@ async def get_marks(
 ):
     result = await session.execute(
         select(Marks)
-        .filter(Marks.student_id == student_id)
+        .where(Marks.student_id == student_id)
     )
     marks = result.scalar_one_or_none()
 
@@ -66,3 +66,21 @@ async def create_student(
     session.add(marks)
 
     return user
+
+
+async def update_student(
+    session: AsyncSession,
+    student: StudentUpdate,
+):
+    class_id = await class_id_by_number(student.class_num, session=session)
+    result = await session.execute(
+        update(Student)
+        .where(Student.user_id == student.id)
+        .values(
+            id=student.id,
+            class_id=class_id,
+        )
+        .returning(Student)
+    )
+    await session.commit()
+    return result.scalar_one()

@@ -21,7 +21,7 @@ async def get_classes(
     return await crud.get_classes(session=session)
 
 
-@classes_router.get("/{value}", response_model=Class)
+@classes_router.get("/get/{value}", response_model=Class)
 async def get_class(
     class_: ClassByValueDep,
 ):

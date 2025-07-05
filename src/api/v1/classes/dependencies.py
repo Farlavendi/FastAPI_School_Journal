@@ -24,7 +24,7 @@ async def class_id_by_number(
 ) -> int:
     result = await session.execute(
         select(Class.id)
-        .filter(Class.class_num == class_num)
+        .where(Class.class_num == class_num)
     )
     class_id = result.scalar_one_or_none()
 
