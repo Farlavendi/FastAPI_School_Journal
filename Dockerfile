@@ -10,7 +10,9 @@ ENV UV_LINK_MODE=copy
 
 WORKDIR /app
 
-COPY ./pyproject.toml ./uv.lock ./.python-version ./alembic.ini /app/
+RUN apt-get update && apt-get install -y make && rm -rf /var/lib/apt/lists/*
+
+COPY ./pyproject.toml ./uv.lock ./.python-version ./alembic.ini ./Makefile /app/
 
 ENV PATH="/app/.venv/bin:$PATH"
 
