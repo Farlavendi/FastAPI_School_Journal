@@ -47,6 +47,7 @@ class TeacherUserCreate(BaseUser):
 
 
 class User(BaseModel):
+    # id: UUID = Field(default_factory=uuid7)
     id: int
     email: EmailStr
     username: str

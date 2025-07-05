@@ -14,6 +14,7 @@ class ClassCreate(BaseModel):
 
 
 class Class(ClassCreate):
+    # id: UUID = Field(default_factory=uuid7)
     id: int = Field(..., ge=0)
     students: Optional[List[Student]]
     teacher: Optional[Teacher]
