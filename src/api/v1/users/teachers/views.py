@@ -15,14 +15,14 @@ from .schemas import TeacherCreate, UserResponse, TeacherUpdate
 teachers_router = APIRouter(prefix="/teachers")
 
 
-@teachers_router.get("/get-teachers", response_model=list[UserResponse])
+@teachers_router.get("/get", response_model=list[UserResponse])
 async def get_teachers(
     session: SessionDep,
 ):
     return await crud.get_teachers(session=session)
 
 
-@teachers_router.post("/create-teacher")
+@teachers_router.post("/create")
 async def create_user_teacher(
     user_in: TeacherUserCreate,
     teacher_in: TeacherCreate,
@@ -39,7 +39,7 @@ async def create_user_teacher(
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Error creating user.")
 
 
-@teachers_router.patch("/update-subject")
+@teachers_router.patch("/update")
 async def update_teacher(
     session: SessionDep,
     teacher: TeacherUpdate,
@@ -53,7 +53,7 @@ async def update_teacher(
     return updated_subject
 
 
-@teachers_router.patch("/edit-marks")
+@teachers_router.patch("/marks/edit")
 async def update_marks(
     session: SessionDep,
     user: CurrentUserDep,
