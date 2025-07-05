@@ -11,6 +11,8 @@ down:
 
 restart: down up
 
+restart-build: down up-build
+
 config:
 	docker compose config
 
