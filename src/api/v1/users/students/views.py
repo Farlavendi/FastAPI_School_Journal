@@ -13,14 +13,14 @@ from .schemas import StudentCreate, UserResponse
 students_router = APIRouter(prefix="/students")
 
 
-@students_router.get("/get-students", response_model=list[UserResponse])
+@students_router.get("/get", response_model=list[UserResponse])
 async def get_students(
     session: SessionDep,
 ):
     return await crud.get_students(session=session)
 
 
-@students_router.get("/get-marks", response_model=Marks)
+@students_router.get("/marks/get", response_model=Marks)
 async def get_marks(
     student_id: Annotated[int, Path],
     session: SessionDep,

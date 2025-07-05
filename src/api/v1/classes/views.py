@@ -14,7 +14,7 @@ from .schemas import (
 classes_router = APIRouter(prefix="/classes", tags=["Classes"])
 
 
-@classes_router.get("/", response_model=list[ClassResponse])
+@classes_router.get("/get", response_model=list[ClassResponse])
 async def get_classes(
     session: SessionDep,
 ):
@@ -28,11 +28,7 @@ async def get_class(
     return class_
 
 
-@classes_router.post(
-    "/create/",
-    response_model=Class,
-    status_code=status.HTTP_201_CREATED,
-)
+@classes_router.post("/create", response_model=Class, status_code=status.HTTP_201_CREATED)
 async def create_class(
     class_in: ClassCreate,
     session: SessionDep,
@@ -46,7 +42,7 @@ async def create_class(
         )
 
 
-@classes_router.delete("/delete/{class_id}/", status_code=status.HTTP_204_NO_CONTENT)
+@classes_router.delete("/delete/{class_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_class(
     session: SessionDep,
     class_: ClassByValueDep,

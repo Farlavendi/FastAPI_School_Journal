@@ -17,14 +17,14 @@ users_router = APIRouter(
 )
 
 
-@users_router.get("/", response_model=list[User], response_model_exclude_none=True)
+@users_router.get("/get", response_model=list[User], response_model_exclude_none=True)
 async def get_users(
     session: SessionDep,
 ):
     return await crud.get_users(session=session)
 
 
-@users_router.get("/{users_id}", response_model=User, response_model_exclude_none=True)
+@users_router.get("/get/{users_id}", response_model=User, response_model_exclude_none=True)
 async def get_user_by_id(
     user: UserByIdDep,
 ):
@@ -48,7 +48,7 @@ async def choose_role(role: RoleEnum):
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Invalid role")
 
 
-@users_router.get("/users/me")
+@users_router.get("/me")
 async def auth_user_check_self_info(
     current_user: CurrentUserDep,
 ):
