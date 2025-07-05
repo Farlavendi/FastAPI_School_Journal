@@ -1,4 +1,4 @@
-.PHONY: up up-build down
+.PHONY: up up-build down restart config upgrade
 
 up:
 	docker compose up -d
@@ -8,6 +8,8 @@ up-build:
 
 down:
 	docker compose down -v
+
+restart: down up
 
 config:
 	docker compose config
