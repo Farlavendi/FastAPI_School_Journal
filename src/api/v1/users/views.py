@@ -17,7 +17,7 @@ users_router = APIRouter(
 )
 
 
-@users_router.get("/get", response_model=list[User], response_model_exclude_none=True)
+@users_router.get("/get/all", response_model=list[User], response_model_exclude_none=True)
 async def get_users(
     session: SessionDep,
 ):

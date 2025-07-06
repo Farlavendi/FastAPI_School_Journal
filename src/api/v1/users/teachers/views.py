@@ -15,7 +15,7 @@ from .schemas import TeacherCreate, UserResponse, TeacherUpdate
 teachers_router = APIRouter(prefix="/teachers")
 
 
-@teachers_router.get("/get", response_model=list[UserResponse])
+@teachers_router.get("/get/all", response_model=list[UserResponse])
 async def get_teachers(
     session: SessionDep,
 ):

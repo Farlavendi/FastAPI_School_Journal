@@ -13,7 +13,7 @@ from .schemas import StudentCreate, UserResponse, StudentUpdate
 students_router = APIRouter(prefix="/students")
 
 
-@students_router.get("/get", response_model=list[UserResponse])
+@students_router.get("/get/all", response_model=list[UserResponse])
 async def get_students(
     session: SessionDep,
 ):

@@ -14,7 +14,7 @@ from .schemas import (
 classes_router = APIRouter(prefix="/classes", tags=["Classes"])
 
 
-@classes_router.get("/get", response_model=list[ClassResponse])
+@classes_router.get("/get/all", response_model=list[ClassResponse])
 async def get_classes(
     session: SessionDep,
 ):
