@@ -23,6 +23,6 @@ class Application(BaseApplication):
             if key in self.cfg.settings and value is not None
         }
 
-    def load_config(self):
+    def load_config(self) -> None:
         for key, value in self.config_options.items():
             self.cfg.set(key.lower(), value)

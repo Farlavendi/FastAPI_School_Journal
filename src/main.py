@@ -42,7 +42,7 @@ async def root_and_redirect():
     return redirect_url
 
 
-def main():
+def main() -> None:
     app = Application(
         application=main_app,
         options=get_app_options(

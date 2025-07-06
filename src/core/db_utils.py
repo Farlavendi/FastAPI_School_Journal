@@ -52,7 +52,7 @@ class DatabaseHelper:
         yield session
         await session.close()
 
-    async def dispose(self):
+    async def dispose(self) -> None:
         await self.engine.dispose()
 
 

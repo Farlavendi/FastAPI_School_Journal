@@ -4,7 +4,7 @@ from fastapi import Path, HTTPException, status, Depends
 
 from src.core.db_utils import SessionDep
 from . import crud
-from .schemas import User
+from . import schemas
 
 
 async def user_by_id(
@@ -20,4 +20,4 @@ async def user_by_id(
     return user
 
 
-UserByIdDep = Annotated[User, Depends(user_by_id)]
+UserByIdDep = Annotated[schemas.User, Depends(user_by_id)]
