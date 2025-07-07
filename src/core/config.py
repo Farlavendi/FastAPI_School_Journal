@@ -57,7 +57,7 @@ class TaskiqConfig(BaseModel):
 
 
 class MailingConfig(BaseModel):
-    host: str = "localhost"
+    host: str = "maildev"  # docker container name
     port: int = 1025
     sender: str = "fastapi-journal@example.com"
 
