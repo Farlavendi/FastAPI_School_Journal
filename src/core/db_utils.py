@@ -6,6 +6,7 @@ from sqlalchemy.ext.asyncio import (
     AsyncSession,
     create_async_engine,
     async_sessionmaker,
+    AsyncEngine,
     async_scoped_session,
 )
 from taskiq import TaskiqDepends
@@ -22,14 +23,14 @@ class DatabaseHelper:
         pool_size: int = 5,
         max_overflow: int = 10,
     ):
-        self.engine = create_async_engine(
+        self.engine: AsyncEngine = create_async_engine(
             url=url,
             echo=echo,
             echo_pool=echo_pool,
             pool_size=pool_size,
             max_overflow=max_overflow,
         )
-        self.session_factory = async_sessionmaker(
+        self.session_factory: async_sessionmaker[AsyncSession] = async_sessionmaker(
             bind=self.engine,
             autoflush=False,
             autocommit=False,

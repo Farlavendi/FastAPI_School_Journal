@@ -3,6 +3,7 @@ from typing import Annotated
 from fastapi import Path, HTTPException, status, Depends
 
 from src.core.db_utils import SessionDep
+from src.core.models import User
 from . import crud
 from . import schemas
 
@@ -10,7 +11,7 @@ from . import schemas
 async def user_by_id(
     user_id: Annotated[int, Path],
     session: SessionDep,
-):
+) -> User | None:
     user = await crud.get_user_by_id(session=session, user_id=user_id)
     if user is None:
         raise HTTPException(
