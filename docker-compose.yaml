@@ -65,6 +65,11 @@ services:
       RABBITMQ_DEFAULT_PASS: ${RMQ_PASSWORD}
     volumes:
       - rabbitmq-data:/var/lib/rabbitmq
+    healthcheck:
+      test: [ "CMD", "rabbitmq-diagnostics", "check_port_connectivity" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   maildev:
     image: maildev/maildev
@@ -80,6 +85,29 @@ services:
       driver: "json-file"
       options:
         max-size: "1m"
+
+  taskiq:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: taskiq
+    restart: always
+    volumes:
+      - ./src:/app/src
+    environment:
+      APP_CONFIG__DB__URL: ${APP_CONFIG__DB__URL}
+      TASKIQ_URL: ${TASKIQ_URL}
+    command: >
+      taskiq worker src.core.taskiq:broker
+      --no-configure-logging
+      --fs-discover
+      --tasks-pattern "**/tasks"
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      postgres-dev:
+        condition: service_healthy
+
 
 volumes:
   postgres-dev-data:
