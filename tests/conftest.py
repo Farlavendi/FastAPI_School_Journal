@@ -44,7 +44,7 @@ async def async_client(db_session):
     async def _override():
         yield db_session
 
-    main_app.dependency_overrides[db_helper.scoped_session_dependency] = _override
+    main_app.dependency_overrides[db_helper.session_getter] = _override
 
     async with AsyncClient(
         transport=ASGITransport(app=main_app),

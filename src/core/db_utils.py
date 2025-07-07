@@ -1,5 +1,4 @@
-from asyncio import current_task
-from typing import Annotated
+from typing import Annotated, AsyncGenerator
 
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import (
@@ -7,7 +6,6 @@ from sqlalchemy.ext.asyncio import (
     create_async_engine,
     async_sessionmaker,
     AsyncEngine,
-    async_scoped_session,
 )
 from taskiq import TaskiqDepends
 
@@ -37,22 +35,9 @@ class DatabaseHelper:
             expire_on_commit=False,
         )
 
-    async def get_scoped_session(self):
-        session = async_scoped_session(
-            self.session_factory,
-            scopefunc=current_task,
-        )
-        return session
-
-    async def session_dependency(self) -> AsyncSession:
+    async def session_getter(self) -> AsyncGenerator[AsyncSession, None]:
         async with self.session_factory() as session:
             yield session
-            await session.close()
-
-    async def scoped_session_dependency(self) -> AsyncSession:
-        session = await self.get_scoped_session()
-        yield session
-        await session.close()
 
     async def dispose(self) -> None:
         await self.engine.dispose()
@@ -66,5 +51,5 @@ db_helper = DatabaseHelper(
     max_overflow=settings.db.max_overflow,
 )
 
-SessionDep = Annotated[AsyncSession, Depends(db_helper.scoped_session_dependency)]
-TaskiqSessionDep = Annotated[AsyncSession, TaskiqDepends(db_helper.session_dependency)]
+SessionDep = Annotated[AsyncSession, Depends(db_helper.session_getter)]
+TaskiqSessionDep = Annotated[AsyncSession, TaskiqDepends(db_helper.session_getter)]
