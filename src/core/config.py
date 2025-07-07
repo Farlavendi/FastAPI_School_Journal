@@ -45,7 +45,6 @@ class LoggingConfig(BaseModel):
     ] = "info"
     logging.Formatter.default_msec_format = '%s.%03d'
     log_format: str = DEFAULT_LOG_FORMAT
-    log_date_format: str = "%Y-%m-%d %H:%M:%S"
 
     @property
     def log_level_value(self) -> int:
