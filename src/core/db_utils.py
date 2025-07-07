@@ -8,6 +8,7 @@ from sqlalchemy.ext.asyncio import (
     async_sessionmaker,
     async_scoped_session,
 )
+from taskiq import TaskiqDepends
 
 from .config import settings
 
@@ -65,3 +66,4 @@ db_helper = DatabaseHelper(
 )
 
 SessionDep = Annotated[AsyncSession, Depends(db_helper.scoped_session_dependency)]
+TaskiqSessionDep = Annotated[AsyncSession, TaskiqDepends(db_helper.session_dependency)]
