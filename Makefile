@@ -1,4 +1,4 @@
-.PHONY: up up-build down restart config upgrade
+.PHONY: up up-build down restart restart-build config upgrade taskiq
 
 up:
 	docker compose up -d
@@ -18,3 +18,6 @@ config:
 
 upgrade:
 	alembic upgrade head
+
+taskiq:
+	taskiq worker src.core.taskiq:broker --no-configure-logging --fs-discover --tasks-pattern "**src/tasks"
