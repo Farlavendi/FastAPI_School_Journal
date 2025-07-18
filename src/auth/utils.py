@@ -5,6 +5,7 @@ from typing import Annotated
 import jwt
 from fastapi import HTTPException, Depends, Form
 from fastapi.security import OAuth2PasswordBearer
+from jwt import PyJWTError
 from jwt.exceptions import InvalidTokenError, ExpiredSignatureError
 from passlib.context import CryptContext
 from pydantic import ValidationError
@@ -64,12 +65,20 @@ def decode_jwt(
     except ExpiredSignatureError:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Token has expired"
+            detail="Token has expired",
+            headers={"WWW-Authenticate": "Bearer"},
         )
     except InvalidTokenError:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid token."
+            detail="Invalid token.",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    except PyJWTError:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Could not validate credentials",
+            headers={"WWW-Authenticate": "Bearer"},
         )
 
 
@@ -90,6 +99,7 @@ async def get_token_payload(
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid token.",
+            headers={"WWW-Authenticate": "Bearer"},
         )
 
 
@@ -100,11 +110,13 @@ async def get_current_user(
     credentials_exception = HTTPException(
         status_code=status.HTTP_403_FORBIDDEN,
         detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
     )
     if not token:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Not authenticated",
+            headers={"WWW-Authenticate": "Bearer"},
         )
     try:
         payload = jwt.decode(
@@ -120,12 +132,14 @@ async def get_current_user(
     if not user:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="User not found"
+            detail="User not found",
+            headers={"WWW-Authenticate": "Bearer"},
         )
     if not user.is_active:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Inactive user"
+            detail="Inactive user",
+            headers={"WWW-Authenticate": "Bearer"},
         )
     return user
 
@@ -141,18 +155,21 @@ async def validate_user(
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect username or password.",
+            headers={"WWW-Authenticate": "Bearer"},
         )
 
     if not validate_password_hash(password, user.password):
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Invalid password.",
+            headers={"WWW-Authenticate": "Bearer"},
         )
 
     if not user.is_active:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="User is inactive.",
+            headers={"WWW-Authenticate": "Bearer"},
         )
 
     return user
