@@ -1,9 +1,8 @@
 import logging
-import os
 from pathlib import Path
 from typing import Literal
 
-from pydantic import BaseModel, PostgresDsn, AmqpDsn
+from pydantic import BaseModel, PostgresDsn
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -15,8 +14,6 @@ DEFAULT_LOG_FORMAT = (
 WORKER_DEFAULT_LOG_FORMAT = (
     "[%(asctime)s] [%(processName)s] %(module)15s:%(lineno)-3d %(levelname)8s - %(message)s"
 )
-
-TASKIQ_URL = os.getenv("TASKIQ_URL")
 
 
 class GunicornConfig(BaseModel):
@@ -52,7 +49,7 @@ class LoggingConfig(BaseModel):
 
 
 class TaskiqConfig(BaseModel):
-    url: AmqpDsn = TASKIQ_URL
+    url: str
     log_format: str = WORKER_DEFAULT_LOG_FORMAT
 
 
@@ -89,7 +86,7 @@ class Settings(BaseSettings):
     logging: LoggingConfig = LoggingConfig()
     api: ApiPrefix = ApiPrefix()
     db: DatabaseConfig
-    taskiq: TaskiqConfig = TaskiqConfig()
+    taskiq: TaskiqConfig
     mailing: MailingConfig = MailingConfig()
 
 

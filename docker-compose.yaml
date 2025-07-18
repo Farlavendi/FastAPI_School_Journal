@@ -11,7 +11,7 @@ services:
       - "8000:8000"
     environment:
       APP_CONFIG__DB__URL: ${APP_CONFIG__DB__URL}
-      TASKIQ_URL: ${TASKIQ_URL}
+      APP_CONFIG__TASKIQ__URL: ${APP_CONFIG__TASKIQ__URL}
     depends_on:
       postgres-dev:
         condition: service_healthy
@@ -96,7 +96,7 @@ services:
       - ./src:/app/src
     environment:
       APP_CONFIG__DB__URL: ${APP_CONFIG__DB__URL}
-      TASKIQ_URL: ${TASKIQ_URL}
+      APP_CONFIG__TASKIQ__URL: ${APP_CONFIG__TASKIQ__URL}
     command: >
       taskiq worker src.core.taskiq:broker
       --no-configure-logging
