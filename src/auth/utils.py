@@ -77,8 +77,8 @@ def hash_password(password: str) -> str:
     return pwd_context.hash(secret=password)
 
 
-def validate_password_hash(password: str, hashed_password: str) -> bool:
-    return pwd_context.verify(secret=password, hash=hashed_password)
+def validate_password_hash(plain_password: str, hashed_password: str) -> bool:
+    return pwd_context.verify(secret=plain_password, hash=hashed_password)
 
 
 async def get_token_payload(
