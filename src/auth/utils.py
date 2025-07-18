@@ -61,7 +61,8 @@ def decode_jwt(
     algorithm: str = auth_jwt_config.algorithm,
 ):
     try:
-        return jwt.decode(jwt=token, key=public_key, algorithms=[algorithm])
+        payload = jwt.decode(jwt=token, key=public_key, algorithms=[algorithm])
+        return payload
     except ExpiredSignatureError:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
