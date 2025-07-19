@@ -1,4 +1,4 @@
-.PHONY: up up-build down restart restart-build config upgrade taskiq
+.PHONY: up up-build down watch restart restart-build config upgrade taskiq
 
 up:
 	docker compose up -d
@@ -8,6 +8,9 @@ up-build:
 
 down:
 	docker compose down -v
+
+watch:
+	docker compose up --watch
 
 restart: down up
 
