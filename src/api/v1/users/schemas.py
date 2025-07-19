@@ -3,6 +3,7 @@ import re
 from fastapi import HTTPException, status
 from pydantic import BaseModel, EmailStr, Field, field_validator
 from pydantic.json_schema import SkipJsonSchema
+from pydantic.types import UUID
 
 from src.core.models.users import RoleEnum
 from .students.schemas import Student
@@ -46,8 +47,7 @@ class TeacherUserCreate(BaseUser):
 
 
 class User(BaseModel):
-    # id: UUID = Field(default_factory=uuid7)
-    id: int
+    id: UUID = Field(...)
     email: EmailStr
     username: str
     password: str

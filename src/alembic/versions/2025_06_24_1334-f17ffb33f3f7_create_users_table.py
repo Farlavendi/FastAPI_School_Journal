@@ -30,7 +30,7 @@ def upgrade() -> None:
         sa.Column('last_name', sa.String(length=100), nullable=False),
         sa.Column('role', sa.Enum('STUDENT', 'TEACHER', 'SUPERUSER', name='role_enum'), nullable=False),
         sa.Column('is_active', sa.Boolean(), nullable=False),
-        sa.Column('id', sa.Integer(), nullable=False),
+        sa.Column('id', sa.Uuid(), nullable=False),
         sa.PrimaryKeyConstraint('id', name=op.f('pk_users')),
     )
     op.create_index(op.f('ix_users_email'), 'users', ['email'], unique=True)

@@ -29,7 +29,7 @@ def upgrade() -> None:
         sa.Column('history', sa.Integer(), nullable=True),
         sa.Column('geography', sa.Integer(), nullable=True),
         sa.Column('literature', sa.Integer(), nullable=True),
-        sa.Column('id', sa.Integer(), nullable=False),
+        sa.Column('id', sa.Uuid(), nullable=False),
         sa.PrimaryKeyConstraint('id', name=op.f('pk_marks')),
     )
     # ### end Alembic commands ###

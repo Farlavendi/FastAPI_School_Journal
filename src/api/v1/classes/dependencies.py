@@ -1,6 +1,7 @@
 from typing import Annotated
 
 from fastapi import Depends, HTTPException, Path
+from pydantic.types import UUID
 from sqlalchemy import select
 from starlette import status
 
@@ -11,7 +12,7 @@ from .crud import get_class
 
 
 async def class_by_id(
-    value: Annotated[int, Path],
+    value: Annotated[UUID | int, Path],
     session: SessionDep,
     by_id: Annotated[bool, Path] = False,
 ) -> Class | None:
@@ -21,7 +22,7 @@ async def class_by_id(
 async def class_id_by_number(
     class_num: Annotated[int, Path],
     session: SessionDep,
-) -> int:
+) -> UUID:
     result = await session.execute(
         select(Class.id)
         .where(Class.class_num == class_num),

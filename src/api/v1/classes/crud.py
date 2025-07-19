@@ -1,6 +1,7 @@
 from typing import Sequence
 
 from fastapi import HTTPException, status
+from pydantic.types import UUID
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload, selectinload
@@ -17,7 +18,7 @@ async def get_classes(session: AsyncSession) -> Sequence[Class]:
 
 async def get_class(
     session: AsyncSession,
-    value: int,
+    value: UUID | int,
     by_id: bool = False,
 ) -> Class | None:
     query = select(Class).options(
@@ -46,7 +47,7 @@ async def create_class(session: AsyncSession, class_in: ClassCreate) -> Class:
     class_ = Class(**class_in.model_dump())
     session.add(class_)
     await session.commit()
-    return class_
+    return await get_class(session=session, value=class_.id, by_id=True)
 
 
 async def delete_class(

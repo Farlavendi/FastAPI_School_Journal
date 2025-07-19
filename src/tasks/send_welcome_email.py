@@ -1,5 +1,7 @@
 import logging
 
+from pydantic.types import UUID
+
 from src.api.v1.users.dependencies import user_by_id
 from src.core.db_utils import TaskiqSessionDep
 from src.core.taskiq import broker
@@ -12,7 +14,7 @@ logger = logging.getLogger(__name__)
 
 @broker.task
 async def send_welcome_email(
-    user_id: int,
+    user_id: UUID,
     session: TaskiqSessionDep,
 ) -> None:
     user = await user_by_id(user_id=user_id, session=session)

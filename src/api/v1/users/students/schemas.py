@@ -1,33 +1,35 @@
 from pydantic import BaseModel, Field
 from pydantic.json_schema import SkipJsonSchema
+from pydantic.types import UUID
+from uuid_utils import uuid4
 
 
 class BaseStudent(BaseModel):
-    class_id: int = Field(..., ge=0)
+    class_id: UUID = Field(...)
 
 
 class StudentCreate(BaseStudent):
-    class_id: SkipJsonSchema[int] = None
+    class_id: SkipJsonSchema[UUID] = Field(default_factory=uuid4)
     class_num: int
 
 
 class StudentUpdate(BaseModel):
-    id: int
+    id: UUID
     class_num: int | None = None
 
 
 class Student(BaseStudent):
-    id: int
+    id: UUID
 
 
 class StudentResponse(BaseModel):
-    id: int
-    user_id: int
-    class_id: int
+    id: UUID
+    user_id: UUID
+    class_id: UUID
 
 
 class UserResponse(BaseModel):
-    id: int
+    id: UUID
     email: str
     username: str
     password: str

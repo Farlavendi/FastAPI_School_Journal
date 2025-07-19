@@ -23,7 +23,7 @@ def upgrade() -> None:
     op.create_table(
         'classes',
         sa.Column('class_num', sa.Integer(), nullable=False),
-        sa.Column('id', sa.Integer(), nullable=False),
+        sa.Column('id', sa.Uuid(), nullable=False),
         sa.PrimaryKeyConstraint('id', name=op.f('pk_classes')),
     )
     op.create_index(op.f('ix_classes_class_num'), 'classes', ['class_num'], unique=True)

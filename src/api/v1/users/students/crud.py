@@ -1,6 +1,7 @@
 from typing import Sequence
 
 from fastapi import HTTPException, status
+from pydantic.types import UUID
 from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload
@@ -27,7 +28,7 @@ async def get_students(session: AsyncSession) -> Sequence[User]:
 
 async def get_marks(
     session: AsyncSession,
-    student_id: int,
+    student_id: UUID,
 ):
     result = await session.execute(
         select(Marks)

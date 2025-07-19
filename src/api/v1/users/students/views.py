@@ -2,6 +2,7 @@ from typing import Annotated
 
 import sqlalchemy
 from fastapi import APIRouter, HTTPException, Path, status
+from pydantic.types import UUID
 
 from src.api.v1.users.marks_schemas import Marks
 from src.api.v1.users.schemas import StudentUserCreate
@@ -22,7 +23,7 @@ async def get_students(
 
 @students_router.get("/marks/get", response_model=Marks)
 async def get_marks(
-    student_id: Annotated[int, Path],
+    student_id: Annotated[UUID, Path],
     session: SessionDep,
 ):
     return await crud.get_marks(session=session, student_id=student_id)

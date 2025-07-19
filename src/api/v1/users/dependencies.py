@@ -1,6 +1,7 @@
 from typing import Annotated
 
 from fastapi import Depends, HTTPException, Path, status
+from pydantic.types import UUID
 
 from src.core.db_utils import SessionDep
 from src.core.models import User
@@ -8,7 +9,7 @@ from . import crud, schemas
 
 
 async def user_by_id(
-    user_id: Annotated[int, Path],
+    user_id: Annotated[UUID, Path],
     session: SessionDep,
 ) -> User:
     user = await crud.get_user_by_id(session=session, user_id=user_id)

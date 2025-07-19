@@ -1,4 +1,3 @@
-import uuid
 from datetime import datetime, timedelta, timezone
 from typing import Annotated
 
@@ -10,6 +9,7 @@ from jwt.exceptions import ExpiredSignatureError, InvalidTokenError
 from passlib.context import CryptContext
 from pydantic import ValidationError
 from starlette import status
+from uuid_utils import uuid7
 
 from src.api.v1.users import crud
 from src.api.v1.users.schemas import User
@@ -44,7 +44,7 @@ def encode_jwt(
         {
             "exp": expire_time,
             "iat": now,
-            "jti": str(uuid.uuid4()),
+            "jti": str(uuid7())
         },
     )
     encoded_jwt = jwt.encode(

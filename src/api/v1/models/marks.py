@@ -2,6 +2,7 @@ from typing import TYPE_CHECKING
 
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+from uuid_utils import UUID
 
 from src.core.models import Base
 
@@ -20,7 +21,7 @@ class Marks(Base):
     geography: Mapped[int] = mapped_column(nullable=True)
     literature: Mapped[int] = mapped_column(nullable=True)
 
-    student_id: Mapped[int] = mapped_column(
+    student_id: Mapped[UUID] = mapped_column(
         ForeignKey(
             column="students.id",
             ondelete="CASCADE",

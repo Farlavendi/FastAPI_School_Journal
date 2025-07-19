@@ -1,6 +1,7 @@
 from typing import Sequence
 
 from fastapi import HTTPException, status
+from pydantic.types import UUID
 from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload
@@ -23,7 +24,7 @@ async def get_users(session: AsyncSession) -> Sequence[User]:
     return users
 
 
-async def get_user_by_id(session: AsyncSession, user_id: int):
+async def get_user_by_id(session: AsyncSession, user_id: UUID):
     result = await session.execute(
         select(User)
         .where(User.id == user_id)
@@ -60,7 +61,7 @@ async def delete_user(
 
 async def update_user(
     session: AsyncSession,
-    user_id: int,
+    user_id: UUID,
     user_in: UserUpdate,
 ):
     result = await session.execute(

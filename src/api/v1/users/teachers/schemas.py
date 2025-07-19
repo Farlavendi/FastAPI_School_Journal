@@ -1,38 +1,40 @@
 from pydantic import BaseModel, Field
 from pydantic.json_schema import SkipJsonSchema
+from pydantic.types import UUID
+from uuid_utils import uuid4
 
 from src.api.v1.models.teachers import SubjectEnum
 
 
 class BaseTeacher(BaseModel):
-    class_id: int = Field(..., ge=0)
+    class_id: UUID = Field(...)
     subject: SubjectEnum | None = None
 
 
 class TeacherCreate(BaseTeacher):
-    class_id: SkipJsonSchema[int] = None
+    class_id: SkipJsonSchema[UUID] = Field(default_factory=uuid4)
     class_num: int
     subject: SkipJsonSchema[SubjectEnum] = None
 
 
 class TeacherUpdate(BaseModel):
-    id: int = Field(..., ge=0)
+    id: UUID = Field(...)
     class_num: int | None = None
 
 
 class Teacher(BaseTeacher):
-    id: int
+    id: UUID
 
 
 class TeacherResponse(BaseModel):
-    id: int
-    user_id: int
-    class_id: int
+    id: UUID
+    user_id: UUID
+    class_id: UUID
     subject: SubjectEnum | None
 
 
 class UserResponse(BaseModel):
-    id: int
+    id: UUID
     email: str
     username: str
     password: str

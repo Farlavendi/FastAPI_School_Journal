@@ -2,6 +2,7 @@ from typing import TYPE_CHECKING
 
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+from uuid_utils import UUID
 
 from src.core.models import Base, User
 
@@ -12,7 +13,7 @@ if TYPE_CHECKING:
 class Student(Base):
     __tablename__ = "students"
 
-    user_id: Mapped[int] = mapped_column(
+    user_id: Mapped[UUID] = mapped_column(
         ForeignKey(
             column="users.id",
             ondelete="CASCADE",
@@ -23,7 +24,7 @@ class Student(Base):
         index=True,
     )
 
-    class_id: Mapped[int] = mapped_column(
+    class_id: Mapped[UUID] = mapped_column(
         ForeignKey(
             column="classes.id",
             ondelete="CASCADE",
