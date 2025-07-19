@@ -14,7 +14,7 @@ async def class_by_id(
     value: Annotated[int, Path],
     session: SessionDep,
     by_id: Annotated[bool, Path] = False,
-):
+) -> Class | None:
     return await get_class(session=session, value=value, by_id=by_id)
 
 

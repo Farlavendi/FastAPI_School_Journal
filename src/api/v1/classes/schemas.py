@@ -1,4 +1,4 @@
-from typing import Optional, List
+from typing import List
 
 from pydantic import BaseModel, Field
 from pydantic.json_schema import SkipJsonSchema
@@ -9,15 +9,15 @@ from src.api.v1.users.teachers.schemas import Teacher
 
 class ClassCreate(BaseModel):
     class_num: int = Field(..., ge=1)
-    students: SkipJsonSchema[Optional[List[Student]]] = []
-    teacher: SkipJsonSchema[Optional[Teacher]] = None
+    students: SkipJsonSchema[List[Student]] = Field(default_factory=list)
+    teacher: SkipJsonSchema[Teacher] = None
 
 
 class Class(ClassCreate):
     # id: UUID = Field(default_factory=uuid7)
     id: int = Field(..., ge=0)
-    students: Optional[List[Student]]
-    teacher: Optional[Teacher]
+    students: List[Student]
+    teacher: Teacher | None
 
 
 class ClassResponse(BaseModel):

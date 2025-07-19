@@ -11,7 +11,7 @@ from . import schemas
 async def user_by_id(
     user_id: Annotated[int, Path],
     session: SessionDep,
-) -> User | None:
+) -> User:
     user = await crud.get_user_by_id(session=session, user_id=user_id)
     if user is None:
         raise HTTPException(

@@ -1,5 +1,3 @@
-from typing import Optional
-
 from pydantic import Field, BaseModel
 from pydantic.json_schema import SkipJsonSchema
 
@@ -15,7 +13,7 @@ class StudentCreate(BaseStudent):
 
 class StudentUpdate(BaseModel):
     id: int
-    class_num: Optional[int] = None
+    class_num: int | None = None
 
 
 class Student(BaseStudent):

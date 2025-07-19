@@ -31,7 +31,7 @@ async def create_teacher(
     session: AsyncSession,
     user_in: TeacherUserCreate,
     teacher_in: TeacherCreate,
-    subject: SubjectEnum
+    subject: SubjectEnum | None
 ) -> User:
     hashed_password = hash_password(user_in.password)
     user_data = user_in.model_dump(exclude={"password"})

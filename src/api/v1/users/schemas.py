@@ -1,5 +1,4 @@
 import re
-from typing import Optional
 
 from fastapi import HTTPException, status
 from pydantic import BaseModel, EmailStr, Field, field_validator
@@ -57,13 +56,13 @@ class User(BaseModel):
     last_name: str
     role: RoleEnum
     is_active: bool
-    student: Optional[Student]
-    teacher: Optional[Teacher]
+    student: Student | None
+    teacher: Teacher | None
 
 
 class UserUpdate(BaseModel):
-    email: Optional[EmailStr] = None
-    username: Optional[str] = None
-    first_name: Optional[str] = None
-    second_name: Optional[str] = None
-    last_name: Optional[str] = None
+    email: EmailStr | None = None
+    username: str | None = None
+    first_name: str | None = None
+    second_name: str | None = None
+    last_name: str | None = None

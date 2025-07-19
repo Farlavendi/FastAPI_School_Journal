@@ -27,7 +27,7 @@ async def create_user_teacher(
     user_in: TeacherUserCreate,
     teacher_in: TeacherCreate,
     session: SessionDep,
-    subject: Optional[Annotated[SubjectEnum, Path]] = None,
+    subject: Annotated[SubjectEnum, Path] | None = None,
 ):
     try:
         user = await crud.create_teacher(session=session, user_in=user_in, teacher_in=teacher_in, subject=subject)

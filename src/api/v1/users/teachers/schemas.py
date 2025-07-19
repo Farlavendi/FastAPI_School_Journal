@@ -1,5 +1,3 @@
-from typing import Optional
-
 from pydantic import Field, BaseModel
 from pydantic.json_schema import SkipJsonSchema
 
@@ -8,7 +6,7 @@ from src.api.v1.models.teachers import SubjectEnum
 
 class BaseTeacher(BaseModel):
     class_id: int = Field(..., ge=0)
-    subject: Optional[SubjectEnum] = None
+    subject: SubjectEnum | None = None
 
 
 class TeacherCreate(BaseTeacher):
@@ -19,7 +17,7 @@ class TeacherCreate(BaseTeacher):
 
 class TeacherUpdate(BaseModel):
     id: int = Field(..., ge=0)
-    class_num: Optional[int] = None
+    class_num: int | None = None
 
 
 class Teacher(BaseTeacher):
