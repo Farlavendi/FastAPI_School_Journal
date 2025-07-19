@@ -6,11 +6,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload
 
 from src.api.v1.classes.dependencies import class_id_by_number
-from src.api.v1.models import Teacher, Marks
+from src.api.v1.models import Marks, Teacher
 from src.api.v1.models.teachers import SubjectEnum
 from src.api.v1.users.marks_schemas import MarksUpdate
 from src.api.v1.users.schemas import TeacherUserCreate
-from src.auth.utils import hash_password, CurrentUserDep
+from src.auth.utils import CurrentUserDep, hash_password
 from src.core.models import User
 from src.core.models.users import RoleEnum
 from .schemas import TeacherCreate, TeacherUpdate
@@ -21,7 +21,7 @@ async def get_teachers(session: AsyncSession) -> Sequence[User]:
         select(User)
         .where(User.role == RoleEnum.TEACHER)
         .options(joinedload(User.teacher))
-        .order_by(User.id)
+        .order_by(User.id),
     )
     teachers = result.scalars().all()
     return teachers
@@ -31,7 +31,7 @@ async def create_teacher(
     session: AsyncSession,
     user_in: TeacherUserCreate,
     teacher_in: TeacherCreate,
-    subject: SubjectEnum | None
+    subject: SubjectEnum | None,
 ) -> User:
     hashed_password = hash_password(user_in.password)
     user_data = user_in.model_dump(exclude={"password"})
@@ -46,7 +46,7 @@ async def create_teacher(
         user_id=user.id,
         class_id=class_id,
         subject=subject,
-        **teacher_data
+        **teacher_data,
     )
     session.add(teacher)
 
@@ -64,9 +64,9 @@ async def update_teacher(
         .where(Teacher.user_id == teacher.id)
         .values(
             subject=subject,
-            class_id=class_id
+            class_id=class_id,
         )
-        .returning(Teacher)
+        .returning(Teacher),
     )
     await session.commit()
     return result.scalar_one()
@@ -75,18 +75,18 @@ async def update_teacher(
 async def update_marks(
     session: AsyncSession,
     user: CurrentUserDep,
-    marks: MarksUpdate
+    marks: MarksUpdate,
 ):
     if user.role != RoleEnum.TEACHER:
         return HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="Only teachers can edit marks!"
+            detail="Only teachers can edit marks!",
         )
     result = await session.execute(
         update(Marks)
         .where(Marks.student_id == marks.student_id)
         .values(**marks.model_dump(exclude_unset=True))
-        .returning(Marks)
+        .returning(Marks),
     )
     await session.commit()
     return result.scalar_one()

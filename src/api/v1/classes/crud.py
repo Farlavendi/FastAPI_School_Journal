@@ -18,11 +18,11 @@ async def get_classes(session: AsyncSession) -> Sequence[Class]:
 async def get_class(
     session: AsyncSession,
     value: int,
-    by_id: bool = False
+    by_id: bool = False,
 ) -> Class | None:
     query = select(Class).options(
         joinedload(Class.teacher),
-        selectinload(Class.students)
+        selectinload(Class.students),
     )
 
     if by_id:

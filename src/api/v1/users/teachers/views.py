@@ -1,7 +1,7 @@
-from typing import Annotated, Optional
+from typing import Annotated
 
 import sqlalchemy
-from fastapi import APIRouter, HTTPException, status, Path
+from fastapi import APIRouter, HTTPException, Path, status
 
 from src.api.v1.models.teachers import SubjectEnum
 from src.api.v1.users.marks_schemas import MarksUpdate
@@ -10,7 +10,7 @@ from src.auth.utils import CurrentUserDep
 from src.core.db_utils import SessionDep
 from src.tasks import send_welcome_email
 from . import crud
-from .schemas import TeacherCreate, UserResponse, TeacherUpdate
+from .schemas import TeacherCreate, TeacherUpdate, UserResponse
 
 teachers_router = APIRouter(prefix="/teachers")
 
@@ -62,7 +62,7 @@ async def update_marks(
     updated_marks = await crud.update_marks(
         session=session,
         user=user,
-        marks=marks
+        marks=marks,
     )
 
     return updated_marks

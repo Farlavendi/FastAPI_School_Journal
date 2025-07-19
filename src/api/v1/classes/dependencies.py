@@ -1,6 +1,6 @@
 from typing import Annotated
 
-from fastapi import Path, HTTPException, Depends
+from fastapi import Depends, HTTPException, Path
 from sqlalchemy import select
 from starlette import status
 
@@ -24,14 +24,14 @@ async def class_id_by_number(
 ) -> int:
     result = await session.execute(
         select(Class.id)
-        .where(Class.class_num == class_num)
+        .where(Class.class_num == class_num),
     )
     class_id = result.scalar_one_or_none()
 
     if class_id is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="Class not found."
+            detail="Class not found.",
         )
 
     return class_id

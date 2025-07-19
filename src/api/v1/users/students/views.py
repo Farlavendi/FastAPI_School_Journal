@@ -1,14 +1,14 @@
 from typing import Annotated
 
 import sqlalchemy
-from fastapi import APIRouter, HTTPException, status, Path
+from fastapi import APIRouter, HTTPException, Path, status
 
 from src.api.v1.users.marks_schemas import Marks
 from src.api.v1.users.schemas import StudentUserCreate
 from src.core.db_utils import SessionDep
 from src.tasks import send_welcome_email
 from . import crud
-from .schemas import StudentCreate, UserResponse, StudentUpdate
+from .schemas import StudentCreate, StudentUpdate, UserResponse
 
 students_router = APIRouter(prefix="/students")
 
@@ -51,6 +51,6 @@ async def update_student(
 ):
     updated_student = await crud.update_student(
         session=session,
-        student=student
+        student=student,
     )
     return updated_student

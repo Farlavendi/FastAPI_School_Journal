@@ -13,7 +13,7 @@ from .schemas import User, UserUpdate
 users_router = APIRouter(
     prefix="/users",
     tags=["Users"],
-    dependencies=[Depends(http_bearer)]
+    dependencies=[Depends(http_bearer)],
 )
 
 
@@ -37,13 +37,13 @@ async def choose_role(role: RoleEnum):
         return ORJSONResponse(
             content={
                 "next_step": "/api/users/create-student",
-            }
+            },
         )
     elif role == RoleEnum.TEACHER:
         return ORJSONResponse(
             content={
                 "next_step": "/api/users/create-teacher",
-            }
+            },
         )
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Invalid role")
 
@@ -58,7 +58,7 @@ async def auth_user_check_self_info(
         "first_name": current_user.first_name,
         "second_name": current_user.second_name,
         "last_name": current_user.last_name,
-        "role": current_user.role
+        "role": current_user.role,
     }
 
 
@@ -66,12 +66,12 @@ async def auth_user_check_self_info(
 async def update_user(
     user_update: UserUpdate,
     session: SessionDep,
-    user: CurrentUserDep
+    user: CurrentUserDep,
 ):
     updated_user = await crud.update_user(
         session=session,
         user_id=user.id,
-        user_in=user_update
+        user_in=user_update,
     )
     return updated_user
 

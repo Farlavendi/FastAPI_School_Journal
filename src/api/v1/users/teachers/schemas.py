@@ -1,4 +1,4 @@
-from pydantic import Field, BaseModel
+from pydantic import BaseModel, Field
 from pydantic.json_schema import SkipJsonSchema
 
 from src.api.v1.models.teachers import SubjectEnum

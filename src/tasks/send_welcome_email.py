@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 @broker.task
 async def send_welcome_email(
     user_id: int,
-    session: TaskiqSessionDep
+    session: TaskiqSessionDep,
 ) -> None:
     user = await user_by_id(user_id=user_id, session=session)
     logger.info("Sending welcome email to user %s", user_id)

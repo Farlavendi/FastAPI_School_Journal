@@ -31,7 +31,7 @@ class Teacher(Base):
             name="fk_teacher_user_id",
         ),
         nullable=False,
-        index=True
+        index=True,
     )
 
     class_id: Mapped[int] = mapped_column(
@@ -42,10 +42,10 @@ class Teacher(Base):
         ),
         nullable=False,
         unique=True,
-        index=True
+        index=True,
     )
     subject: Mapped[SubjectEnum] = mapped_column(
-        sa.Enum(SubjectEnum, name='subject_enum'), nullable=True, index=True
+        sa.Enum(SubjectEnum, name='subject_enum'), nullable=True, index=True,
     )
 
     user: Mapped["User"] = relationship(back_populates="teacher")

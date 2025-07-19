@@ -1,11 +1,10 @@
 from typing import Annotated
 
-from fastapi import Path, HTTPException, status, Depends
+from fastapi import Depends, HTTPException, Path, status
 
 from src.core.db_utils import SessionDep
 from src.core.models import User
-from . import crud
-from . import schemas
+from . import crud, schemas
 
 
 async def user_by_id(

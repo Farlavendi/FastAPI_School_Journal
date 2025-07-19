@@ -26,12 +26,12 @@ class BaseUser(BaseModel):
         if len(password) < 8 or len(password) > 20:
             raise HTTPException(
                 status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-                detail="Password must contain between 8 and 20 characters."
+                detail="Password must contain between 8 and 20 characters.",
             )
         if not re.match(password_regex, password):
             raise HTTPException(
                 status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-                detail="Password can only contain letters, digits or _ sign."
+                detail="Password can only contain letters, digits or _ sign.",
             )
 
         return password

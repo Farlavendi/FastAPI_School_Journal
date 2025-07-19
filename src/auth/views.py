@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Response, Request
+from fastapi import APIRouter, Depends, Request, Response
 from fastapi.security import HTTPBearer
 
 from src.core import config
@@ -21,7 +21,7 @@ auth_router = APIRouter(
 async def refresh_jwt(
     request: Request,
     response: Response,
-    session: SessionDep
+    session: SessionDep,
 ):
     refresh_token = request.cookies.get("refresh_token")
 
@@ -33,7 +33,7 @@ async def refresh_jwt(
         httponly=True,
         secure=True,
         samesite="strict",
-        max_age=auth_jwt_config.access_token_expire_minutes * 60
+        max_age=auth_jwt_config.access_token_expire_minutes * 60,
     )
 
     return token_info
@@ -53,7 +53,7 @@ async def issue_jwt(
         httponly=True,
         secure=True,
         samesite="strict",
-        max_age=auth_jwt_config.access_token_expire_minutes * 60
+        max_age=auth_jwt_config.access_token_expire_minutes * 60,
     )
     response.set_cookie(
         key="refresh_token",
@@ -61,7 +61,7 @@ async def issue_jwt(
         httponly=True,
         secure=True,
         samesite="strict",
-        max_age=auth_jwt_config.access_token_expire_minutes * 60 * 24
+        max_age=auth_jwt_config.access_token_expire_minutes * 60 * 24,
     )
 
     return TokenInfo(
@@ -72,7 +72,7 @@ async def issue_jwt(
 
 @auth_router.get("/users/me")
 async def check_self_info(
-    current_user: CurrentUserDep
+    current_user: CurrentUserDep,
 ):
     return {
         "username": current_user.username,
@@ -80,7 +80,7 @@ async def check_self_info(
         "first_name": current_user.first_name,
         "second_name": current_user.second_name,
         "last_name": current_user.last_name,
-        "role": current_user.role
+        "role": current_user.role,
     }
 
 

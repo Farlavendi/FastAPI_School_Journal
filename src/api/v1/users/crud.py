@@ -14,7 +14,7 @@ async def get_users(session: AsyncSession) -> Sequence[User]:
         select(User)
         .options(
             joinedload(User.student),
-            joinedload(User.teacher)
+            joinedload(User.teacher),
         )
         .order_by(User.id)
     )
@@ -29,8 +29,8 @@ async def get_user_by_id(session: AsyncSession, user_id: int):
         .where(User.id == user_id)
         .options(
             joinedload(User.student),
-            joinedload(User.teacher)
-        )
+            joinedload(User.teacher),
+        ),
     )
     user = result.scalar_one_or_none()
 
@@ -45,7 +45,7 @@ async def get_user_by_id(session: AsyncSession, user_id: int):
 async def get_user_by_username(session: AsyncSession, username: str):
     result = await session.execute(
         select(User)
-        .where(User.username == username)
+        .where(User.username == username),
     )
     return result.scalar_one_or_none()
 
@@ -61,13 +61,13 @@ async def delete_user(
 async def update_user(
     session: AsyncSession,
     user_id: int,
-    user_in: UserUpdate
+    user_in: UserUpdate,
 ):
     result = await session.execute(
         update(User)
         .where(User.id == user_id)
         .values(**user_in.model_dump(exclude_unset=True))
-        .returning(User)
+        .returning(User),
     )
     await session.commit()
     return result.scalar_one()

@@ -22,21 +22,21 @@ class User(Base):
 
     email: Mapped[str] = mapped_column(
         unique=True,
-        index=True
+        index=True,
     )
     username: Mapped[str] = mapped_column(
         unique=True,
-        index=True
+        index=True,
     )
     password: Mapped[str] = mapped_column()
     first_name: Mapped[str] = mapped_column(String(100))
     second_name: Mapped[str | None] = mapped_column(
-        String(50), default="", server_default=""
+        String(50), default="", server_default="",
     )
     last_name: Mapped[str] = mapped_column(String(100))
 
     role: Mapped[RoleEnum] = mapped_column(
-        sa.Enum(RoleEnum, name='role_enum'), nullable=False, index=True
+        sa.Enum(RoleEnum, name='role_enum'), nullable=False, index=True,
     )
     is_active: Mapped[bool] = mapped_column(default=True, nullable=False)
 

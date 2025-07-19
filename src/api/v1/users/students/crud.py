@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload
 
 from src.api.v1.classes.dependencies import class_id_by_number
-from src.api.v1.models import Student, Marks
+from src.api.v1.models import Marks, Student
 from src.api.v1.users.schemas import StudentUserCreate
 from src.auth.utils import hash_password
 from src.core.models import User
@@ -19,7 +19,7 @@ async def get_students(session: AsyncSession) -> Sequence[User]:
         select(User)
         .where(User.role == RoleEnum.STUDENT)
         .options(joinedload(User.student))
-        .order_by(User.id)
+        .order_by(User.id),
     )
     students = result.scalars().all()
     return students
@@ -27,18 +27,18 @@ async def get_students(session: AsyncSession) -> Sequence[User]:
 
 async def get_marks(
     session: AsyncSession,
-    student_id: int
+    student_id: int,
 ):
     result = await session.execute(
         select(Marks)
-        .where(Marks.student_id == student_id)
+        .where(Marks.student_id == student_id),
     )
     marks = result.scalar_one_or_none()
 
     if not marks:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail='Marks not found.'
+            detail='Marks not found.',
         )
 
     return marks
@@ -80,7 +80,7 @@ async def update_student(
             id=student.id,
             class_id=class_id,
         )
-        .returning(Student)
+        .returning(Student),
     )
     await session.commit()
     return result.scalar_one()

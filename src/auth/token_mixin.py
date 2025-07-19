@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.api.v1.users.crud import get_user_by_username
 from src.api.v1.users.schemas import User
 from src.auth.schemas import TokenInfo
-from src.auth.utils import encode_jwt, decode_jwt
+from src.auth.utils import decode_jwt, encode_jwt
 from src.core import config
 
 auth_jwt_config = config.AuthJWT()
@@ -58,28 +58,28 @@ async def refresh_jwt_token(session: AsyncSession, refresh_token: str) -> TokenI
     if not refresh_token:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Missing refresh token"
+            detail="Missing refresh token",
         )
     try:
         payload = decode_jwt(refresh_token)
         if payload.get("type") != "refresh":
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Invalid refresh token type"
+                detail="Invalid refresh token type",
             )
 
         username = payload.get("sub")
         if not username:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Invalid refresh token: missing username"
+                detail="Invalid refresh token: missing username",
             )
 
         user = await get_user_by_username(session=session, username=username)
         if not user:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="User not found"
+                detail="User not found",
             )
 
         new_access_token = create_access_token(user)
@@ -91,5 +91,5 @@ async def refresh_jwt_token(session: AsyncSession, refresh_token: str) -> TokenI
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f"Error during token refresh: {str(e)}"
+            detail=f"Error during token refresh: {str(e)}",
         )

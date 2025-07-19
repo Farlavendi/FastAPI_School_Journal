@@ -1,6 +1,6 @@
 from datetime import datetime, timezone
 
-from fastapi import Request, HTTPException
+from fastapi import HTTPException, Request
 from fastapi.logger import logger
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.types import ASGIApp
@@ -54,7 +54,7 @@ class AutoRefreshTokenMiddleware(BaseHTTPMiddleware):
                                 httponly=True,
                                 secure=True,
                                 samesite="strict",
-                                max_age=auth_jwt_config.access_token_expire_minutes * 60
+                                max_age=auth_jwt_config.access_token_expire_minutes * 60,
                             )
                             return response
                         else:
@@ -64,7 +64,7 @@ class AutoRefreshTokenMiddleware(BaseHTTPMiddleware):
                     logger.error(f"Error refreshing token: {e}")
                     raise HTTPException(
                         status_code=401,
-                        detail="Invalid or expired refresh token."
+                        detail="Invalid or expired refresh token.",
                     )
 
         except Exception as e:

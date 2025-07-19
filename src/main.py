@@ -3,7 +3,7 @@ from contextlib import asynccontextmanager
 from typing import AsyncGenerator
 
 from fastapi import FastAPI
-from fastapi.responses import RedirectResponse, ORJSONResponse
+from fastapi.responses import ORJSONResponse, RedirectResponse
 
 from src.api import router as api_router
 from src.auth.middlewares import AutoRefreshTokenMiddleware

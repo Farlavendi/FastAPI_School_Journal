@@ -20,7 +20,7 @@ class Student(Base):
         ),
         nullable=False,
         unique=True,
-        index=True
+        index=True,
     )
 
     class_id: Mapped[int] = mapped_column(
@@ -30,7 +30,7 @@ class Student(Base):
             name="fk_student_class_id",
         ),
         nullable=False,
-        index=True
+        index=True,
     )
 
     user: Mapped["User"] = relationship(back_populates="student")

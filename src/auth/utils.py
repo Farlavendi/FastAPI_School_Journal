@@ -1,12 +1,12 @@
 import uuid
-from datetime import timedelta, datetime, timezone
+from datetime import datetime, timedelta, timezone
 from typing import Annotated
 
 import jwt
-from fastapi import HTTPException, Depends, Form
+from fastapi import Depends, Form, HTTPException
 from fastapi.security import OAuth2PasswordBearer
 from jwt import PyJWTError
-from jwt.exceptions import InvalidTokenError, ExpiredSignatureError
+from jwt.exceptions import ExpiredSignatureError, InvalidTokenError
 from passlib.context import CryptContext
 from pydantic import ValidationError
 from starlette import status
@@ -44,8 +44,8 @@ def encode_jwt(
         {
             "exp": expire_time,
             "iat": now,
-            "jti": str(uuid.uuid4())
-        }
+            "jti": str(uuid.uuid4()),
+        },
     )
     encoded_jwt = jwt.encode(
         payload=to_encode,
@@ -123,7 +123,8 @@ async def get_current_user(
         payload = jwt.decode(
             token,
             auth_jwt_config.public_key,
-            algorithms=[auth_jwt_config.algorithm])
+            algorithms=[auth_jwt_config.algorithm],
+        )
         username = payload.get("sub")
         if not username:
             raise credentials_exception
