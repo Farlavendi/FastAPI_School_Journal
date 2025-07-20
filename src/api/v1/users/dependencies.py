@@ -1,7 +1,7 @@
 from typing import Annotated
+from uuid import UUID
 
 from fastapi import Depends, HTTPException, Path, status
-from pydantic.types import UUID
 
 from src.core.db_utils import SessionDep
 from src.core.models import User

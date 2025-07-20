@@ -1,6 +1,5 @@
 import logging
-
-from pydantic.types import UUID
+from uuid import UUID
 
 from src.api.v1.users.dependencies import user_by_id
 from src.core.db_utils import TaskiqSessionDep

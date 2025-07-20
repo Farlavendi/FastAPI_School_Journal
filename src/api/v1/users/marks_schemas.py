@@ -1,5 +1,6 @@
+from uuid import UUID
+
 from pydantic import BaseModel, Field
-from pydantic.types import UUID
 
 
 class Marks(BaseModel):
@@ -14,4 +15,4 @@ class Marks(BaseModel):
 
 
 class MarksUpdate(Marks):
-    pass
+    student_id: UUID = Field(...)

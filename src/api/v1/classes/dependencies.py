@@ -1,7 +1,7 @@
 from typing import Annotated
+from uuid import UUID
 
 from fastapi import Depends, HTTPException, Path
-from pydantic.types import UUID
 from sqlalchemy import select
 from starlette import status
 

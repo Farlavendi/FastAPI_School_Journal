@@ -1,7 +1,7 @@
+from uuid import UUID, uuid4
+
 from pydantic import BaseModel, Field
 from pydantic.json_schema import SkipJsonSchema
-from pydantic.types import UUID
-from uuid_utils import uuid4
 
 
 class BaseStudent(BaseModel):
@@ -10,12 +10,12 @@ class BaseStudent(BaseModel):
 
 class StudentCreate(BaseStudent):
     class_id: SkipJsonSchema[UUID] = Field(default_factory=uuid4)
-    class_num: int
+    class_num: int = Field(..., ge=1)
 
 
 class StudentUpdate(BaseModel):
-    id: UUID
-    class_num: int | None = None
+    id: UUID = Field(...)
+    class_num: int | None = Field(None, ge=1)
 
 
 class Student(BaseStudent):

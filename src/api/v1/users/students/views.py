@@ -1,8 +1,8 @@
 from typing import Annotated
+from uuid import UUID
 
 import sqlalchemy
 from fastapi import APIRouter, HTTPException, Path, status
-from pydantic.types import UUID
 
 from src.api.v1.users.marks_schemas import Marks
 from src.api.v1.users.schemas import StudentUserCreate

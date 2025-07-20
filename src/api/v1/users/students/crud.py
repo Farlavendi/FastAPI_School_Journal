@@ -1,7 +1,7 @@
 from typing import Sequence
+from uuid import UUID
 
 from fastapi import HTTPException, status
-from pydantic.types import UUID
 from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload
