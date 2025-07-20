@@ -6,14 +6,11 @@ requires-python = ">=3.13"
 dependencies = [
     "alembic>=1.15.1",
     "asyncpg>=0.30.0",
-    "bcrypt>=4.3.0",
     "orjson>=3.10.15",
     "pydantic[email]>=2.10.6",
     "pydantic-settings>=2.8.1",
     "pyjwt[crypto]>=2.10.1",
     "python-dotenv>=1.0.1",
-    "sqlalchemy>=2.0.39",
-    "uvicorn>=0.34.0",
     "python-multipart>=0.0.20",
     "fastapi[standard]>=0.115.11",
     "passlib[argon2]>=1.7.4",
@@ -24,6 +21,8 @@ dependencies = [
     "taskiq-fastapi>=0.3.5",
     "taskiq>=0.11.17",
     "uuid-utils>=0.11.0",
+    "sqlalchemy[asyncio]>=2.0.39",
+    "fastapi-users[sqlalchemy]>=14.0.1",
 ]
 
 [dependency-groups]
