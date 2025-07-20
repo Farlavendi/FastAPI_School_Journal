@@ -7,7 +7,8 @@ from fastapi import Depends, Form, HTTPException
 from fastapi.security import OAuth2PasswordBearer
 from jwt import PyJWTError
 from jwt.exceptions import ExpiredSignatureError, InvalidTokenError
-from passlib.context import CryptContext
+from pwdlib import PasswordHash
+from pwdlib.hashers.argon2 import Argon2Hasher
 from pydantic import ValidationError
 from starlette import status
 
@@ -20,7 +21,9 @@ oauth2_scheme = OAuth2PasswordBearer(
     tokenUrl="/auth/login",
 )
 
-pwd_context = CryptContext(schemes=['argon2'], deprecated='auto')
+password_hash = PasswordHash((
+    Argon2Hasher(),
+))
 
 auth_jwt_config = config.AuthJWT()
 
@@ -84,11 +87,11 @@ def decode_jwt(
 
 
 def hash_password(password: str) -> str:
-    return pwd_context.hash(secret=password)
+    return password_hash.hash(password=password)
 
 
 def validate_password_hash(plain_password: str, hashed_password: str) -> bool:
-    return pwd_context.verify(secret=plain_password, hash=hashed_password)
+    return password_hash.verify(password=plain_password, hash=hashed_password)
 
 
 async def get_token_payload(
