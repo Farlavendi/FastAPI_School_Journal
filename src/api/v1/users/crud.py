@@ -43,7 +43,7 @@ async def get_user_by_id(session: AsyncSession, user_id: UUID):
     return user
 
 
-async def get_user_by_username(session: AsyncSession, username: str):
+async def get_user_by_username(session: AsyncSession, username: str) -> User | None:
     result = await session.execute(
         select(User)
         .where(User.username == username),

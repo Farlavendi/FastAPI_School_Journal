@@ -1,16 +1,17 @@
 from typing import Sequence
 
-from fastapi import HTTPException, status
+from fastapi import HTTPException, Response, status
 from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload
 
+from src.api.v1.auth.dependencies import CurrentUserDep
+from src.api.v1.auth.utils import hash_password, issue_tokens
 from src.api.v1.classes.dependencies import class_id_by_number
 from src.api.v1.models import Marks, Teacher
 from src.api.v1.models.teachers import SubjectEnum
 from src.api.v1.users.marks_schemas import MarksUpdate
 from src.api.v1.users.schemas import TeacherUserCreate
-from src.auth.utils import CurrentUserDep, hash_password
 from src.core.models import User
 from src.core.models.users import RoleEnum
 from .schemas import TeacherCreate, TeacherUpdate
@@ -32,6 +33,7 @@ async def create_teacher(
     user_in: TeacherUserCreate,
     teacher_in: TeacherCreate,
     subject: SubjectEnum | None,
+    response: Response,
 ) -> User:
     hashed_password = hash_password(user_in.password)
     user_data = user_in.model_dump(exclude={"password"})
@@ -39,6 +41,11 @@ async def create_teacher(
     user = User(**user_data, password=hashed_password)
     session.add(user)
     await session.flush()
+
+    await issue_tokens(
+        user=user,
+        response=response,
+    )
 
     class_id = await class_id_by_number(teacher_in.class_num, session=session)
     teacher_data = teacher_in.model_dump(exclude={"class_id", "class_num", "subject"})

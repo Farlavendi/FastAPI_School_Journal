@@ -11,7 +11,10 @@ from .schemas import (
     ClassResponse,
 )
 
-classes_router = APIRouter(prefix="/classes", tags=["Classes"])
+classes_router = APIRouter(
+    prefix="/classes",
+    tags=["Classes"]
+)
 
 
 @classes_router.get("/get/all", response_model=list[ClassResponse])

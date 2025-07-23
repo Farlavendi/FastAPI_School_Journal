@@ -1,18 +1,19 @@
 from typing import Annotated
 
-import sqlalchemy
-from fastapi import APIRouter, HTTPException, Path, status
+from fastapi import APIRouter, HTTPException, Path, Response, status
+from sqlalchemy.exc import IntegrityError
 
+from src.api.v1 import auth_router
+from src.api.v1.auth.dependencies import CurrentUserDep
 from src.api.v1.models.teachers import SubjectEnum
 from src.api.v1.users.marks_schemas import MarksUpdate
 from src.api.v1.users.schemas import TeacherUserCreate
-from src.auth.utils import CurrentUserDep
 from src.core.db_utils import SessionDep
 from src.tasks import send_welcome_email
 from . import crud
 from .schemas import TeacherCreate, TeacherUpdate, UserResponse
 
-teachers_router = APIRouter(prefix="/teachers")
+teachers_router = APIRouter(prefix="/teachers", tags=["Teachers"])
 
 
 @teachers_router.get("/get/all", response_model=list[UserResponse])
@@ -22,19 +23,26 @@ async def get_teachers(
     return await crud.get_teachers(session=session)
 
 
-@teachers_router.post("/create")
+@auth_router.post("/register/teacher")
 async def create_user_teacher(
     user_in: TeacherUserCreate,
     teacher_in: TeacherCreate,
     session: SessionDep,
+    response: Response,
     subject: Annotated[SubjectEnum, Path] | None = None,
 ):
     try:
-        user = await crud.create_teacher(session=session, user_in=user_in, teacher_in=teacher_in, subject=subject)
+        user = await crud.create_teacher(
+            session=session,
+            user_in=user_in,
+            teacher_in=teacher_in,
+            subject=subject,
+            response=response
+        )
         await session.commit()
         await send_welcome_email.kiq(user_id=user.id)
         return user
-    except sqlalchemy.exc.IntegrityError:
+    except IntegrityError:
         await session.rollback()
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Error creating user.")
 

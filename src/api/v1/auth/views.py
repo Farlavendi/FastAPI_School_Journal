@@ -1,13 +1,12 @@
-from fastapi import APIRouter, Depends, Request, Response
+from fastapi import APIRouter, Depends, Form, HTTPException, Request, Response
 from fastapi.security import HTTPBearer
 
-from src.core import config
+from src.api.v1.users.crud import get_user_by_username
+from src.core.config import auth_jwt_config
 from src.core.db_utils import SessionDep
+from .dependencies import CurrentUserDep
 from .schemas import TokenInfo
-from .token_mixin import create_access_token, create_refresh_token, refresh_jwt_token
-from .utils import CurrentUserDep, ValidateUserDep
-
-auth_jwt_config = config.AuthJWT()
+from .utils import issue_tokens, refresh_access_token, validate_password_hash
 
 http_bearer = HTTPBearer(auto_error=False)
 auth_router = APIRouter(
@@ -25,7 +24,7 @@ async def refresh_jwt(
 ):
     refresh_token = request.cookies.get("refresh_token")
 
-    token_info = await refresh_jwt_token(session=session, refresh_token=refresh_token)
+    token_info = await refresh_access_token(session=session, refresh_token=refresh_token)
 
     response.set_cookie(
         key="access_token",
@@ -33,41 +32,24 @@ async def refresh_jwt(
         httponly=True,
         secure=True,
         samesite="strict",
-        max_age=auth_jwt_config.access_token_expire_minutes * 60,
+        max_age=auth_jwt_config.access_token_ttl,
     )
 
     return token_info
 
 
-@auth_router.post("/login/", response_model=TokenInfo)
-async def issue_jwt(
-    user: ValidateUserDep,
+@auth_router.post("/login", response_model=None)
+async def login(
     response: Response,
+    session: SessionDep,
+    password: str = Form(...),
+    username: str = Form(...),
 ):
-    access_token = create_access_token(user)
-    refresh_token = create_refresh_token(user)
-
-    response.set_cookie(
-        key="access_token",
-        value=access_token,
-        httponly=True,
-        secure=True,
-        samesite="strict",
-        max_age=auth_jwt_config.access_token_expire_minutes * 60,
-    )
-    response.set_cookie(
-        key="refresh_token",
-        value=refresh_token,
-        httponly=True,
-        secure=True,
-        samesite="strict",
-        max_age=auth_jwt_config.access_token_expire_minutes * 60 * 24,
-    )
-
-    return TokenInfo(
-        access_token=access_token,
-        refresh_token=refresh_token,
-    )
+    user = await get_user_by_username(session=session, username=username)
+    if not validate_password_hash(plain_password=password, hashed_password=user.password):
+        raise HTTPException(status_code=401, detail="Incorrect password")
+    else:
+        return await issue_tokens(user=user, response=response)
 
 
 @auth_router.get("/users/me")

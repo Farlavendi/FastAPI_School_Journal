@@ -6,7 +6,6 @@ from fastapi import FastAPI
 from fastapi.responses import ORJSONResponse, RedirectResponse
 
 from src.api import router as api_router
-from src.auth.views import auth_router
 from src.core.config import settings
 from src.core.db_utils import db_helper
 from src.core.gunicorn import Application, get_app_options
@@ -36,7 +35,6 @@ main_app = FastAPI(
     lifespan=lifespan,
 )
 main_app.include_router(router=api_router)
-main_app.include_router(router=auth_router)
 
 
 @main_app.get("/")

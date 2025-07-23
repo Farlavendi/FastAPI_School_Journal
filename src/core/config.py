@@ -75,6 +75,22 @@ class DatabaseConfig(BaseModel):
     }
 
 
+class AuthJWTConfig(BaseModel):
+    private_key_path: Path = BASE_DIR / "certs" / "private.pem"
+    public_key_path: Path = BASE_DIR / "certs" / "public.pem"
+    algorithm: str = "RS256"
+    access_token_ttl: int = 60 * 60  # 1 hour
+    refresh_token_ttl: int = 60 * 60 * 24 * 30  # 30 days(≈1 month)
+
+    @property
+    def private_key(self):
+        return self.private_key_path.read_text()
+
+    @property
+    def public_key(self):
+        return self.public_key_path.read_text()
+
+
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
         case_sensitive=False,
@@ -90,20 +106,5 @@ class Settings(BaseSettings):
     mailing: MailingConfig = MailingConfig()
 
 
-class AuthJWT(BaseModel):
-    private_key_path: Path = BASE_DIR / "certs" / "private.pem"
-    public_key_path: Path = BASE_DIR / "certs" / "public.pem"
-    algorithm: str = "RS256"
-    access_token_expire_minutes: int = 15
-    refresh_token_expire_days: int = 30
-
-    @property
-    def private_key(self):
-        return self.private_key_path.read_text()
-
-    @property
-    def public_key(self):
-        return self.public_key_path.read_text()
-
-
 settings = Settings()
+auth_jwt_config = AuthJWTConfig()
