@@ -28,6 +28,7 @@ def encode_jwt(
 ):
     to_encode = payload.copy()
     now = datetime.now(timezone.utc)
+    jti = str(uuid4())
 
     if expires_delta:
         expire_time = now + expires_delta
@@ -38,7 +39,7 @@ def encode_jwt(
         {
             "exp": expire_time,
             "iat": now,
-            "jti": str(uuid4())
+            "jti": jti
         },
     )
     encoded_jwt = jwt.encode(
