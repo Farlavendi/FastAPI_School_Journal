@@ -1,4 +1,5 @@
 import logging
+from functools import lru_cache
 from pathlib import Path
 from typing import Literal
 
@@ -54,9 +55,14 @@ class TaskiqConfig(BaseModel):
 
 
 class MailingConfig(BaseModel):
-    host: str = "maildev"  # docker container name
-    port: int = 1025
+    host: str
+    port: int
     sender: str = "fastapi-journal@example.com"
+
+
+class RedisConfig(BaseModel):
+    host: str
+    port: int
 
 
 class DatabaseConfig(BaseModel):
@@ -98,13 +104,19 @@ class Settings(BaseSettings):
         env_prefix="APP_CONFIG__",
         extra="ignore",
     )
-    gunicorn: GunicornConfig = GunicornConfig()
+    gunicorn: GunicornConfig
     logging: LoggingConfig = LoggingConfig()
     api: ApiPrefix = ApiPrefix()
     db: DatabaseConfig
     taskiq: TaskiqConfig
-    mailing: MailingConfig = MailingConfig()
+    mailing: MailingConfig
+    redis: RedisConfig
 
 
-settings = Settings()
+@lru_cache
+def get_settings():
+    return Settings()
+
+
+settings = get_settings()
 auth_jwt_config = AuthJWTConfig()
