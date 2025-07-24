@@ -21,9 +21,9 @@ password_hash = PasswordHash((
 
 def encode_jwt(
     payload: dict,
+    token_ttl: int,
     private_key: str = auth_jwt_config.private_key,
     algorithm: str = auth_jwt_config.algorithm,
-    expire_minutes: int = auth_jwt_config.access_token_ttl,
     expires_delta: timedelta | None = None,
 ):
     to_encode = payload.copy()
@@ -32,7 +32,7 @@ def encode_jwt(
     if expires_delta:
         expire_time = now + expires_delta
     else:
-        expire_time = now + timedelta(minutes=expire_minutes)
+        expire_time = now + timedelta(seconds=token_ttl)
 
     to_encode.update(
         {
@@ -103,7 +103,7 @@ async def get_token_payload(
 def create_token(
     token_type: str,
     token_data: dict,
-    expire_minutes: int = auth_jwt_config.access_token_ttl,
+    token_ttl: int,
     expires_delta: timedelta | None = None,
 ) -> str:
     jwt_payload = {"type": token_type}
@@ -111,6 +111,7 @@ def create_token(
     return encode_jwt(
         payload=jwt_payload,
         expires_delta=expires_delta,
+        token_ttl=token_ttl
     )
 
 
@@ -118,14 +119,14 @@ def create_access_token(
     user: User,
 ) -> str:
     jwt_payload = {
-        "sub": user.username,
+        "sub": user.email,
+        "user_id": str(user.id),
         "username": user.username,
-        "email": user.email,
     }
     return create_token(
         token_type="access",
         token_data=jwt_payload,
-        expire_minutes=auth_jwt_config.access_token_ttl,
+        token_ttl=auth_jwt_config.access_token_ttl,
     )
 
 
@@ -134,11 +135,12 @@ def create_refresh_token(
 ) -> str:
     jwt_payload = {
         "sub": user.username,
+        "user_id": str(user.id),
     }
     return create_token(
         token_type="refresh",
         token_data=jwt_payload,
-        expire_minutes=auth_jwt_config.refresh_token_ttl,
+        token_ttl=auth_jwt_config.refresh_token_ttl,
     )
 
 
