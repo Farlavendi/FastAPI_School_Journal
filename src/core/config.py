@@ -18,10 +18,10 @@ WORKER_DEFAULT_LOG_FORMAT = (
 
 
 class GunicornConfig(BaseModel):
-    host: str = "0.0.0.0"
-    port: int = 8000
-    workers: int = 1
-    timeout: int = 900
+    host: str
+    port: int
+    workers: int
+    timeout: int
 
 
 class ApiV1Prefix(BaseModel):
