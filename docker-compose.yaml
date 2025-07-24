@@ -137,8 +137,23 @@ services:
       postgres-dev:
         condition: service_healthy
 
+  redis:
+    image: redis:8
+    container_name: redis
+    restart: always
+    ports:
+      - "6379:6379"
+    environment:
+      APP_CONFIG__REDIS__HOST: ${APP_CONFIG__REDIS__HOST}
+      APP_CONFIG__REDIS__PORT: ${APP_CONFIG__REDIS__PORT}
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: [ "CMD", "redis-cli", "--raw", "incr", "ping" ]
+
 
 volumes:
   postgres-dev-data:
   rabbitmq-data:
+  redis-data:
 #  postgres-test-data:
