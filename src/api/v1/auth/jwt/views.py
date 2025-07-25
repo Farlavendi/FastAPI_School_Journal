@@ -1,19 +1,12 @@
-from fastapi import APIRouter, Depends, Form, HTTPException, Request, Response
-from fastapi.security import HTTPBearer
+from fastapi import Form, HTTPException, Request, Response
 
+from src.api.v1.auth import auth_router
+from src.api.v1.auth.jwt.schemas import TokenInfo
+from src.api.v1.auth.jwt.utils import issue_tokens, refresh_access_token
+from src.api.v1.auth.utils import validate_password_hash
 from src.api.v1.users.crud import get_user_by_username
 from src.core.config import auth_jwt_config
 from src.core.db_utils import SessionDep
-from .dependencies import CurrentUserDep
-from .schemas import TokenInfo
-from .utils import issue_tokens, refresh_access_token, validate_password_hash
-
-http_bearer = HTTPBearer(auto_error=False)
-auth_router = APIRouter(
-    prefix="/auth",
-    tags=["Auth"],
-    dependencies=[Depends(http_bearer)],
-)
 
 
 @auth_router.get("/refresh", response_model=TokenInfo, response_model_exclude_none=True)
@@ -50,20 +43,6 @@ async def login(
         raise HTTPException(status_code=401, detail="Incorrect password")
     else:
         return await issue_tokens(user=user, response=response)
-
-
-@auth_router.get("/users/me")
-async def check_self_info(
-    current_user: CurrentUserDep,
-):
-    return {
-        "username": current_user.username,
-        "email": current_user.email,
-        "first_name": current_user.first_name,
-        "second_name": current_user.second_name,
-        "last_name": current_user.last_name,
-        "role": current_user.role,
-    }
 
 
 @auth_router.post("/logout")
