@@ -11,7 +11,7 @@ if TYPE_CHECKING:
     from src.api.v1.models import Student, Teacher
 
 
-class RoleEnum(Enum):
+class RoleEnum(str, Enum):
     STUDENT = "STUDENT"
     TEACHER = "TEACHER"
 

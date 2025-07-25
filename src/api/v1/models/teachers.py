@@ -12,7 +12,7 @@ if TYPE_CHECKING:
     from . import Class
 
 
-class SubjectEnum(Enum):
+class SubjectEnum(str, Enum):
     MATH = "MATH"
     ENGLISH = "ENGLISH"
     PHYSICS = "PHYSICS"

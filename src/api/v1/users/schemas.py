@@ -56,6 +56,8 @@ class User(BaseModel):
     last_name: str
     role: RoleEnum
     is_active: bool
+    is_superuser: bool
+    is_verified: bool
     student: Student | None
     teacher: Teacher | None
 
