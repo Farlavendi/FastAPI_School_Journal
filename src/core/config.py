@@ -118,7 +118,6 @@ class Settings(BaseSettings):
     taskiq: TaskiqConfig
     mailing: MailingConfig
     redis: RedisConfig
-    jwt: AuthJWTConfig = AuthJWTConfig()
     sessions: AuthSessionsConfig = AuthSessionsConfig()
 
 
