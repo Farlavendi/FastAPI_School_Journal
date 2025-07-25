@@ -5,6 +5,7 @@ from typing import Literal
 
 from pydantic import BaseModel, PostgresDsn
 from pydantic_settings import BaseSettings, SettingsConfigDict
+from redis.asyncio import Redis
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -63,6 +64,8 @@ class MailingConfig(BaseModel):
 class RedisConfig(BaseModel):
     host: str
     port: int
+    username: str
+    password: str
 
 
 class DatabaseConfig(BaseModel):
@@ -97,6 +100,10 @@ class AuthJWTConfig(BaseModel):
         return self.public_key_path.read_text()
 
 
+class AuthSessionsConfig(BaseModel):
+    session_ttl: int = 60 * 60  # 1 hour
+
+
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
         case_sensitive=False,
@@ -111,6 +118,8 @@ class Settings(BaseSettings):
     taskiq: TaskiqConfig
     mailing: MailingConfig
     redis: RedisConfig
+    jwt: AuthJWTConfig = AuthJWTConfig()
+    sessions: AuthSessionsConfig = AuthSessionsConfig()
 
 
 @lru_cache
@@ -118,5 +127,9 @@ def get_settings():
     return Settings()
 
 
+@lru_cache()
+def get_redis():
+    return Redis(host=settings.redis.host, port=settings.redis.port)
+
+
 settings = get_settings()
-auth_jwt_config = AuthJWTConfig()
