@@ -29,8 +29,10 @@ def upgrade() -> None:
         sa.Column('first_name', sa.String(length=100), nullable=False),
         sa.Column('second_name', sa.String(length=50), server_default='', nullable=True),
         sa.Column('last_name', sa.String(length=100), nullable=False),
-        sa.Column('role', sa.Enum('STUDENT', 'TEACHER', 'SUPERUSER', name='role_enum'), nullable=False),
+        sa.Column('role', sa.Enum('STUDENT', 'TEACHER', name='role_enum'), nullable=False),
         sa.Column('is_active', sa.Boolean(), nullable=False),
+        sa.Column('is_superuser', sa.Boolean(), nullable=False),
+        sa.Column('is_verified', sa.Boolean(), nullable=False),
         sa.PrimaryKeyConstraint('id', name=op.f('pk_users')),
     )
     op.create_index(op.f('ix_users_email'), 'users', ['email'], unique=True)

@@ -14,7 +14,6 @@ if TYPE_CHECKING:
 class RoleEnum(Enum):
     STUDENT = "STUDENT"
     TEACHER = "TEACHER"
-    SUPERUSER = "SUPERUSER"
 
 
 class User(Base):
@@ -39,6 +38,8 @@ class User(Base):
         sa.Enum(RoleEnum, name='role_enum'), nullable=False, index=True,
     )
     is_active: Mapped[bool] = mapped_column(default=True, nullable=False)
+    is_superuser: Mapped[bool] = mapped_column(default=False, nullable=False)
+    is_verified: Mapped[bool] = mapped_column(default=False, nullable=False)
 
     student: Mapped["Student"] = relationship(back_populates="user", cascade="all, delete-orphan")
     teacher: Mapped["Teacher"] = relationship(back_populates="user", cascade="all, delete-orphan")
