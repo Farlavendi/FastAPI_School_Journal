@@ -128,7 +128,13 @@ def get_settings():
 
 @lru_cache()
 def get_redis():
-    return Redis(host=settings.redis.host, port=settings.redis.port)
+    return Redis(
+        host=settings.redis.host,
+        port=settings.redis.port,
+        password=settings.redis.password,
+        username=settings.redis.username,
+    )
 
 
 settings = get_settings()
+redis_instance = get_redis()
