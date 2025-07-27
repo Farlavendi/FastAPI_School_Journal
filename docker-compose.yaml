@@ -10,8 +10,6 @@ services:
     environment:
       APP_CONFIG__DB__URL: ${APP_CONFIG__DB__URL}
       APP_CONFIG__TASKIQ__URL: ${APP_CONFIG__TASKIQ__URL}
-      APP_CONFIG__REDIS__HOST: ${APP_CONFIG__REDIS__HOST}
-      APP_CONFIG__REDIS__PORT: ${APP_CONFIG__REDIS__PORT}
       APP_CONFIG__GUNICORN__HOST: ${APP_CONFIG__GUNICORN__HOST}
       APP_CONFIG__GUNICORN__PORT: ${APP_CONFIG__GUNICORN__PORT}
       APP_CONFIG__GUNICORN__WORKERS: ${APP_CONFIG__GUNICORN__WORKERS}
@@ -19,10 +17,15 @@ services:
       APP_CONFIG__MAILING__HOST: ${APP_CONFIG__MAILING__HOST}
       APP_CONFIG__MAILING__PORT: ${APP_CONFIG__MAILING__PORT}
       APP_CONFIG__MAILING__TZ: ${APP_CONFIG__MAILING__TZ}
+      APP_CONFIG__REDIS__HOST: ${APP_CONFIG__REDIS__HOST}
+      APP_CONFIG__REDIS__PORT: ${APP_CONFIG__REDIS__PORT}
+      APP_CONFIG__REDIS__USERNAME: ${APP_CONFIG__REDIS__USERNAME}
+      APP_CONFIG__REDIS__USER_PASSWORD: ${APP_CONFIG__REDIS__USER_PASSWORD}
+      APP_CONFIG__REDIS__PASSWORD: ${APP_CONFIG__REDIS__PASSWORD}
     depends_on:
       postgres-dev:
         condition: service_healthy
-      redis-stack:
+      redis:
         condition: service_healthy
       rabbitmq:
         condition: service_healthy
@@ -115,8 +118,6 @@ services:
     environment:
       APP_CONFIG__DB__URL: ${APP_CONFIG__DB__URL}
       APP_CONFIG__TASKIQ__URL: ${APP_CONFIG__TASKIQ__URL}
-      APP_CONFIG__REDIS__HOST: ${APP_CONFIG__REDIS__HOST}
-      APP_CONFIG__REDIS__PORT: ${APP_CONFIG__REDIS__PORT}
       APP_CONFIG__GUNICORN__HOST: ${APP_CONFIG__GUNICORN__HOST}
       APP_CONFIG__GUNICORN__PORT: ${APP_CONFIG__GUNICORN__PORT}
       APP_CONFIG__GUNICORN__WORKERS: ${APP_CONFIG__GUNICORN__WORKERS}
@@ -124,6 +125,11 @@ services:
       APP_CONFIG__MAILING__HOST: ${APP_CONFIG__MAILING__HOST}
       APP_CONFIG__MAILING__PORT: ${APP_CONFIG__MAILING__PORT}
       APP_CONFIG__MAILING__TZ: ${APP_CONFIG__MAILING__TZ}
+      APP_CONFIG__REDIS__HOST: ${APP_CONFIG__REDIS__HOST}
+      APP_CONFIG__REDIS__PORT: ${APP_CONFIG__REDIS__PORT}
+      APP_CONFIG__REDIS__USERNAME: ${APP_CONFIG__REDIS__USERNAME}
+      APP_CONFIG__REDIS__USER_PASSWORD: ${APP_CONFIG__REDIS__USER_PASSWORD}
+      APP_CONFIG__REDIS__PASSWORD: ${APP_CONFIG__REDIS__PASSWORD}
     volumes:
       - ./src:/app/src
     command: >
@@ -137,21 +143,46 @@ services:
       postgres-dev:
         condition: service_healthy
 
-  redis-stack:
-    image: redis/redis-stack:latest
-    container_name: redis-stack
-    restart: always
+  redis:
+    image: redis:8
+    container_name: redis
     ports:
       - "6379:6379"
-      - "8001:8001"
     environment:
       APP_CONFIG__REDIS__HOST: ${APP_CONFIG__REDIS__HOST}
       APP_CONFIG__REDIS__PORT: ${APP_CONFIG__REDIS__PORT}
+      APP_CONFIG__REDIS__USERNAME: ${APP_CONFIG__REDIS__USERNAME}
+      APP_CONFIG__REDIS__USER_PASSWORD: ${APP_CONFIG__REDIS__USER_PASSWORD}
+      APP_CONFIG__REDIS__PASSWORD: ${APP_CONFIG__REDIS__PASSWORD}
+    command: >
+      sh -c "
+        mkdir -p /usr/local/etc/redis &&
+        echo 'bind 0.0.0.0' > /usr/local/etc/redis/redis.conf &&
+        echo 'requirepass $APP_CONFIG__REDIS__PASSWORD' >> /usr/local/etc/redis/redis.conf &&
+        echo 'appendonly yes' >> /usr/local/etc/redis/redis.conf &&
+        echo 'appendfsync everysec' >> /usr/local/etc/redis/redis.conf &&
+        echo 'user default on nopass ~* +@all' > /usr/local/etc/redis/users.acl &&
+        echo \"user $APP_CONFIG__REDIS__USERNAME on >$APP_CONFIG__REDIS__USER_PASSWORD ~* +@all\" >> /usr/local/etc/redis/users.acl &&
+        redis-server /usr/local/etc/redis/redis.conf --aclfile /usr/local/etc/redis/users.acl
+      "
     volumes:
       - redis-data:/data
+    restart: unless-stopped
     healthcheck:
-      test: [ "CMD", "redis-cli", "--raw", "ping" ]
+      test: [ "CMD", "redis-cli", "-a", "$APP_CONFIG__REDIS__PASSWORD", "ping" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
+  redisinsight:
+    image: redis/redisinsight:latest
+    container_name: redisinsight
+    ports:
+      - "5540:5540"
+    restart: unless-stopped
+    depends_on:
+      redis:
+        condition: service_healthy
 
 volumes:
   postgres-dev-data:
