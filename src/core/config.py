@@ -66,6 +66,8 @@ class RedisConfig(BaseModel):
     port: int
     username: str
     password: str
+    user_password: str
+    db: int
 
 
 class DatabaseConfig(BaseModel):
