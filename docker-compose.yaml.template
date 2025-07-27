@@ -7,8 +7,22 @@ services:
     restart: always
     ports:
       - "8000:8000"
-    env_file:
-      - .env
+    environment:
+      APP_CONFIG__DB__URL: ${APP_CONFIG__DB__URL}
+      APP_CONFIG__TASKIQ__URL: ${APP_CONFIG__TASKIQ__URL}
+      APP_CONFIG__GUNICORN__HOST: ${APP_CONFIG__GUNICORN__HOST}
+      APP_CONFIG__GUNICORN__PORT: ${APP_CONFIG__GUNICORN__PORT}
+      APP_CONFIG__GUNICORN__WORKERS: ${APP_CONFIG__GUNICORN__WORKERS}
+      APP_CONFIG__GUNICORN__TIMEOUT: ${APP_CONFIG__GUNICORN__TIMEOUT}
+      APP_CONFIG__MAILING__HOST: ${APP_CONFIG__MAILING__HOST}
+      APP_CONFIG__MAILING__PORT: ${APP_CONFIG__MAILING__PORT}
+      APP_CONFIG__MAILING__TZ: ${APP_CONFIG__MAILING__TZ}
+      APP_CONFIG__REDIS__HOST: ${APP_CONFIG__REDIS__HOST}
+      APP_CONFIG__REDIS__PORT: ${APP_CONFIG__REDIS__PORT}
+      APP_CONFIG__REDIS__USERNAME: ${APP_CONFIG__REDIS__USERNAME}
+      APP_CONFIG__REDIS__USER_PASSWORD: ${APP_CONFIG__REDIS__USER_PASSWORD}
+      APP_CONFIG__REDIS__PASSWORD: ${APP_CONFIG__REDIS__PASSWORD}
+      APP_CONFIG__REDIS__DB: ${APP_CONFIG__REDIS__DB}
     depends_on:
       postgres-dev:
         condition: service_healthy
@@ -18,12 +32,12 @@ services:
         condition: service_healthy
     volumes:
       - ./src:/app/src
-  #    develop:
-  #      watch:
-  #        - path: ./src
-  #          action: sync+restart
-  #          target: /app/src
-  
+    develop:
+      watch:
+        - path: ./src
+          action: sync+restart
+          target: /app/src
+
   postgres-dev:
     image: postgres:17.2-alpine
     container_name: postgres-dev
@@ -31,9 +45,10 @@ services:
     expose:
       - "5432:5432"
     environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DATA: /var/lib/postgresql/data
-    env_file:
-      - .env
     volumes:
       - postgres-dev-data:/var/lib/postgresql/data
     healthcheck:
@@ -48,10 +63,13 @@ services:
   #    restart: always
   #    volumes:
   #      - postgres-test-data:/var/lib/postgresql/data
+  #    environment:
+  #      POSTGRES_DB: ${POSTGRES_TEST_DB}
+  #      POSTGRES_USER: ${POSTGRES_TEST_USER}
+  #      POSTGRES_PASSWORD: ${POSTGRES_TEST_PASSWORD}
+  #      POSTGRES_DATA: /var/lib/postgresql/data
   #    ports:
   #      - "5432:5432"
-  #    env_file:
-  #      - .env
   #    healthcheck:
   #      test: [ "CMD-SHELL", "sh -c 'pg_isready -U ${POSTGRES_TEST_USER} -d ${POSTGRES_TEST_DB}'" ]
   #      interval: 10s
@@ -64,8 +82,9 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
-    env_file:
-      - .env
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RMQ_USER}
+      RABBITMQ_DEFAULT_PASS: ${RMQ_PASSWORD}
     volumes:
       - rabbitmq-data:/var/lib/rabbitmq
     healthcheck:
@@ -98,8 +117,22 @@ services:
       dockerfile: Dockerfile
     container_name: taskiq
     restart: always
-    env_file:
-      - .env
+    environment:
+      APP_CONFIG__DB__URL: ${APP_CONFIG__DB__URL}
+      APP_CONFIG__TASKIQ__URL: ${APP_CONFIG__TASKIQ__URL}
+      APP_CONFIG__GUNICORN__HOST: ${APP_CONFIG__GUNICORN__HOST}
+      APP_CONFIG__GUNICORN__PORT: ${APP_CONFIG__GUNICORN__PORT}
+      APP_CONFIG__GUNICORN__WORKERS: ${APP_CONFIG__GUNICORN__WORKERS}
+      APP_CONFIG__GUNICORN__TIMEOUT: ${APP_CONFIG__GUNICORN__TIMEOUT}
+      APP_CONFIG__MAILING__HOST: ${APP_CONFIG__MAILING__HOST}
+      APP_CONFIG__MAILING__PORT: ${APP_CONFIG__MAILING__PORT}
+      APP_CONFIG__MAILING__TZ: ${APP_CONFIG__MAILING__TZ}
+      APP_CONFIG__REDIS__HOST: ${APP_CONFIG__REDIS__HOST}
+      APP_CONFIG__REDIS__PORT: ${APP_CONFIG__REDIS__PORT}
+      APP_CONFIG__REDIS__USERNAME: ${APP_CONFIG__REDIS__USERNAME}
+      APP_CONFIG__REDIS__USER_PASSWORD: ${APP_CONFIG__REDIS__USER_PASSWORD}
+      APP_CONFIG__REDIS__PASSWORD: ${APP_CONFIG__REDIS__PASSWORD}
+      APP_CONFIG__REDIS__DB: ${APP_CONFIG__REDIS__DB}
     volumes:
       - ./src:/app/src
     command: >
@@ -118,8 +151,13 @@ services:
     container_name: redis
     ports:
       - "6379:6379"
-    env_file:
-      - .env
+    environment:
+      APP_CONFIG__REDIS__HOST: ${APP_CONFIG__REDIS__HOST}
+      APP_CONFIG__REDIS__PORT: ${APP_CONFIG__REDIS__PORT}
+      APP_CONFIG__REDIS__USERNAME: ${APP_CONFIG__REDIS__USERNAME}
+      APP_CONFIG__REDIS__USER_PASSWORD: ${APP_CONFIG__REDIS__USER_PASSWORD}
+      APP_CONFIG__REDIS__PASSWORD: ${APP_CONFIG__REDIS__PASSWORD}
+      APP_CONFIG__REDIS__DB: ${APP_CONFIG__REDIS__DB}
     command: >
       sh -c "
         mkdir -p /usr/local/etc/redis &&
