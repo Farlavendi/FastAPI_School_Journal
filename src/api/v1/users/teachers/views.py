@@ -1,10 +1,10 @@
 from typing import Annotated
 
-from fastapi import APIRouter, HTTPException, Path, Response, status
+from fastapi import APIRouter, HTTPException, Path, status
 from sqlalchemy.exc import IntegrityError
 
-from src.api.v1 import auth_router
 from src.api.v1.auth.dependencies import CurrentUserDep
+from src.api.v1.auth.views import auth_router
 from src.api.v1.models.teachers import SubjectEnum
 from src.api.v1.users.marks_schemas import MarksUpdate
 from src.api.v1.users.schemas import TeacherUserCreate
@@ -28,7 +28,6 @@ async def create_user_teacher(
     user_in: TeacherUserCreate,
     teacher_in: TeacherCreate,
     session: SessionDep,
-    response: Response,
     subject: Annotated[SubjectEnum, Path] | None = None,
 ):
     try:
@@ -37,7 +36,6 @@ async def create_user_teacher(
             user_in=user_in,
             teacher_in=teacher_in,
             subject=subject,
-            response=response
         )
         await session.commit()
         await send_welcome_email.kiq(user_id=user.id)

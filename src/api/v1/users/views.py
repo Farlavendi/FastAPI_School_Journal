@@ -1,9 +1,8 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, HTTPException
 from fastapi.responses import ORJSONResponse
 from starlette import status
 
 from src.api.v1.auth.dependencies import CurrentUserDep
-from src.api.v1.auth.views import http_bearer
 from src.core.db_utils import SessionDep
 from src.core.models.users import RoleEnum
 from . import crud
@@ -13,7 +12,6 @@ from .schemas import User, UserUpdate
 users_router = APIRouter(
     prefix="/users",
     tags=["Users"],
-    dependencies=[Depends(http_bearer)],
 )
 
 
@@ -44,12 +42,6 @@ async def choose_role(role: RoleEnum):
             content={
                 "next_step": "/api/users/teachers/create",
             },
-        )
-    elif role == RoleEnum.SUPERUSER:
-        return ORJSONResponse(
-            content={
-                "next_step": "/api/users/create-superuser",  # TODO create a superuser creation logic
-            }
         )
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Invalid role")
 

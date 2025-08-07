@@ -102,8 +102,9 @@ class AuthJWTConfig(BaseModel):
         return self.public_key_path.read_text()
 
 
-class AuthSessionsConfig(BaseModel):
-    session_ttl: int = 60 * 60  # 1 hour
+class AuthConfig(BaseModel):
+    session_ttl: int = 60 * 60 * 24 * 7  # 1 week (7 days)
+    secret_key: bytes
 
 
 class Settings(BaseSettings):
@@ -120,7 +121,7 @@ class Settings(BaseSettings):
     taskiq: TaskiqConfig
     mailing: MailingConfig
     redis: RedisConfig
-    sessions: AuthSessionsConfig = AuthSessionsConfig()
+    auth: AuthConfig
 
 
 @lru_cache

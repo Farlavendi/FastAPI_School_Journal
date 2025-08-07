@@ -1,12 +1,12 @@
 from typing import Sequence
 from uuid import UUID
 
-from fastapi import HTTPException, Response, status
+from fastapi import HTTPException, status
 from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload
 
-from src.api.v1.auth.utils import hash_password, issue_tokens
+from src.api.v1.auth.utils import hash_password
 from src.api.v1.classes.dependencies import class_id_by_number
 from src.api.v1.models import Marks, Student
 from src.api.v1.users.schemas import StudentUserCreate
@@ -49,7 +49,6 @@ async def create_student(
     session: AsyncSession,
     user_in: StudentUserCreate,
     student_in: StudentCreate,
-    response: Response,
 ) -> User:
     hashed_password = hash_password(user_in.password)
     user_data = user_in.model_dump(exclude={"password"})
@@ -57,11 +56,6 @@ async def create_student(
     user = User(**user_data, password=hashed_password)
     session.add(user)
     await session.flush()
-
-    await issue_tokens(
-        user=user,
-        response=response,
-    )
 
     class_id = await class_id_by_number(student_in.class_num, session=session)
     student_data = student_in.model_dump(exclude={"class_id", "class_num"})

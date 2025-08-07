@@ -1,10 +1,10 @@
 from typing import Annotated
 from uuid import UUID
 
-from fastapi import APIRouter, HTTPException, Path, Response, status
+from fastapi import APIRouter, HTTPException, Path, status
 from sqlalchemy.exc import IntegrityError
 
-from src.api.v1 import auth_router
+from src.api.v1.auth.views import auth_router
 from src.api.v1.users.marks_schemas import Marks
 from src.api.v1.users.schemas import StudentUserCreate
 from src.core.db_utils import SessionDep
@@ -35,14 +35,12 @@ async def create_user_student(
     user_in: StudentUserCreate,
     student_in: StudentCreate,
     session: SessionDep,
-    response: Response,
 ):
     try:
         user = await crud.create_student(
             session=session,
             user_in=user_in,
             student_in=student_in,
-            response=response
         )
         await session.commit()
         await send_welcome_email.kiq(user_id=user.id)
