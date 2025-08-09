@@ -10,9 +10,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.api.v1.users.crud import get_user_by_username
 from src.core.config import redis_client, settings
 
-password_hash = PasswordHash((
-    Argon2Hasher(),
-))
+password_hash = PasswordHash((Argon2Hasher(),))
 
 SECRET_KEY = settings.auth.secret_key
 SESSION_TTL = settings.auth.session_ttl
@@ -28,22 +26,18 @@ def validate_password_hash(plain_password: str, hashed_password: str) -> bool:
 
 def sign_token(token: str) -> str:
     signature = hmac.new(
-        key=SECRET_KEY,
-        msg=token.encode(),
-        digestmod=hashlib.sha256
+        key=SECRET_KEY, msg=token.encode(), digestmod=hashlib.sha256
     ).hexdigest()
     return f"{token}.{signature}"
 
 
 async def verify_session_token(token: str) -> tuple[str, str]:
     try:
-        token, sig = token.rsplit('.', 1)
-        user_id, session_id = token.split('|', 1)
+        token, sig = token.rsplit(".", 1)
+        user_id, session_id = token.split("|", 1)
 
         expected_sig = hmac.new(
-            key=SECRET_KEY,
-            msg=token.encode(),
-            digestmod=hashlib.sha256
+            key=SECRET_KEY, msg=token.encode(), digestmod=hashlib.sha256
         ).hexdigest()
 
         redis_entry_exists = await redis_client.exists(f"session:{session_id}")
@@ -51,7 +45,7 @@ async def verify_session_token(token: str) -> tuple[str, str]:
         if not redis_entry_exists:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Session expired or invalid"
+                detail="Session expired or invalid",
             )
 
         if hmac.compare_digest(sig, expected_sig) and redis_entry_exists:
@@ -75,11 +69,7 @@ async def verify_session_token(token: str) -> tuple[str, str]:
     )
 
 
-async def login(
-    session: AsyncSession,
-    response: Response,
-    username: str
-):
+async def login(session: AsyncSession, response: Response, username: str):
     user = await get_user_by_username(session, username)
 
     session_id = uuid4().hex
@@ -96,7 +86,7 @@ async def login(
         httponly=True,
         secure=True,
         samesite="strict",
-        max_age=SESSION_TTL
+        max_age=SESSION_TTL,
     )
 
     return {"message": "Logged in successfully"}
@@ -110,8 +100,7 @@ async def logout(
 
     if not token:
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Already logged out."
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Already logged out."
         )
 
     user_id, session_id = await verify_session_token(token)
@@ -131,30 +120,17 @@ async def logout_all(
 
     if not token:
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Already logged out."
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Already logged out."
         )
 
     user_id, session_id = await verify_session_token(token)
 
-    # session_ids = await redis_client.smembers(f"user_sessions:{user_id}")
-    #
-    # for sid in session_ids:
-    #     await redis_client.delete(f"session:{sid.decode('utf-8')}")
-    #
-    # await redis_client.delete(f"user_sessions:{user_id}")
+    session_ids = await redis_client.smembers(f"user_sessions:{user_id}")
 
-    lua_script = """
-        local user_sessions_key = KEYS[1]
-        local session_ids = redis.call("SMEMBERS", user_sessions_key)
+    for sid in session_ids:
+        await redis_client.delete(f"session:{sid.decode('utf-8')}")
 
-        for _, sid in ipairs(session_ids) do
-            redis.call("DEL", "session:" .. sid)
-        end
-
-        redis.call("DEL", user_sessions_key)
-        """
-    await redis_client.eval(lua_script, 1, f"user_sessions:{user_id}")
+    await redis_client.delete(f"user_sessions:{user_id}")
 
     response.delete_cookie("session_token")
     return {"message": "Logged out from all devices"}
