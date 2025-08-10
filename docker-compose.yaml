@@ -80,12 +80,10 @@ services:
   maildev:
     image: maildev/maildev
     container_name: maildev
-    environment:
-      APP_CONFIG__MAILING__HOST: ${APP_CONFIG__MAILING__HOST}
-      APP_CONFIG__MAILING__PORT: ${APP_CONFIG__MAILING__PORT}
-      APP_CONFIG__MAILING__TZ: ${APP_CONFIG__MAILING__TZ}
+    env_file:
+      - .env
     ports:
-      - "8080:1080"
+      - "1080:1080"
       - "1025:1025"
     logging:
       driver: "json-file"
