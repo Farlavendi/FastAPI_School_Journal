@@ -45,7 +45,7 @@ async def verify_session_token(token: str) -> tuple[str, str]:
         if not redis_entry_exists:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Session expired or invalid",
+                detail="Session expired or invalid.",
             )
 
         if hmac.compare_digest(sig, expected_sig) and redis_entry_exists:
@@ -89,7 +89,7 @@ async def login(session: AsyncSession, response: Response, username: str):
         max_age=SESSION_TTL,
     )
 
-    return {"message": "Logged in successfully"}
+    return {"message": "Logged in successfully."}
 
 
 async def logout(
@@ -109,7 +109,7 @@ async def logout(
     await redis_client.srem(f"user_sessions:{user_id}", session_id)
 
     response.delete_cookie("session_token")
-    return {"message": "Logged out successfully"}
+    return {"message": "Logged out successfully."}
 
 
 async def logout_all(
@@ -133,4 +133,4 @@ async def logout_all(
     await redis_client.delete(f"user_sessions:{user_id}")
 
     response.delete_cookie("session_token")
-    return {"message": "Logged out from all devices"}
+    return {"message": "Logged out from all devices successfully."}

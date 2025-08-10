@@ -24,7 +24,7 @@ async def get_users(session: AsyncSession) -> Sequence[User]:
     return users
 
 
-async def get_user_by_id(session: AsyncSession, user_id: UUID):
+async def get_user_by_id(session: AsyncSession, user_id: str | UUID):
     result = await session.execute(
         select(User)
         .where(User.id == user_id)
