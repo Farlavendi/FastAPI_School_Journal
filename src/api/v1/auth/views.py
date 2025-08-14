@@ -51,15 +51,12 @@ async def verify_email(
 ):
     token = request.cookies.get("session_token")
     user_id_redis = await redis_client.get(f"verification_token:{verification_token}")
-    user_id_redis = user_id_redis.decode("utf-8")
     user_id_cookies, _ = await verify_session_token(token)
-
-    print(user_id_cookies, user_id_redis)
 
     if not user_id_redis:
         raise HTTPException(400, "Invalid or expired token")
 
-    if user_id_redis == user_id_cookies:
+    if user_id_redis.decode("utf-8") == user_id_cookies:
         await redis_client.delete(f"verification_token:{verification_token}")
 
         await session.execute(
