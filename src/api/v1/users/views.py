@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException, Request, Response, status
-from fastapi.responses import RedirectResponse
+from fastapi.responses import ORJSONResponse
 
 from src.api.v1.auth.dependencies import CurrentUserDep
 from src.api.v1.auth.utils import logout
@@ -32,16 +32,27 @@ async def get_user_by_id(
 @users_router.post("/choose-role")
 async def choose_role(role: RoleEnum):
     if role == RoleEnum.STUDENT:
-        response = RedirectResponse(
-            url="/docs#/Auth/create_user_student_api_v1_auth_register_student_post",
-            status_code=status.HTTP_302_FOUND,
+        response = ORJSONResponse(
+            content={
+                "next_step": "/api/users/students/create",
+            }
         )
+        # response = RedirectResponse(
+        #     url="/docs#/Auth/create_user_student_api_v1_auth_register_student_post",
+        #     status_code=status.HTTP_302_FOUND,
+        # )
         return response
+
     elif role == RoleEnum.TEACHER:
-        response = RedirectResponse(
-            url="/docs#/Auth/create_user_teacher_api_v1_auth_register_teacher_post",
-            status_code=status.HTTP_302_FOUND,
+        response = ORJSONResponse(
+            content={
+                "next_step": "/api/users/students/create",
+            }
         )
+        # response = RedirectResponse(
+        #     url="/docs#/Auth/create_user_teacher_api_v1_auth_register_teacher_post",
+        #     status_code=status.HTTP_302_FOUND,
+        # )
         return response
 
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Invalid role")
