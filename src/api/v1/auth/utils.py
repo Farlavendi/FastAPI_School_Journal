@@ -33,7 +33,7 @@ def sign_token(token: str) -> str:
 
 async def verify_session_token(token: str) -> tuple[str, str]:
     try:
-        token, sig = token.rsplit(".", 1)
+        token, sig = token.split(".", 1)
         user_id, session_id = token.split("|", 1)
 
         expected_sig = hmac.new(
