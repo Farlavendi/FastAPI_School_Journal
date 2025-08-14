@@ -104,6 +104,7 @@ class AuthJWTConfig(BaseModel):
 
 class AuthConfig(BaseModel):
     session_ttl: int = 60 * 60 * 24 * 7  # 1 week (7 days)
+    verification_token_ttl: int = 60 * 10  # 10 minutes
     secret_key: bytes
 
 
