@@ -1,7 +1,8 @@
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, HTTPException, Request, Response, status
 from fastapi.responses import RedirectResponse
 
 from src.api.v1.auth.dependencies import CurrentUserDep
+from src.api.v1.auth.utils import logout
 from src.core.db_utils import SessionDep
 from src.core.models.users import RoleEnum
 from . import crud
@@ -78,5 +79,8 @@ async def update_user(
 async def delete_user(
     session: SessionDep,
     user: UserByIdDep,
+    request: Request,
+    response: Response,
 ):
+    await logout(request=request, response=response)
     return await crud.delete_user(user=user, session=session)
